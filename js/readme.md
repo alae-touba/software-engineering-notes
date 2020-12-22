@@ -760,7 +760,7 @@ L'héritage par prototype est une fonctionnalité de langage qui permet ceci.
 
     En JavaScript, les objets ont une propriété spécial qui s'appelle [[prototype]] (comme nommé dans la spécificatio) qui est soit **null** soit une référence a un autre objet. Cet autre objet est appelé *un prototype*. 
 
-    ![img](./1.png)
+    ![img](./imgs/1.png)
 
     Quand on essaye de lire une propriété d'un objet et cette propriété n'existes pas dans l'objet alors JavaScript va essayer de prendre cette proproté du prototype de l'objet.
 
@@ -803,7 +803,7 @@ L'héritage par prototype est une fonctionnalité de langage qui permet ceci.
 
     quand on essaie d'accéder a la propriété *eats* dans la ligne (**), JavaScript ne va pas la trouver et va chercher dans son prototype qui est *animal*.
 
-    ![img](./2.png)
+    ![img](./imgs/2.png)
 
     Maintenant l'utilité de ceci est que si *animal* a plusieurs attributs/méthodes utiles ils vont etre automatiquement disponibles dans *rabbit*.
 
@@ -829,7 +829,7 @@ L'héritage par prototype est une fonctionnalité de langage qui permet ceci.
 
     la méthode est automatiquement pris du prototype comme ca:
 
-    ![img](./3.png)
+    ![img](./imgs/3.png)
 
     La *chaine du prototype* peut etre plus longue:
     ```js
@@ -856,7 +856,7 @@ L'héritage par prototype est une fonctionnalité de langage qui permet ceci.
     longEar.walk() // Animal walk
     console.log(longEar.jumps) // true (de rabbit)
     ```
-    ![img](./4.png)
+    ![img](./imgs/4.png)
 
 * L'écriture n'utilise pas le prototype:    
 
@@ -887,7 +887,7 @@ L'héritage par prototype est une fonctionnalité de langage qui permet ceci.
 
     Désormais, l'appel rabbit.walk() trouve la méthode immédiatement dans l'objet et l'execute sans utiliser le prototype.
 
-    ![img](./5.png)
+    ![img](./imgs/5.png)
 
 
 ### _Expliquer F.prototype (propriété *prototype* d'une fonction constructeur)
