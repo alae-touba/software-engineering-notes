@@ -2,7 +2,7 @@
 
 # JavaScript interview questions 
 
-### Quels sont les différents types de données présents dans javascript?
+### _Quels sont les différents types de données présents dans javascript?
 
 On a 8 types:
 
