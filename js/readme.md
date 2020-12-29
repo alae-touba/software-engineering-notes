@@ -915,7 +915,7 @@ let rabbit = new Rabbit("White Rabbit") //  rabbit.__proto__ == animal
 console.log(rabbit.eats) // true
 ```
 
-![img](6.png)
+![img](./imgs/6.png)
 
 ### _Supposons qu'on une fonction constructeur F, quelle est la valeur par défaut de sa propriété *prototype*?
 
@@ -976,11 +976,11 @@ D'où vient le code qui génère la chaîne **"[objet objet]"**? C'est une méth
 
 ....Il faut savoir que **obj = {}** est la meme chose que **new Object()** où **Object** est une fonction constructeur dans le language JavaScript, avec sa propre propriété **prototype** qui est un un objet avec plusieurs méthodes comme **toString**.
 
-![img](7.png)
+![imgs](./imgs/7.png)
 
 Quand un nouveau objet est crée avec **new Object()** (ou bien **{...}**) alors son **[[prototype]]** est maintenant égal a **Object.prototype** d'ou pourquoi on a la méthode **toString** dans l'**obj** vide qu'on a crée au début.
 
-![img](8.png)
+![imgs](./imgs/8.png)
 
 Donc **obj.toString** est pris de **Object.prototype**.
 ```js
@@ -1005,7 +1005,7 @@ Par exemple, lorsqu'on créet un tableau [1, 2, 3], alors **new Array()** est ut
 
 Par spécifications, tous les fonctions constructeurs ont **Object.prototype** au top, c'est pourquoi on dit que tous les objets héritent de **Object**.
 
-![img](9.png)
+![imgs](./imgs/9.png)
 
 On peut vérfier ceci facilement:
 ```js
