@@ -175,7 +175,7 @@ after executing the code we will notice that the table "students" gets created a
 
 ## Hibernate CRUD operations
 
- ## set up a java project to work with hibernate (using maven quickstart)
+* set up a java project to work with hibernate (using maven quickstart)
 
 * create a maven quick start project
 
