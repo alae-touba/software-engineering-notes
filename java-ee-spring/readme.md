@@ -43,7 +43,7 @@
             <!-- Set the current session context -->
             <property name="current_session_context_class">thread</property>
 
-            <!-- create table if they dont exist (automatically), otherwise update-->
+            <!-- create tables if they dont exist (automatically), otherwise update-->
             <property name="hbm2ddl.auto">update</property>
         </session-factory>
 
@@ -217,7 +217,7 @@ after executing the code we will notice that the table "students" gets created a
             <!-- Set the current session context -->
             <property name="current_session_context_class">thread</property>
 
-            <!-- create table if they dont exist (automatically), otherwise update-->
+            <!-- create tables if they dont exist (automatically), otherwise update-->
             <property name="hbm2ddl.auto">update</property>
         </session-factory>
 
@@ -306,7 +306,9 @@ after executing the code we will notice that the table "students" gets created a
 Now for each operation (i.e delete, read, update, etc) I will create a Driver class (Main class) that shows how to the operation.
 
 * create a class named **PrimaryKeyDemo**:
-  
+
+    here we will see how to save entites without primary key value (primary keys will be generated automatically).
+
     ```java
     package org.example;
 
@@ -355,7 +357,7 @@ Now for each operation (i.e delete, read, update, etc) I will create a Driver cl
     }
     ```
 
-    notice that i didnt specify the primary key and it will be generated AUTOmatically (*@GeneratedValue(strategy = GenerationType.AUTO)).
+    notice that i didnt specify the primary key and it will be generated AUTOmatically **(@GeneratedValue(strategy = GenerationType.AUTO))**.
 
     Here is a look at the table that gets created and populated.
 
@@ -363,6 +365,8 @@ Now for each operation (i.e delete, read, update, etc) I will create a Driver cl
 
 
 * create a class named: **ReadStudentDemo**
+
+    here we will see how to get an entity with primary key.
     
     ```java
     package org.example;
@@ -412,3 +416,96 @@ Now for each operation (i.e delete, read, update, etc) I will create a Driver cl
     Get complete: Student{id=1, firstName='alae', lastName='touba', email='alae@gmail.com'}
     Done!
     ```
+
+* create a class named **QueryStudentsDemo**:
+    
+    we will see how to use HQL (hibernate query language) to query students.
+
+    ```java
+    package org.example;
+
+    import java.util.List;
+
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    import javax.persistence.TypedQuery;
+
+
+    public class QueryStudentDemo {
+
+        public static void main(String[] args) {
+
+            // create session factory
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(Student.class)
+                    .buildSessionFactory();
+
+            // create session
+            Session session = factory.getCurrentSession();
+
+            try {
+
+                // start a transaction
+                session.beginTransaction();
+
+                // query students
+                TypedQuery<Student> typedQuery = session.createQuery("from Student",
+                                                            Student.class);
+
+                List<Student> students = typedQuery.getResultList();
+
+                // display the students
+                System.out.println("all students in DB");
+                displayStudents(students);
+
+                // query students: lastName='Doe'
+                students = session
+                                .createQuery("from Student s where s.lastName='touba'",
+                                        Student.class)
+                                .getResultList();
+
+                // display the students
+                System.out.println("\n\nStudents who have last name of touba");
+                displayStudents(students);
+
+                // query students: lastName='touba' OR firstName='hamza'
+                students = session
+                                .createQuery("from Student s where"
+                                    + " s.lastName='touba' OR s.firstName='hamza'",
+                                        Student.class)
+                                .getResultList();
+
+                System.out.println("\n\nStudents who have lastname of touba OR firstname of hamza");
+                displayStudents(students);
+
+                // query students where email LIKE '%gmail.com'
+                students = session
+                                .createQuery("from Student s where"
+                                        + " s.email LIKE '%gmail.com'", Student.class)
+                                .getResultList();
+
+                System.out.println("\n\nStudents whose email ends with gmail.com");
+                displayStudents(students);
+
+
+                // commit transaction
+                session.getTransaction().commit();
+
+                System.out.println("Done!");
+            }
+            finally {
+                factory.close();
+            }
+        }
+
+        private static void displayStudents(List<Student> students) {
+            for (Student tempStudent : students) {
+                System.out.println(tempStudent);
+            }
+        }
+
+    }
+    ``` 
