@@ -16,6 +16,8 @@
 	- [generally used to target DOM nodes/elements](#generally-used-to-target-dom-nodeselements)
 - [can you display how many times a page renders?](#can-you-display-how-many-times-a-page-renders)
 - [can you create a form with one input field, and when the component renders the input will have the focus automatically?](#can-you-create-a-form-with-one-input-field-and-when-the-component-renders-the-input-will-have-the-focus-automatically)
+- [A quick intro to props.children (or this.props.children)](#a-quick-intro-to-propschildren-or-thispropschildren)
+- [React useContext Hook Tutorial (with Examples)](#react-usecontext-hook-tutorial-with-examples)
 
 
 ## Ben awad practical react tutorial (beginner)
@@ -919,10 +921,12 @@ use **useEffect** to fetch a list of users and then display this list and give t
 * here is how it should look like
   
 	* when the page loads for the fisrt time
-	![](imgs/11.png)
+		
+		![](imgs/11.png)
 
 	* after adding alae/alae@gmail.com
-	![](imgs/11.png)
+		
+		![](imgs/11.png)
 
 
 
@@ -1364,3 +1368,69 @@ I need to execute somthing (put the focus on the input) when the component rende
 
 	useRef will run when the component renders, and inside it we put the focus on the input :) and we dont need to pass the second argupent to **useEffect** because **useRef** does not trigger re-render and so we will not cause an infinite loop. 
 
+## A quick intro to props.children (or this.props.children)
+
+**props.children** (in a function based component or **this.props.children** in a class based component) is whatever you include between the opening and closing tags when invoking a component.
+
+* example:
+	
+	Here is a component name **Picture**:
+
+	```js
+	import React from "react"
+
+	const Picture = (props) => {
+		return (
+			<div>
+				<img src={props.src} width={props.width} /> <br />
+				{props.children}
+			</div>
+		)
+	}
+
+	export default Picture
+	```
+
+    This component contains an **\<img>** that is receiving some **props** and then it is displaying **{props.children}**
+
+    Whenever this component is invoked **{props.children}** will also be displayed and this is just a reference to what is between the opening and closing tags of the component.
+
+	Here is the code for the **App** component:
+
+	```js
+	import React from "react"
+	import Picture from "./Picture"
+
+	function App() {
+		return (
+			<>
+				<Picture
+					src="https://www.inovex.de/blog/wp-content/uploads/2022/01/one-year-of-react-native.png"
+					width={200}
+				>
+					<h1>my name is alae toouba</h1>
+				</Picture>
+			</>
+		)
+	}
+
+	export default App
+	```
+	Instead of invoking the component with a self-closing tag **\<Picture />** if we invoke it will full opening and closing tags **\<Picture> \</Picture>** we can then place more code between it.
+
+	in this case the code we placed in between is an **h1** so this is what will be **props.children** of the **Picture** component.
+
+* Here is how this looks like 
+	
+	![](imgs/22.png)
+
+## React useContext Hook Tutorial (with Examples)
+https://daveceddia.com/usecontext-hook/
+
+todo:
+https://daveceddia.com/useeffect-hook-examples/
+https://daveceddia.com/ajax-requests-in-react/
+https://daveceddia.com/how-i-learned-react/
+https://daveceddia.com/react-is-trending/
+https://daveceddia.com/why-react/
+https://daveceddia.com/usestate-hook-examples/
