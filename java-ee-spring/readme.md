@@ -1268,6 +1268,7 @@ This relationship will be bidirictioanl which means we can go from an instructor
     ```
 
 * creating instructor and its instructor detail
+  
     same as one to one unid
 
 	```java
@@ -1291,6 +1292,8 @@ This relationship will be bidirictioanl which means we can go from an instructor
     session.getTransaction().commit();
     ```
 * creating an instructor
+
+
 	same as OneToOne uni
     ```java
     session.beginTransaction();
@@ -1299,6 +1302,7 @@ This relationship will be bidirictioanl which means we can go from an instructor
     session.getTransaction().commit();
     ```
 * creating an instructor detail and linking it to an existing instructor in the db
+
 	same as OneToOne uni
     
     ```java
@@ -1311,6 +1315,7 @@ This relationship will be bidirictioanl which means we can go from an instructor
     session.getTransaction().commit();
     ```
 * updating an instructor
+
 	same as OneToOne uni
 
     ```java
@@ -1322,7 +1327,8 @@ This relationship will be bidirictioanl which means we can go from an instructor
     session.getTransaction().commit();    
     ```
 * updating an instructor detail
-	same as OneToOne uni
+	
+    same as OneToOne uni
 
     * method1: directly by its id (<=>instructor's detail id):
     
@@ -1402,7 +1408,8 @@ This relationship will be bidirictioanl which means we can go from an instructor
     ```
 
 * deleteing the instructor's detail without deleting the instructor
-	we dont want cascading delete in the InstructorDetail.java entity
+	
+    we dont want cascading delete in the InstructorDetail.java entity\
 	so we will change its code to look like this
 	
     ```java
