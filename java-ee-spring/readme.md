@@ -432,7 +432,6 @@ Now for each operation (i.e delete, read, update, etc) I will create a Driver cl
 
     import javax.persistence.TypedQuery;
 
-
     public class QueryStudentDemo {
 
         public static void main(String[] args) {
@@ -506,6 +505,27 @@ Now for each operation (i.e delete, read, update, etc) I will create a Driver cl
                 System.out.println(tempStudent);
             }
         }
-
     }
     ``` 
+
+    Here is the ouput in the console:
+    
+    ```bash
+    all students in DB
+    Student{id=1, firstName='alae', lastName='touba', email='alae@gmail.com'}
+    Student{id=2, firstName='hamza', lastName='jebbar', email='hamza@jebbar.com'}
+    Student{id=3, firstName='khalil', lastName='elbasri', email='khalil@yahoo.fr'}
+    ...
+
+    Students who have last name of touba
+    Student{id=1, firstName='alae', lastName='touba', email='alae@gmail.com'}
+    ...
+
+    Students who have lastname of touba OR firstname of hamza
+    Student{id=1, firstName='alae', lastName='touba', email='alae@gmail.com'}
+    Student{id=2, firstName='hamza', lastName='jebbar', email='hamza@jebbar.com'}
+     ...
+
+    Students whose email ends with gmail.com
+    Student{id=1, firstName='alae', lastName='touba', email='alae@gmail.com'}
+    ```
