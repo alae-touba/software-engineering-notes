@@ -1,6 +1,11 @@
 - [Hibernate](#hibernate)
-  
+  - [set up a java project to work with hibernate (using maven quickstart)](#set-up-a-java-project-to-work-with-hibernate-using-maven-quickstart)
+  - [Hibernate CRUD operations](#hibernate-crud-operations)
+
+
 # Hibernate
+
+
 ## set up a java project to work with hibernate (using maven quickstart)
 
 * create a maven quick start project
