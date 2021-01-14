@@ -2,6 +2,8 @@
   - [set up a java project to work with hibernate (using maven quickstart)](#set-up-a-java-project-to-work-with-hibernate-using-maven-quickstart)
   - [Hibernate CRUD operations](#hibernate-crud-operations)
   - [hibernate one to one mapping (unidirictional)](#hibernate-one-to-one-mapping-unidirictional)
+  - [hiberanate one to one mapping (bidirictional)](#hiberanate-one-to-one-mapping-bidirictional)
+  - [hibernate OneToMany mapping (bidirectional)](#hibernate-onetomany-mapping-bidirectional)
 
 
 # Hibernate
@@ -1043,3 +1045,965 @@ This a unidirectional OneToOne, meaning that we only can go from instructor to i
         session.getTransaction().commit();
         ```
         
+
+## hiberanate one to one mapping (bidirictional)
+
+We will have two tables in the db:\
+**instructors** (id, first_name, last_name, email, instructor_detail_id) \
+**instructors_details**(id, youtube_channel, hobby)
+		
+a constructor has a constructor detail and each instructor detail belongs to only one instructor => OneToOne.
+
+instructor_detail_id is a foreign key that references the instructor's detail in the instructor_detail table
+
+
+This relationship will be bidirictioanl which means we can go from an instructor to its instructors details and vice versa.
+
+* create a maven quick start project
+
+* add dependencies to: mysql connector, hibernate orm
+
+* create a database named: **hibernate-testing-db** (tables will be gererated automatically)
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- JDBC connection pool settings ... using built-in test pool -->
+            <property name="connection.pool_size">100</property>
+
+            <!-- Select our SQL dialect -->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+
+* create a class named **Instructor**
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+
+    @Entity
+    @Table(name = "instructors")
+    public class Instructor {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        @Column(name = "id")
+        private int id;
+
+        @Column(name = "first_name")
+        private String firstName;
+
+        @Column(name = "last_name")
+        private String lastName;
+
+        @Column(name = "email")
+        private  String email;
+
+        @OneToOne(cascade = CascadeType.ALL)
+        @JoinColumn(name = "instructor_detail_id")
+        private InstructorDetail instructorDetail;
+
+        public Instructor(){}
+
+        public Instructor(String firstName, String lastName, String email){
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public InstructorDetail getInstructorDetail() {
+            return instructorDetail;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public void setInstructorDetail(InstructorDetail instructorDetail) {
+            this.instructorDetail = instructorDetail;
+        }
+
+        @Override
+        public String toString() {
+            return "Instructor{" +
+                    "id=" + id +
+                    ", firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", email='" + email + '\'' +
+                    '}';
+        }
+    }
+    ```
+
+* create a class named **InstrucotorDetail**
+  
+    ```java
+    package org.example;
+
+
+    import javax.persistence.*;
+
+    @Entity
+    @Table(name = "instructors_details")
+
+    public class InstructorDetail {
+
+        @Id
+        @Column(name = "id")
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private int id;
+
+        @Column(name = "youtube_channel")
+        private String youtubeChannel;
+
+        @Column(name = "hobby")
+        private String hobby;
+
+        @OneToOne(mappedBy = "instructorDetail", cascade = CascadeType.ALL)
+        private Instructor instructor;
+
+        public InstructorDetail(){}
+
+        public InstructorDetail(String youtubeChannel, String hobby){
+            this.youtubeChannel = youtubeChannel;
+            this.hobby = hobby;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getYoutubeChannel() {
+            return youtubeChannel;
+        }
+
+        public String getHobby() {
+            return hobby;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public void setYoutubeChannel(String youtubeChannel) {
+            this.youtubeChannel = youtubeChannel;
+        }
+
+        public void setHobby(String hobby) {
+            this.hobby = hobby;
+        }
+
+        public Instructor getInstructor() {
+            return instructor;
+        }
+
+        public void setInstructor(Instructor instructor) {
+            this.instructor = instructor;
+        }
+
+        @Override
+        public String toString() {
+            return "InstructorDetail{" +
+                    "id=" + id +
+                    ", youtubeChannel='" + youtubeChannel + '\'' +
+                    ", hobby='" + hobby + '\'' +
+                    '}';
+        }
+    }
+    ```
+
+* creating instructor and its instructor detail
+    same as one to one unid
+
+	```java
+    //create instuctor
+    Instructor instructor = new Instructor("alae", "touba", "alae@gmail.com");
+
+    //create instructor's detail
+    InstructorDetail instructorDetail = new InstructorDetail("www.youtube.com/channel",
+            "programming");
+
+    //link them
+    instructor.setInstructorDetail(instructorDetail);
+
+    session.beginTransaction();
+
+    //save the instructor object in the instructors table
+    //=> this will save also the instuctorDetail object in instructors_details table
+    // because of CASCADING
+    session.save(instructor);
+
+    session.getTransaction().commit();
+    ```
+* creating an instructor
+	same as OneToOne uni
+    ```java
+    session.beginTransaction();
+    Instructor instructor = new Instructor("yassine", "capitos", "yassine@gmail.com");
+	session.save(instructor);
+    session.getTransaction().commit();
+    ```
+* creating an instructor detail and linking it to an existing instructor in the db
+	same as OneToOne uni
+    
+    ```java
+     session.beginTransaction();
+    
+    InstructorDetail instructorDetail = new InstructorDetail("youtube", "video games");
+    Instructor instructor = session.get(Instructor.class, 1);
+    instructor.setInstructorDetail(instructorDetail);
+    
+    session.getTransaction().commit();
+    ```
+* updating an instructor
+	same as OneToOne uni
+
+    ```java
+    session.beginTransaction();
+
+    Instructor instructor = session.get(Instructor.class, instructorId);
+    instructor.setFirstName("alex");
+
+    session.getTransaction().commit();    
+    ```
+* updating an instructor detail
+	same as OneToOne uni
+
+    * method1: directly by its id (<=>instructor's detail id):
+    
+        ```java
+		session.beginTransaction();
+
+		InstructorDetail instructorDetail = session.get(InstructorDetail.class, instructorDetailId);
+		instructorDetail.setYoutubeChannel("youtube/channel01");
+
+		session.getTransaction().commit();
+        ```
+
+	* method2: by the instructor:
+
+        ```java
+        session.beginTransaction();
+
+        //getting the instructor
+        Instructor instructor = session.get(Instructor.class, instructorId);	
+
+        //getting its instructor detail and modifyng it
+        instructor.getInstructorDetail().setYoutubeChannel("youtube");	
+
+        session.getTransaction().commit();
+        ```
+
+* get the instructor from the instructor detail object
+
+    here is what we have in the db now:
+
+    ![](imgs/007.png)
+
+    ```java
+    int instructorDetailId = 6;
+
+    session.beginTransaction();
+
+    //get the instructor's detail from table (instructors_details)
+    InstructorDetail instructorDetail = session.get(InstructorDetail.class, instructorDetailId);
+
+    if(instructorDetail != null){
+        // get the instructor
+        Instructor instructor = instructorDetail.getInstructor();
+
+        System.out.println(instructorDetail);
+        System.out.println(instructor);
+    }
+
+
+    session.getTransaction().commit();
+    ```
+
+    here is the output in the console:
+
+    ```bash
+    ...
+    InstructorDetail{id=6, youtubeChannel='www.youtube.com/channel', hobby='programming'}
+    Instructor{id=5, firstName='alae', lastName='touba', email='alae@gmail.com'}
+    ```
+
+* deleting instructor's detail (will delete instructor also)
+
+    ```java
+    int instructorDetailId = 6;
+
+    session.beginTransaction();
+
+    InstructorDetail instructorDetail = session.get(InstructorDetail.class, instructorDetailId);
+    if(instructorDetail != null){
+        // delete the instructor's detail from the instructors_details table
+        // =>will also delete the instructor from the instructors table
+        // because of cascade ALL that we have in the InstructorDetail class
+        session.delete(instructorDetail);
+    }
+
+    session.getTransaction().commit();
+    ```
+
+* deleteing the instructor's detail without deleting the instructor
+	we dont want cascading delete in the InstructorDetail.java entity
+	so we will change its code to look like this
+	
+    ```java
+    @OneToOne(mappedBy = "instructorDetail", cascade = {
+            CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH
+    })
+    private Instructor instructor;
+    ```
+
+    now here is the code to delete the instrcutor's details (from instructors_details table) without deleting the instructor (from instructors table)
+
+    ```java
+    int instructorDetailId = 8;
+
+    session.beginTransaction();
+
+    InstructorDetail instructorDetail = session.get(InstructorDetail.class, instructorDetailId);
+
+    if(instructorDetail != null){
+        // remove the associated object reference
+        // break bidirectional link
+        instructorDetail.getInstructor().setInstructorDetail(null);
+
+        // delete instructor detail from "instructors_details" table
+        session.delete(instructorDetail);
+    }
+
+    session.getTransaction().commit();
+    ```
+
+## hibernate OneToMany mapping (bidirectional)
+
+
+We will have 3 entities: Instructor, InstructorDetail, Course .
+
+an instrcutor has one instrcutor detail and an instrcutor detail belongs to an instrcutor => one to one.
+
+an instructor has many courses & a course belongs to only one instrucor => ManyToMany.
+
+
+* create a maven quick start project
+
+* add dependencies to: mysql connector, hibernate orm
+
+* create a database named: **hibernate-testing-db** (tables will be generated )
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- JDBC connection pool settings ... using built-in test pool -->
+            <property name="connection.pool_size">100</property>
+
+            <!-- Select our SQL dialect -->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+* create the **Instructor** entity
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+    import java.util.*;
+
+    @Entity
+    @Table(name = "instructors")
+    public class Instructor {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        @Column(name = "id")
+        private int id;
+
+        @Column(name = "first_name")
+        private String firstName;
+
+        @Column(name = "last_name")
+        private String lastName;
+
+        @Column(name = "email")
+        private  String email;
+
+        @OneToOne(cascade = CascadeType.ALL)
+        @JoinColumn(name = "instructor_detail_id")
+        private InstructorDetail instructorDetail;
+
+        @OneToMany(mappedBy = "instructor", cascade = {
+                CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH
+        })
+        private List<Course> courses;
+
+        public Instructor(){}
+
+        public Instructor(String firstName, String lastName, String email){
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public InstructorDetail getInstructorDetail() {
+            return instructorDetail;
+        }
+
+        public void setInstructorDetail(InstructorDetail instructorDetail) {
+            this.instructorDetail = instructorDetail;
+        }
+
+
+        public List<Course> getCourses() {
+            return courses;
+        }
+
+        public void setCourses(List<Course> courses) {
+            this.courses = courses;
+        }
+
+        //convenience method
+        public void addCourse(Course course){
+            if(courses == null){
+                courses = new ArrayList<>();
+            }
+
+            courses.add(course);
+        }
+
+
+        @Override
+        public String toString() {
+            return "Instructor{" +
+                    "id=" + id +
+                    ", firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", email='" + email + '\'' +
+                    '}';
+        }
+    }
+    ```
+
+* create the **InstructorDetail** entity
+
+    ```java
+    package org.example;
+
+
+    import javax.persistence.*;
+
+    @Entity
+    @Table(name = "instructors_details")
+
+    public class InstructorDetail {
+
+        @Id
+        @Column(name = "id")
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private int id;
+
+        @Column(name = "youtube_channel")
+        private String youtubeChannel;
+
+        @Column(name = "hobby")
+        private String hobby;
+
+        @OneToOne(mappedBy = "instructorDetail", cascade = {
+                CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH
+        })
+        private Instructor instructor;
+
+
+        public InstructorDetail(){}
+
+        public InstructorDetail(String youtubeChannel, String hobby){
+            this.youtubeChannel = youtubeChannel;
+            this.hobby = hobby;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getYoutubeChannel() {
+            return youtubeChannel;
+        }
+
+        public String getHobby() {
+            return hobby;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public void setYoutubeChannel(String youtubeChannel) {
+            this.youtubeChannel = youtubeChannel;
+        }
+
+        public void setHobby(String hobby) {
+            this.hobby = hobby;
+        }
+
+        @Override
+        public String toString() {
+            return "InstructorDetail{" +
+                    "id=" + id +
+                    ", youtubeChannel='" + youtubeChannel + '\'' +
+                    ", hobby='" + hobby + '\'' +
+                    '}';
+        }
+
+        public Instructor getInstructor() {
+            return instructor;
+        }
+
+        public void setInstructor(Instructor instructor) {
+            this.instructor = instructor;
+        }
+    }
+    ```
+
+* create the **Course** entity
+
+    ```java
+    package org.example;
+
+
+    import javax.persistence.*;
+
+    @Entity
+    @Table(name = "courses")
+    public class Course {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        @Column(name = "id")
+        private int id;
+
+        @Column(name = "title")
+        private String title;
+
+        @ManyToOne(cascade = {
+                CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH
+        })
+        @JoinColumn(name = "instructor_id")
+        private Instructor instructor;
+
+        public Course(String title){
+            this.title = title;
+        }
+
+        public Course(){}
+
+        public Course(String title, Instructor instructor) {
+            this.title = title;
+            this.instructor = instructor;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public void setInstructor(Instructor instructor) {
+            this.instructor = instructor;
+        }
+
+        public Instructor getInstructor() {
+            return instructor;
+        }
+
+        @Override
+        public String toString() {
+            return "Course{" +
+                    "id=" + id +
+                    ", title='" + title + '\'' +
+                    '}';
+        }
+    }
+    ```
+
+* create an instructor and associate an instructor details to it, and also associat some courses to it
+
+    ```java
+    package org.example;
+
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    public class Main {
+        public static void main(String[] args) {
+
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(Instructor.class)
+                    .addAnnotatedClass(InstructorDetail.class)
+                    .addAnnotatedClass(Course.class)
+                    .buildSessionFactory();
+
+            Session session = factory.getCurrentSession();
+
+            try{
+
+                session.beginTransaction();
+
+                Instructor instructor = new Instructor("yassine", "capi", "yassine gmail");
+
+                InstructorDetail instructorDetail = new InstructorDetail("youtube", "video games");
+                instructor.setInstructorDetail(instructorDetail);
+
+                Course course1 = new Course("course1");
+                Course course2 = new Course("course2");
+
+                instructor.addCourse(course1);
+                instructor.addCourse(course2);
+
+                course1.setInstructor(instructor);
+                course2.setInstructor(instructor);
+
+                session.save(instructor);
+
+                session.save(course1);
+                session.save(course2);
+
+                session.getTransaction().commit();
+            }finally {
+                factory.close();
+            }
+        }
+    }
+    ```
+
+    here is what the DB looks like after executing this code:
+
+    ![](imgs/008.png)
+
+* create courses for an instructor (we have the instructor stored in the DB)
+
+    ```java
+    session.beginTransaction();
+
+    var course = new Course("course title");
+    var instructor = session.get(Instructor.class, 9);
+    course.setInstructor(instructor);
+    session.save(course);
+
+    session.getTransaction().commit();
+    ```
+
+* linking an existing instructor with an existing course (we have the instructor and the course both already in the DB, we just have to link them)
+
+    * lets create first an instructor and a course (unrelated) in the DB.
+
+    ```java
+    package org.example;
+
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    public class Main {
+        public static void main(String[] args) {
+
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(Instructor.class)
+                    .addAnnotatedClass(InstructorDetail.class)
+                    .addAnnotatedClass(Course.class)
+                    .buildSessionFactory();
+
+            Session session = factory.getCurrentSession();
+
+            try{
+                // create an instructor
+                session.beginTransaction();
+                Instructor yassine = new Instructor("yassine", "capitos", "yassine@gmail.com");
+                session.save(yassine);
+                session.getTransaction().commit();
+
+                // create a course
+                Course course = new Course("course title");
+                session = factory.getCurrentSession();
+                session.beginTransaction();
+                session.save(course);
+                session.getTransaction().commit();
+
+                
+            }finally {
+                factory.close();
+            }
+        }
+    }
+    ```
+
+    here is how the DB looks like after executing this code:
+
+    ![](imgs/009.png)
+
+    * lets write the code that to the association between the 2 entities
+
+    ```java
+    session.beginTransaction();
+
+    // get the instructor
+    Instructor instructor = session.get(Instructor.class, 1);
+
+    //get the course
+    Course course = session.get(Course.class, 2);
+
+    // associate/link them
+    course.setInstructor(instructor);
+
+    session.getTransaction().commit();
+    ```
+
+    ![](imgs/010.png)
+
+    we see in the **courses** table that that the value of the column **instructor_id** is now 1 pointing to the instructor (with id 1) in the **instructors**    
+
+
+* getting all the instructor's courses
+
+    
+    ```java
+    session.beginTransaction();
+
+    int instructorId = 1;
+    Instructor inst = session.get(Instructor.class, instructorId);
+    List<Course> courses = inst.getCourses();
+    
+    session.getTransaction().commit();
+    ```
+
+* get the course's instructor:
+
+    ```java
+
+    session.beginTransaction();
+    int courseId = 2;
+    var instructor = session.get(Course.class, courseId).getInstructor();
+    session.getTransaction().commit();
+    ```
+
+* updating an instructor by primary key
+
+    ```java
+    session.beginTransaction();
+
+    int instructorId = 1;
+    session.get(Instructor.class, instructorId).setFirstName("new first name");
+
+    session.getTransaction().commit();
+    ```
+ 
+* updating a course by PK:
+    
+    ```java
+    session.beginTransaction();
+
+    int courseId = 2;
+    session.get(Course.class, courseId).setTitle("new title");
+
+    session.getTransaction().commit();
+    ```
+
+* updating an instructor from some of its courses
+
+    ```java
+    session.beginTransaction();
+
+    Course course = session.get(Course.class, 2);
+    course.getInstructor().setFirstName("alae");
+
+    session.getTransaction().commit();
+    ```
+
+* updating a course from its instructor
+
+    ```java
+    session.beginTransaction();
+
+    Instructor instructor = session.get(Instructor.class, 1);
+
+    //updating the first course
+    // in the list of instructor's courses
+    instructor.getCourses().get(0).setTitle("title changed");
+    session.getTransaction().commit();
+    ```
+
+* delete a course (this wont delete the instructor becuase we dont have cascading delete)
+
+    ```java
+    int courseId = 2;
+
+    session.beginTransaction();
+
+    Course course = session.get(Course.class, courseId);
+
+    if (course != null){
+        session.delete(course);
+    }
+
+    session.getTransaction().commit();
+    ```
+
+
+* delete an instructor without deleting its courses (because we dont have a cascade delete in instructor's courses)
+
+    ```java
+    session.beginTransaction();
+
+    Instructor instructor = session.get(Instructor.class, 1);
+
+    // breaking the links between courses and their instructor
+    instructor.getCourses().forEach((course) -> course.setInstructor(null));
+
+    session.delete( instructor );
+
+    session.getTransaction().commit();
+    ```
+
+* delete an instructor and all its courses 
+	* we must have cascading delete, so change the Instructor entity like this
+
+        ```java
+		@OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
+		private List<Course> courses;
+        ```
+	
+	* code:
+
+        ```java
+        session.beginTransaction();
+        int intstructorId = 10;
+        session.delete( session.get(Instructor.class, instructorId) );
+        session.getTransaction().commit();
+        ```
