@@ -1,9 +1,13 @@
 - [Hibernate](#hibernate)
   - [set up a java project to work with hibernate (using maven quickstart)](#set-up-a-java-project-to-work-with-hibernate-using-maven-quickstart)
   - [Hibernate CRUD operations](#hibernate-crud-operations)
-  - [hibernate one to one mapping (unidirictional)](#hibernate-one-to-one-mapping-unidirictional)
-  - [hiberanate one to one mapping (bidirictional)](#hiberanate-one-to-one-mapping-bidirictional)
+  - [hibernate OneToOne mapping (unidirictional)](#hibernate-onetoone-mapping-unidirictional)
+  - [hiberanate OneToOne mapping (bidirictional)](#hiberanate-onetoone-mapping-bidirictional)
   - [hibernate OneToMany mapping (bidirectional)](#hibernate-onetomany-mapping-bidirectional)
+  - [EAGER vs LAZY loading](#eager-vs-lazy-loading)
+  - [HIbernate OneToMany (unidirectional)](#hibernate-onetomany-unidirectional)
+  - [ManyToMany mapping (bidirectional)](#manytomany-mapping-bidirectional)
+  - [How To View Hibernate SQL Parameter Values in the console:](#how-to-view-hibernate-sql-parameter-values-in-the-console)
 
 
 # Hibernate
@@ -671,7 +675,7 @@ Now for each operation (i.e delete, read, update, etc) I will create a Driver cl
 
     ![](imgs/002.png)
 
-## hibernate one to one mapping (unidirictional)
+## hibernate OneToOne mapping (unidirictional)
 
 This is a full example of OneToOne.
 
@@ -1046,7 +1050,7 @@ This a unidirectional OneToOne, meaning that we only can go from instructor to i
         ```
         
 
-## hiberanate one to one mapping (bidirictional)
+## hiberanate OneToOne mapping (bidirictional)
 
 We will have two tables in the db:\
 **instructors** (id, first_name, last_name, email, instructor_detail_id) \
@@ -1818,8 +1822,8 @@ an instructor has many courses & a course belongs to only one instrucor => ManyT
     ```java
     session.beginTransaction();
 
-    var course = new Course("course title");
-    var instructor = session.get(Instructor.class, 9);
+    Course course = new Course("course title");
+    Instructor instructor = session.get(Instructor.class, 9);
     course.setInstructor(instructor);
     session.save(course);
 
@@ -1916,7 +1920,7 @@ an instructor has many courses & a course belongs to only one instrucor => ManyT
 
     session.beginTransaction();
     int courseId = 2;
-    var instructor = session.get(Course.class, courseId).getInstructor();
+    Instructor instructor = session.get(Course.class, courseId).getInstructor();
     session.getTransaction().commit();
     ```
 
@@ -2014,3 +2018,739 @@ an instructor has many courses & a course belongs to only one instrucor => ManyT
         session.delete( session.get(Instructor.class, instructorId) );
         session.getTransaction().commit();
         ```
+
+## EAGER vs LAZY loading
+
+Suppose we have 3 entities: Instructor, InstructorDeatil & Course.
+Instructor has one INstructorDetail and vice versa => one to one.
+INstructor has many courses and a course belongs to one intstructor => ont to many.
+
+* what is EAGER and LAZY loading?
+	
+    suppose we query the databse for the instructor with id 5, do we want to retrieve also all its courses at the same time? or we want to retrieve just the instructor and get the courses after and on demand?
+	
+    If we are usign EAGER mode, when we retrieve the instructor, a query to course table will be made also and we'll have all the instructor's courses available.
+	
+    If we are using LAZY mode, when we retrieve the instructor, we'll retrieve just the instructor not its courses also :) the courses will be loaded when we need them :)
+
+* default fetch types
+  
+    * OneToOne: FetchType.EAGER
+    * OneToMany: FetchType.LAZY
+    * ManyToOne: FetchType.EAGER
+    * ManyToMany: FetchType.LAZY
+		
+		
+* EAGER loading demo:
+    
+    Here is what we should put in the Instructor entity if we want to fetch courses in EAGER mode:
+    
+    ```java
+    @OneToMany(fetch = FetchType.EAGER ,mappedBy = "instructor", cascade = {
+            CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH
+    })
+    private List<Course> courses;
+    ```    
+    
+    So now if we do:
+    ```java
+    Instructor instructor = session.get(Instructor.class, instructorId);
+    ```
+
+    All the instructor's courses will be also retrieved from the course table
+
+* LAZY loading demo:
+
+    When we have lazy loading on instructor's courses and we do:
+    ```java
+    Instructor instructor = session.get(Instructor.class, instructorId);
+    ```
+
+    The instrucor's courses will not be retrieved from the DB.\
+    They'll be retrieved when we do something like: instructor.getCourses() 
+
+## HIbernate OneToMany (unidirectional)
+
+we will have a one to many relationship between two entities: Course and Review (a course has many reviews)
+
+* create a maven quick start project
+
+* add dependencies to: mysql connector, hibernate orm
+
+* create a database named: **hibernate-testing-db** (tables will be generacted automatically, how good is that :) ?)
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- JDBC connection pool settings ... using built-in test pool -->
+            <property name="connection.pool_size">100</property>
+
+            <!-- Select our SQL dialect -->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+
+* create the **Course** entity:
+
+    ```java
+    package org.example;
+
+
+    import javax.persistence.*;
+    import java.util.*;
+
+    @Entity
+    @Table(name = "courses")
+    public class Course {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        @Column(name = "id")
+        private int id;
+
+        @Column(name = "title")
+        private String title;
+
+        public Course(String title){
+            this.title = title;
+        }
+
+        public Course(){}
+
+
+        public int getId() {
+            return id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+        @JoinColumn(name = "course_id")
+        private List<Review> reviews;
+
+        public void addReview(Review review){
+            if(reviews == null){
+                reviews = new ArrayList<>();
+            }
+
+            reviews.add(review);
+        }
+
+        public List<Review> getReviews() {
+            return reviews;
+        }
+
+        public void setReviews(List<Review> reviews) {
+            this.reviews = reviews;
+        }
+
+        @Override
+        public String toString() {
+            return "Course{" +
+                    "id=" + id +
+                    ", title='" + title + '\'' +
+                    '}';
+        }
+    }
+    ```
+
+* create the **Review** entity:
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+
+    @Entity
+    @Table(name = "reviews")
+    public class Review {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private int id;
+
+        @Column(name = "comment")
+        private String comment;
+
+        public Review(){}
+
+        public Review(String comment){
+            this.comment = comment;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getComment() {
+            return comment;
+        }
+
+        public void setComment(String comment) {
+            this.comment = comment;
+        }
+
+        @Override
+        public String toString() {
+            return "Review{" +
+                    "id=" + id +
+                    ", comment='" + comment + '\'' +
+                    '}';
+        }
+    }
+    ```
+
+* insert a course with its reviews 
+
+    ```java
+    package org.example;
+
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    import java.util.List;
+
+    public class Main {
+        public static void main(String[] args) {
+
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(Course.class)
+                    .addAnnotatedClass(Review.class)
+                    .buildSessionFactory();
+
+            Session session = factory.getCurrentSession();
+
+            try{
+
+                session.beginTransaction();
+
+                Course course = new Course("course1");
+
+                Review review1 = new Review("comment on course1");
+                Review review2 = new Review("commen2 on course1");
+
+                course.addReview(review1);
+                course.addReview(review2);
+
+                session.save(course);
+
+                session.getTransaction().commit();
+
+
+            }finally {
+                session.close();
+                factory.close();
+            }
+        }
+    }
+    ```
+
+    we just needed to add the reviews to the course's reviews list and save the course (without saving the reviews).
+
+    here is what the db looks like afetr this operation:
+
+    ![](imgs/011.png)
+
+* add reviews to an existing course:
+
+    ```java
+    session.beginTransaction();
+
+    int courseId = 1;
+    Course course = session.get(Course.class, courseId);
+    course.addReview(new Review("review"));
+    session.getTransaction().commit();
+
+    ```
+
+* getting the course reviews
+
+    ```java
+    session.beginTransaction();
+
+    int courseId = 1;
+    Course course = session.get(Course.class, courseId);
+    List<Review> reviews = course.getReviews();
+    System.out.println(reviews);
+
+    session.getTransaction().commit();
+    ```
+
+* deleting a course (will also delete its reviews due to cascading delete)
+
+    ```java
+    session.beginTransaction();
+
+    int courseId = 1;
+    Course course = session.get(Course.class, courseId);
+    session.delete(course);
+    session.getTransaction().commit();
+    ```
+
+## ManyToMany mapping (bidirectional)
+
+
+We will work with two entities: Student.java & Course.java 
+
+Each student has many courses and each course has many students => ManyToMany
+
+We will have 3 tables in the db:
+* **courses**(id, title) for courses
+* **students**(id, first_name, last_name, email) for students
+* **course_student**(course_id, student_id) for the associations 
+
+
+* create a maven quick start project
+
+* add dependencies to: mysql connector, hibernate orm
+
+* create a database named: **hibernate-testing-db** (tables will be generated )
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- JDBC connection pool settings ... using built-in test pool -->
+            <property name="connection.pool_size">100</property>
+
+            <!-- Select our SQL dialect -->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+* create the **Course** entity
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+    import java.util.ArrayList;
+    import java.util.List;
+
+    @Entity
+    @Table(name = "courses")
+    public class Course {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        @Column(name = "id")
+        private int id;
+
+        @Column(name = "title")
+        private String title;
+
+        @ManyToMany(fetch = FetchType.LAZY, cascade =
+                {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+        @JoinTable(
+                name = "course_student",
+                joinColumns = @JoinColumn(name = "course_id"),
+                inverseJoinColumns = @JoinColumn(name = "student_id")
+        )
+        private List<Student> students;
+
+        public Course(){
+
+        }
+        public Course(String title){
+            this.title = title;
+        }
+
+        public void addStudent(Student student){
+            if(students == null){
+                students = new ArrayList<>();
+            }
+
+            students.add(student);
+        }
+
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public List<Student> getStudents() {
+            return students;
+        }
+
+        public void setStudents(List<Student> students) {
+            this.students = students;
+        }
+
+        @Override
+        public String toString() {
+            return "Course{" +
+                    "id=" + id +
+                    ", title='" + title;
+        }
+    }
+    ```
+
+* create the **Student** entity:
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+    import java.util.List;
+
+
+    @Entity
+    @Table(name = "students")
+    public class Student {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        @Column(name = "id")
+        private int id;
+
+        @Column(name = "first_name")
+        private String firstName;
+
+        @Column(name = "last_name")
+        private String lastName;
+
+        @Column(name = "email")
+        private String email;
+
+        @ManyToMany(fetch = FetchType.LAZY, cascade =
+                {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+        @JoinTable(
+                name = "course_student",
+                joinColumns = @JoinColumn(name = "student_id"),
+                inverseJoinColumns = @JoinColumn(name = "course_id")
+        )
+        private List<Course> courses;
+
+        public Student(){}
+
+        public Student(String firstName, String lastName, String email){
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public List<Course> getCourses() {
+            return courses;
+        }
+
+        public void setCourses(List<Course> courses) {
+            this.courses = courses;
+        }
+
+        @Override
+        public String toString() {
+            return "Student{" +
+                    "id=" + id +
+                    ", firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", email='" + email + '\'' +
+                    '}';
+        }
+    }
+    ```
+
+* create a course and add some students to it
+
+    ```java
+    package org.example;
+
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    import java.util.List;
+
+    public class Main {
+        public static void main(String[] args) {
+
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(Course.class)
+                    .addAnnotatedClass(Student.class)
+                    .buildSessionFactory();
+
+            Session session = factory.getCurrentSession();
+
+            try{
+                session.beginTransaction();
+
+                //create course
+                Course course = new Course("course1");
+
+                //create students to course
+                Student student1 = new Student("alae", "touba", "alae@gmail.com");
+                Student student2 = new Student("yassine", "capitos", "yassine@gmail.com");
+
+                //link them
+                course.addStudent(student1);
+                course.addStudent(student2);
+
+                //Save all
+                session.save(course);
+                session.save(student1);
+                session.save(student2);
+
+                //commit
+                session.getTransaction().commit();
+            }finally {
+                session.close();
+                factory.close();
+            }
+        }
+    }
+    ```
+    DB content:
+
+    ![](imgs/012.png)
+
+* add a student to an exiting course (we already have the course in the db)
+
+    ```java
+    session.beginTransaction();
+
+    int courseId = 1;
+    Course course = session.get(Course.class, courseId);
+
+    Student student1 = new Student("stud1", "stud1", "stude@gmail.com");
+    course.addStudent(student1);
+
+    session.save(student1);
+
+    session.getTransaction().commit();
+    ```
+
+* linking an existing course with an existing student (we have the course and the student both already in the DB, we just have to link them (add student to course))
+
+    * lets create a course  
+
+        ```java
+        session.beginTransaction();
+
+        Course course = new Course("course title");
+        session.save(course);
+
+        session.getTransaction().commit();
+        ```
+
+    * lets create a student 
+
+        ```java
+            session.beginTransaction();
+
+            Student student = new Student("alae", "touba", "alae2ba@gmail.com");
+            session.save(student);
+
+            session.getTransaction().commit();
+        ```
+
+    * here is how the DB looks like now (notice that association table (course_student) is empty)
+
+        ![](imgs/013.png)
+
+    * lets link the course to the student
+
+        ```java
+        session.beginTransaction();
+
+        int courseId = 1;
+        int studentId = 2;
+
+        Course course = session.get(Course.class, courseId);
+        Student student = session.get(Student.class, studentId);
+
+        course.addStudent(student);
+
+        session.getTransaction().commit();
+        ```
+        here is how the DB looks like now:
+
+        ![](imgs/014.png)
+
+
+* getting student's courses
+    
+    ```java
+    List<Course> courses = session.get(Student.class, 1).getCourses();
+    ```
+
+* getting course's students
+    
+    ```java
+    List<Student> students = session.get(Course.class, 11).getStudents();
+    ```
+    
+
+* updating a course by primary key
+    
+    ```java
+    session.get(Course.class, 13 ).setTitle("new title for course");
+    ```
+
+
+* updating a student by primary key
+
+    ```java
+    session.get(Student.class, 1 ).setFirstName("new name");
+    ```
+
+* adding courses to an existing student (we already have the student in the DB)
+
+    ```java
+    Student student = session.get(Student.class, 1);
+
+    Course course1 = new Course("c1");
+    Course course2 = new Course("c2");
+
+    course1.addStudent(student);
+    course2.addStudent(student);
+
+    session.save(course1);
+    session.save(course2);
+    ```
+    
+* delete a course (wont delete its students because we dont have cascading delete)
+    
+    ```java
+    session.delete( session.get(Course.class, 15) );
+    ```
+    
+* delete a student (wont delete its courses because we dont have cascading delete)
+    
+    ```java
+    session.delete( session.get(Stduent.class, 1) );    
+    ```
+## How To View Hibernate SQL Parameter Values in the console:
+
+* add the log4j dependency to pom.xml
+
+    ```
+    <dependency>
+    <groupId>log4j</groupId>
+    <artifactId>log4j</artifactId>
+    <version>1.2.17</version>
+    </dependency>
+    ```
+* create a log4j.properties file inside src/main/resources
+
+* append this content to it:
+
+    ```properties
+    # Root logger option
+    log4j.rootLogger=DEBUG, stdout
+
+    # Redirect log messages to console
+    log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+    log4j.appender.stdout.Target=System.out
+    log4j.appender.stdout.layout=org.apache.log4j.PatternLayout	
+    log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+
+    log4j.logger.org.hibernate=TRACE  
+    ````
