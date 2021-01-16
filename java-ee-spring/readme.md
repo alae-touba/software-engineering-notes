@@ -3,7 +3,7 @@
 	- [Hibernate CRUD operations](#hibernate-crud-operations)
 	- [hibernate OneToOne mapping (unidirictional)](#hibernate-onetoone-mapping-unidirictional)
 	- [hiberanate OneToOne mapping (bidirictional)](#hiberanate-onetoone-mapping-bidirictional)
-	- [HIbernate OneToMany (unidirectional)](#hibernate-onetomany-unidirectional)
+	- [Hibernate OneToMany (unidirectional)](#hibernate-onetomany-unidirectional)
 	- [hibernate OneToMany mapping (bidirectional)](#hibernate-onetomany-mapping-bidirectional)
 	- [EAGER vs LAZY loading](#eager-vs-lazy-loading)
 	- [ManyToMany mapping (bidirectional)](#manytomany-mapping-bidirectional)
@@ -700,6 +700,8 @@ we are going to see how to:
     * directly by PK
     * from instructor
 
+lets follow these steps to create the project
+
 * create a maven quick start project
 
 * add dependencies to: mysql connector, hibernate orm
@@ -1074,6 +1076,22 @@ instructor_detail_id is a foreign key that references the instructor's detail in
 
 This relationship will be bidirictioanl which means we can go from an instructor to its instructors details and vice versa.
 
+Here is what we're going to see:
+* creating instructor and its instructor detail
+* creating an instructor
+* creating an instructor detail and linking it to an existing instructor in the db
+* updating an instructor
+* updating an instructor detail
+	* method1: directly by its id (<=>instructor's detail id):
+	* method2: by the instructor:
+* get the instructor from the instructor detail object
+* deleting an instructor (will delete also its instructor detail because of calscading delete)
+* deleting instructor's detail (will delete instructor also because of cascading delete)
+* deleteing the instructor's detail without deleting the instructor (we must remove the cascading delete in the InstrucorDetail entity)
+
+
+Lets create the project follwoign these steps
+
 * create a maven quick start project
 
 * add dependencies to: mysql connector, hibernate orm
@@ -1395,8 +1413,15 @@ This relationship will be bidirictioanl which means we can go from an instructor
     InstructorDetail{id=6, youtubeChannel='www.youtube.com/channel', hobby='programming'}
     Instructor{id=5, firstName='alae', lastName='touba', email='alae@gmail.com'}
     ```
+* deleting an instructor (will delete also its instructor detail because of calscading delete)
 
-* deleting instructor's detail (will delete instructor also)
+	```java
+	session.beginTransaction();
+	session.delete( session.get(Instructor.class, 1) );
+	session.getTransaction().commit();
+	```
+	
+* deleting instructor's detail (will delete instructor also because of cascading delete)
 
     ```java
     int instructorDetailId = 6;
@@ -1414,7 +1439,7 @@ This relationship will be bidirictioanl which means we can go from an instructor
     session.getTransaction().commit();
     ```
 
-* deleteing the instructor's detail without deleting the instructor
+* deleteing the instructor's detail without deleting the instructor (we must remove the cascading delete in the InstrucorDetail entity)
 	
     we dont want cascading delete in the InstructorDetail.java entity\
 	so we will change its code to look like this
@@ -1447,7 +1472,7 @@ This relationship will be bidirictioanl which means we can go from an instructor
     session.getTransaction().commit();
     ```
 
-## HIbernate OneToMany (unidirectional)
+## Hibernate OneToMany (unidirectional)
 
 we will have a one to many relationship between two entities: Course and Review (a course has many reviews)
 
@@ -1455,6 +1480,20 @@ the strcutor of the two tables will be as follow:\
 **courses** (id, title)\
 **reviews** (id, comment, course_id)
 
+we are goidn to see how to:
+* insert a course with its reviews 
+* create just a course
+* add reviews to an existing course:
+* getting the course reviews
+* deleting a course (will also delete its reviews due to cascading delete)
+* deleting a review:
+* updating a course
+* updating a review review
+	* method1: updating the review directly by PK:
+	* method2: updating the review through its course
+
+
+Lets follow these steps to create the project:
 
 * create a maven quick start project
 
@@ -1675,6 +1714,14 @@ the strcutor of the two tables will be as follow:\
 
     ![](imgs/011.png)
 
+* create just a course
+
+	```java
+	session.beginTransaction();
+	Course course = new Course("course2");
+	session.save(course);
+	session.getTransaction().commit();
+	```
 * add reviews to an existing course:
 
     ```java
@@ -1684,7 +1731,6 @@ the strcutor of the two tables will be as follow:\
     Course course = session.get(Course.class, courseId);
     course.addReview(new Review("review"));
     session.getTransaction().commit();
-
     ```
 
 * getting the course reviews
@@ -1710,6 +1756,50 @@ the strcutor of the two tables will be as follow:\
     session.delete(course);
     session.getTransaction().commit();
     ```
+* deleting a review:
+
+	```java
+	session.beginTransaction();
+
+	//get the review by PK
+	Review review = session.get(Review.class, 2);
+
+	//delete the review
+	session.delete(review);
+	session.getTransaction().commit();
+	```
+	
+* updating a course
+	
+	```java
+	session.beginTransaction();
+
+	Course course = session.get(Course.class, 1);
+	course.setTitle("hihi");
+	session.getTransaction().commit();
+	```
+
+* updating a course's review
+	
+	* method1: updating the review directly by PK:
+
+		```java
+		 session.beginTransaction();
+
+		Review review = session.get(Review.class, 2);
+		review.setComment("modified comment");
+		session.getTransaction().commit();
+		```
+
+	* method2: updating the review through its course
+
+		```java
+		session.beginTransaction();
+
+		Course course = session.get(Course.class, 1);
+		course.getReviews().get(0).setComment("modified comment hihi");
+		session.getTransaction().commit();
+		```
 
 
 ## hibernate OneToMany mapping (bidirectional)
@@ -1717,11 +1807,33 @@ the strcutor of the two tables will be as follow:\
 
 We will have 3 entities: Instructor, InstructorDetail, Course .
 
-an instrcutor has one instrcutor detail and an instrcutor detail belongs to an instrcutor => one to one.
+an instrcutor has one instrcutor detail and an instrcutor detail belongs to an instrcutor => one to one bidirectional.
 
-an instructor has many courses & a course belongs to only one instrucor => ManyToMany.
+an instructor has many courses & a course belongs to only one instrucor => ManyToMany (bidirectional).
+
+The structor of the DB will be as follow:\
+**instructors** (id, first_name, last_name, email, instructor_detail_id)\
+**instrcutrors_details** (id, youtube_channel, hobby)\
+**courses** (id, title, instructor_id)
 
 
+
+we are going to see how to:
+* create an instructor and associate an instructor details to it, and also associat some courses to it
+* create courses for an instructor (we have the instructor stored in the DB)
+* linking an existing instructor with an existing course (we have the instructor and the course both already in the DB, we just have to link them)
+* getting all the instructor's courses
+* get the course's instructor:
+* updating an instructor by primary key
+* updating a course by PK:
+* updating an instructor from some of its courses
+* updating a course from its instructor
+* delete a course (this wont delete the instructor becuase we dont have cascading delete)
+* delete an instructor without deleting its courses (because we dont have a cascade delete in instructor's courses)
+* delete an instructor and all its courses (we must have cascading delete in the Instrcuror's courses field)
+
+
+Lets follow these steps to create the project
 * create a maven quick start project
 
 * add dependencies to: mysql connector, hibernate orm
@@ -2054,25 +2166,33 @@ an instructor has many courses & a course belongs to only one instrucor => ManyT
 
             try{
 
-                session.beginTransaction();
+				session.beginTransaction();
 
-                Instructor instructor = new Instructor("yassine", "capi", "yassine gmail");
+				//create an instrcutor
+				Instructor instructor = new Instructor("yassine", "capi", "yassine gmail");
 
-                InstructorDetail instructorDetail = new InstructorDetail("youtube", "video games");
-                instructor.setInstructorDetail(instructorDetail);
+				//create an instrcutor detail
+				InstructorDetail instructorDetail = new InstructorDetail("youtube", "video games");
 
-                Course course1 = new Course("course1");
-                Course course2 = new Course("course2");
+				//link them
+				instructor.setInstructorDetail(instructorDetail);
 
-                course1.setInstructor(instructor);
-                course2.setInstructor(instructor);
+				//save the instructor
+				session.save(instructor);
 
-                session.save(instructor);
+				//create courses
+				Course course1 = new Course("course1");
+				Course course2 = new Course("course2");
 
-                session.save(course1);
-                session.save(course2);
+				//associate courses with their instructor (make a course point to instructor)
+				course1.setInstructor(instructor);
+				course2.setInstructor(instructor);
 
-                session.getTransaction().commit();
+				//Save courses
+				session.save(course1);
+				session.save(course2);
+
+				session.getTransaction().commit();
             }finally {
                 factory.close();
             }
@@ -2088,12 +2208,18 @@ an instructor has many courses & a course belongs to only one instrucor => ManyT
 
     ```java
     session.beginTransaction();
-
+	
+	//create course
     Course course = new Course("course title");
-    Instructor instructor = session.get(Instructor.class, 9);
-    course.setInstructor(instructor);
-    session.save(course);
 
+	//get instructor
+    Instructor instructor = session.get(Instructor.class, 9);
+
+	//associate them
+    course.setInstructor(instructor);
+
+	//Save course
+    session.save(course);
     session.getTransaction().commit();
     ```
 
