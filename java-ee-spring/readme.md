@@ -1,13 +1,13 @@
 - [Hibernate](#hibernate)
-	- [set up a java project to work with hibernate (using maven quickstart)](#set-up-a-java-project-to-work-with-hibernate-using-maven-quickstart)
-	- [Hibernate CRUD operations](#hibernate-crud-operations)
-	- [hibernate OneToOne mapping (unidirictional)](#hibernate-onetoone-mapping-unidirictional)
-	- [hiberanate OneToOne mapping (bidirictional)](#hiberanate-onetoone-mapping-bidirictional)
-	- [Hibernate OneToMany (unidirectional)](#hibernate-onetomany-unidirectional)
-	- [hibernate OneToMany mapping (bidirectional)](#hibernate-onetomany-mapping-bidirectional)
-	- [EAGER vs LAZY loading](#eager-vs-lazy-loading)
-	- [ManyToMany mapping (bidirectional)](#manytomany-mapping-bidirectional)
-	- [How To View Hibernate SQL Parameter Values in the console:](#how-to-view-hibernate-sql-parameter-values-in-the-console)
+  - [set up a java project to work with hibernate (using maven quickstart)](#set-up-a-java-project-to-work-with-hibernate-using-maven-quickstart)
+  - [Hibernate CRUD operations](#hibernate-crud-operations)
+  - [hibernate OneToOne mapping (unidirictional)](#hibernate-onetoone-mapping-unidirictional)
+  - [hiberanate OneToOne mapping (bidirictional)](#hiberanate-onetoone-mapping-bidirictional)
+  - [hibernate OneToMany mapping (bidirectional)](#hibernate-onetomany-mapping-bidirectional)
+  - [EAGER vs LAZY loading](#eager-vs-lazy-loading)
+  - [HIbernate OneToMany (unidirectional)](#hibernate-onetomany-unidirectional)
+  - [ManyToMany mapping (bidirectional)](#manytomany-mapping-bidirectional)
+  - [How To View Hibernate SQL Parameter Values in the console:](#how-to-view-hibernate-sql-parameter-values-in-the-console)
 
 
 # Hibernate
@@ -689,19 +689,6 @@ instructor_detail_id is a foreign key that references the instructor's detail in
 	
 This a unidirectional OneToOne, meaning that we only can go from instructor to instructor's detail
 
-we are going to see how to:
-* create instructor and its instructor detail
-* create just an instructor without its intructor detail
-* create instructor detail for an existing instructor
-* remove instructor (will also remove instructor detail because of cascading delete)
-* remove instructor detail
-* update instructor 
-* update instructor detail
-    * directly by PK
-    * from instructor
-
-lets follow these steps to create the project
-
 * create a maven quick start project
 
 * add dependencies to: mysql connector, hibernate orm
@@ -945,7 +932,7 @@ lets follow these steps to create the project
     }
     ```
 
-    we created an instance of the **Instructor** class and an instance of the **InstructorDetail** class and then we linked them togeter and we save the **Instructor** instance. After executing the code both instances will be saved saved to the DB into 2 different tables (instructors).
+    we created an instance of the **Instructor** class and an instance of the **InstructorDetail** class and then we linked them togeter and we save the **Instructor** instance. After executing the code both instances will be saved saved to the DB into 2 different tables (instructors and instructors_details).
 
     Here is the content of the DB:
 
@@ -1075,22 +1062,6 @@ instructor_detail_id is a foreign key that references the instructor's detail in
 
 
 This relationship will be bidirictioanl which means we can go from an instructor to its instructors details and vice versa.
-
-Here is what we're going to see:
-* creating instructor and its instructor detail
-* creating an instructor
-* creating an instructor detail and linking it to an existing instructor in the db
-* updating an instructor
-* updating an instructor detail
-	* method1: directly by its id (<=>instructor's detail id):
-	* method2: by the instructor:
-* get the instructor from the instructor detail object
-* deleting an instructor (will delete also its instructor detail because of calscading delete)
-* deleting instructor's detail (will delete instructor also because of cascading delete)
-* deleteing the instructor's detail without deleting the instructor (we must remove the cascading delete in the InstrucorDetail entity)
-
-
-Lets create the project follwoign these steps
 
 * create a maven quick start project
 
@@ -1300,7 +1271,7 @@ Lets create the project follwoign these steps
     }
     ```
 
-    whats the use of mappedBy? to tell hibernate not to create a column for instructor field in the instructors_details table, because this collumn is mapped by the instructorDetail field (which means the instructor_detail_id column in instructors table) of the Instructor class.
+    whats the use of mappedBy? to tekk hibernate not to create a column for instructor field in the courses table, because this collumn is mapped by the instructorDetail field (which means the instructor_detail_id column in instructors table) of the Instructor class.
 
 * creating instructor and its instructor detail
   
@@ -1413,15 +1384,8 @@ Lets create the project follwoign these steps
     InstructorDetail{id=6, youtubeChannel='www.youtube.com/channel', hobby='programming'}
     Instructor{id=5, firstName='alae', lastName='touba', email='alae@gmail.com'}
     ```
-* deleting an instructor (will delete also its instructor detail because of calscading delete)
 
-	```java
-	session.beginTransaction();
-	session.delete( session.get(Instructor.class, 1) );
-	session.getTransaction().commit();
-	```
-	
-* deleting instructor's detail (will delete instructor also because of cascading delete)
+* deleting instructor's detail (will delete instructor also)
 
     ```java
     int instructorDetailId = 6;
@@ -1439,7 +1403,7 @@ Lets create the project follwoign these steps
     session.getTransaction().commit();
     ```
 
-* deleteing the instructor's detail without deleting the instructor (we must remove the cascading delete in the InstrucorDetail entity)
+* deleteing the instructor's detail without deleting the instructor
 	
     we dont want cascading delete in the InstructorDetail.java entity\
 	so we will change its code to look like this
@@ -1472,368 +1436,16 @@ Lets create the project follwoign these steps
     session.getTransaction().commit();
     ```
 
-## Hibernate OneToMany (unidirectional)
-
-we will have a one to many relationship between two entities: Course and Review (a course has many reviews)
-
-the strcutor of the two tables will be as follow:\
-**courses** (id, title)\
-**reviews** (id, comment, course_id)
-
-we are goidn to see how to:
-* insert a course with its reviews 
-* create just a course
-* add reviews to an existing course:
-* getting the course reviews
-* deleting a course (will also delete its reviews due to cascading delete)
-* deleting a review:
-* updating a course
-* updating a review review
-	* method1: updating the review directly by PK:
-	* method2: updating the review through its course
-
-
-Lets follow these steps to create the project:
-
-* create a maven quick start project
-
-* add dependencies to: mysql connector, hibernate orm
-
-* create a database named: **hibernate-testing-db** (tables will be generacted automatically, how good is that :) ?)
-
-* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
-
-    ```xml
-    <!DOCTYPE hibernate-configuration PUBLIC
-        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
-
-    <hibernate-configuration>
-
-        <session-factory>
-
-            <!-- JDBC Database connection settings -->
-            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
-            <property name="connection.username">root</property>
-            <property name="connection.password"></property>
-
-            <!-- JDBC connection pool settings ... using built-in test pool -->
-            <property name="connection.pool_size">100</property>
-
-            <!-- Select our SQL dialect -->
-            <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
-
-            <!-- Echo the SQL to stdout -->
-            <property name="show_sql">true</property>
-
-            <!-- Set the current session context -->
-            <property name="current_session_context_class">thread</property>
-
-            <!-- create tables if they dont exist (automatically), otherwise update-->
-            <property name="hbm2ddl.auto">update</property>
-        </session-factory>
-
-    </hibernate-configuration>
-    ```
-
-* create the **Course** entity:
-
-    ```java
-    package org.example;
-
-
-    import javax.persistence.*;
-    import java.util.*;
-
-    @Entity
-    @Table(name = "courses")
-    public class Course {
-
-        @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        @Column(name = "id")
-        private int id;
-
-        @Column(name = "title")
-        private String title;
-
-        public Course(String title){
-            this.title = title;
-        }
-
-        public Course(){}
-
-
-        public int getId() {
-            return id;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-        @JoinColumn(name = "course_id")
-        private List<Review> reviews;
-
-        public void addReview(Review review){
-            if(reviews == null){
-                reviews = new ArrayList<>();
-            }
-
-            reviews.add(review);
-        }
-
-        public List<Review> getReviews() {
-            return reviews;
-        }
-
-        public void setReviews(List<Review> reviews) {
-            this.reviews = reviews;
-        }
-
-        @Override
-        public String toString() {
-            return "Course{" +
-                    "id=" + id +
-                    ", title='" + title + '\'' +
-                    '}';
-        }
-    }
-    ```
-
-* create the **Review** entity:
-
-    ```java
-    package org.example;
-
-    import javax.persistence.*;
-
-    @Entity
-    @Table(name = "reviews")
-    public class Review {
-
-        @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        private int id;
-
-        @Column(name = "comment")
-        private String comment;
-
-        public Review(){}
-
-        public Review(String comment){
-            this.comment = comment;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getComment() {
-            return comment;
-        }
-
-        public void setComment(String comment) {
-            this.comment = comment;
-        }
-
-        @Override
-        public String toString() {
-            return "Review{" +
-                    "id=" + id +
-                    ", comment='" + comment + '\'' +
-                    '}';
-        }
-    }
-    ```
-
-* insert a course with its reviews 
-
-    ```java
-    package org.example;
-
-    import org.hibernate.Session;
-    import org.hibernate.SessionFactory;
-    import org.hibernate.cfg.Configuration;
-
-    import java.util.List;
-
-    public class Main {
-        public static void main(String[] args) {
-
-            SessionFactory factory = new Configuration()
-                    .configure("hibernate.cfg.xml")
-                    .addAnnotatedClass(Course.class)
-                    .addAnnotatedClass(Review.class)
-                    .buildSessionFactory();
-
-            Session session = factory.getCurrentSession();
-
-            try{
-
-                session.beginTransaction();
-
-                Course course = new Course("course1");
-
-                Review review1 = new Review("comment on course1");
-                Review review2 = new Review("commen2 on course1");
-
-                course.addReview(review1);
-                course.addReview(review2);
-
-                session.save(course);
-
-                session.getTransaction().commit();
-
-
-            }finally {
-                session.close();
-                factory.close();
-            }
-        }
-    }
-    ```
-
-    we just needed to add the reviews to the course's reviews list and save the course (without saving the reviews).
-
-    here is what the db looks like afetr this operation:
-
-    ![](imgs/011.png)
-
-* create just a course
-
-	```java
-	session.beginTransaction();
-	Course course = new Course("course2");
-	session.save(course);
-	session.getTransaction().commit();
-	```
-* add reviews to an existing course:
-
-    ```java
-    session.beginTransaction();
-
-    int courseId = 1;
-    Course course = session.get(Course.class, courseId);
-    course.addReview(new Review("review"));
-    session.getTransaction().commit();
-    ```
-
-* getting the course reviews
-
-    ```java
-    session.beginTransaction();
-
-    int courseId = 1;
-    Course course = session.get(Course.class, courseId);
-    List<Review> reviews = course.getReviews();
-    System.out.println(reviews);
-
-    session.getTransaction().commit();
-    ```
-
-* deleting a course (will also delete its reviews due to cascading delete)
-
-    ```java
-    session.beginTransaction();
-
-    int courseId = 1;
-    Course course = session.get(Course.class, courseId);
-    session.delete(course);
-    session.getTransaction().commit();
-    ```
-* deleting a review:
-
-	```java
-	session.beginTransaction();
-
-	//get the review by PK
-	Review review = session.get(Review.class, 2);
-
-	//delete the review
-	session.delete(review);
-	session.getTransaction().commit();
-	```
-	
-* updating a course
-	
-	```java
-	session.beginTransaction();
-
-	Course course = session.get(Course.class, 1);
-	course.setTitle("hihi");
-	session.getTransaction().commit();
-	```
-
-* updating a course's review
-	
-	* method1: updating the review directly by PK:
-
-		```java
-		 session.beginTransaction();
-
-		Review review = session.get(Review.class, 2);
-		review.setComment("modified comment");
-		session.getTransaction().commit();
-		```
-
-	* method2: updating the review through its course
-
-		```java
-		session.beginTransaction();
-
-		Course course = session.get(Course.class, 1);
-		course.getReviews().get(0).setComment("modified comment hihi");
-		session.getTransaction().commit();
-		```
-
-
 ## hibernate OneToMany mapping (bidirectional)
 
 
 We will have 3 entities: Instructor, InstructorDetail, Course .
 
-an instrcutor has one instrcutor detail and an instrcutor detail belongs to an instrcutor => one to one bidirectional.
+an instrcutor has one instrcutor detail and an instrcutor detail belongs to an instrcutor => one to one.
 
-an instructor has many courses & a course belongs to only one instrucor => ManyToMany (bidirectional).
-
-The structor of the DB will be as follow:\
-**instructors** (id, first_name, last_name, email, instructor_detail_id)\
-**instrcutrors_details** (id, youtube_channel, hobby)\
-**courses** (id, title, instructor_id)
+an instructor has many courses & a course belongs to only one instrucor => ManyToMany.
 
 
-
-we are going to see how to:
-* create an instructor and associate an instructor details to it, and also associat some courses to it
-* create courses for an instructor (we have the instructor stored in the DB)
-* linking an existing instructor with an existing course (we have the instructor and the course both already in the DB, we just have to link them)
-* getting all the instructor's courses
-* get the course's instructor:
-* updating an instructor by primary key
-* updating a course by PK:
-* updating an instructor from some of its courses
-* updating a course from its instructor
-* delete a course (this wont delete the instructor becuase we dont have cascading delete)
-* delete an instructor without deleting its courses (because we dont have a cascade delete in instructor's courses)
-* delete an instructor and all its courses (we must have cascading delete in the Instrcuror's courses field)
-
-
-Lets follow these steps to create the project
 * create a maven quick start project
 
 * add dependencies to: mysql connector, hibernate orm
@@ -2166,33 +1778,25 @@ Lets follow these steps to create the project
 
             try{
 
-				session.beginTransaction();
+                session.beginTransaction();
 
-				//create an instrcutor
-				Instructor instructor = new Instructor("yassine", "capi", "yassine gmail");
+                Instructor instructor = new Instructor("yassine", "capi", "yassine gmail");
 
-				//create an instrcutor detail
-				InstructorDetail instructorDetail = new InstructorDetail("youtube", "video games");
+                InstructorDetail instructorDetail = new InstructorDetail("youtube", "video games");
+                instructor.setInstructorDetail(instructorDetail);
 
-				//link them
-				instructor.setInstructorDetail(instructorDetail);
+                Course course1 = new Course("course1");
+                Course course2 = new Course("course2");
 
-				//save the instructor
-				session.save(instructor);
+                course1.setInstructor(instructor);
+                course2.setInstructor(instructor);
 
-				//create courses
-				Course course1 = new Course("course1");
-				Course course2 = new Course("course2");
+                session.save(instructor);
 
-				//associate courses with their instructor (make a course point to instructor)
-				course1.setInstructor(instructor);
-				course2.setInstructor(instructor);
+                session.save(course1);
+                session.save(course2);
 
-				//Save courses
-				session.save(course1);
-				session.save(course2);
-
-				session.getTransaction().commit();
+                session.getTransaction().commit();
             }finally {
                 factory.close();
             }
@@ -2208,18 +1812,12 @@ Lets follow these steps to create the project
 
     ```java
     session.beginTransaction();
-	
-	//create course
+
     Course course = new Course("course title");
-
-	//get instructor
     Instructor instructor = session.get(Instructor.class, 9);
-
-	//associate them
     course.setInstructor(instructor);
-
-	//Save course
     session.save(course);
+
     session.getTransaction().commit();
     ```
 
@@ -2462,6 +2060,264 @@ INstructor has many courses and a course belongs to one intstructor => ont to ma
     The instrucor's courses will not be retrieved from the DB.\
     They'll be retrieved when we do something like: instructor.getCourses() 
 
+## HIbernate OneToMany (unidirectional)
+
+we will have a one to many relationship between two entities: Course and Review (a course has many reviews)
+
+* create a maven quick start project
+
+* add dependencies to: mysql connector, hibernate orm
+
+* create a database named: **hibernate-testing-db** (tables will be generacted automatically, how good is that :) ?)
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- JDBC connection pool settings ... using built-in test pool -->
+            <property name="connection.pool_size">100</property>
+
+            <!-- Select our SQL dialect -->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+
+* create the **Course** entity:
+
+    ```java
+    package org.example;
+
+
+    import javax.persistence.*;
+    import java.util.*;
+
+    @Entity
+    @Table(name = "courses")
+    public class Course {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        @Column(name = "id")
+        private int id;
+
+        @Column(name = "title")
+        private String title;
+
+        public Course(String title){
+            this.title = title;
+        }
+
+        public Course(){}
+
+
+        public int getId() {
+            return id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+        @JoinColumn(name = "course_id")
+        private List<Review> reviews;
+
+        public void addReview(Review review){
+            if(reviews == null){
+                reviews = new ArrayList<>();
+            }
+
+            reviews.add(review);
+        }
+
+        public List<Review> getReviews() {
+            return reviews;
+        }
+
+        public void setReviews(List<Review> reviews) {
+            this.reviews = reviews;
+        }
+
+        @Override
+        public String toString() {
+            return "Course{" +
+                    "id=" + id +
+                    ", title='" + title + '\'' +
+                    '}';
+        }
+    }
+    ```
+
+* create the **Review** entity:
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+
+    @Entity
+    @Table(name = "reviews")
+    public class Review {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private int id;
+
+        @Column(name = "comment")
+        private String comment;
+
+        public Review(){}
+
+        public Review(String comment){
+            this.comment = comment;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getComment() {
+            return comment;
+        }
+
+        public void setComment(String comment) {
+            this.comment = comment;
+        }
+
+        @Override
+        public String toString() {
+            return "Review{" +
+                    "id=" + id +
+                    ", comment='" + comment + '\'' +
+                    '}';
+        }
+    }
+    ```
+
+* insert a course with its reviews 
+
+    ```java
+    package org.example;
+
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    import java.util.List;
+
+    public class Main {
+        public static void main(String[] args) {
+
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(Course.class)
+                    .addAnnotatedClass(Review.class)
+                    .buildSessionFactory();
+
+            Session session = factory.getCurrentSession();
+
+            try{
+
+                session.beginTransaction();
+
+                Course course = new Course("course1");
+
+                Review review1 = new Review("comment on course1");
+                Review review2 = new Review("commen2 on course1");
+
+                course.addReview(review1);
+                course.addReview(review2);
+
+                session.save(course);
+
+                session.getTransaction().commit();
+
+
+            }finally {
+                session.close();
+                factory.close();
+            }
+        }
+    }
+    ```
+
+    we just needed to add the reviews to the course's reviews list and save the course (without saving the reviews).
+
+    here is what the db looks like afetr this operation:
+
+    ![](imgs/011.png)
+
+* add reviews to an existing course:
+
+    ```java
+    session.beginTransaction();
+
+    int courseId = 1;
+    Course course = session.get(Course.class, courseId);
+    course.addReview(new Review("review"));
+    session.getTransaction().commit();
+
+    ```
+
+* getting the course reviews
+
+    ```java
+    session.beginTransaction();
+
+    int courseId = 1;
+    Course course = session.get(Course.class, courseId);
+    List<Review> reviews = course.getReviews();
+    System.out.println(reviews);
+
+    session.getTransaction().commit();
+    ```
+
+* deleting a course (will also delete its reviews due to cascading delete)
+
+    ```java
+    session.beginTransaction();
+
+    int courseId = 1;
+    Course course = session.get(Course.class, courseId);
+    session.delete(course);
+    session.getTransaction().commit();
+    ```
 
 ## ManyToMany mapping (bidirectional)
 
