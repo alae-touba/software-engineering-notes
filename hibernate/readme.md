@@ -2330,12 +2330,10 @@ We will have 3 tables in the db:
 * **course_student**(course_id, student_id) for the associations 
 
 
+Lets see the steps to create a project:
 * create a maven quick start project
-
 * add dependencies to: mysql connector, hibernate orm
-
 * create a database named: **hibernate-testing-db** (tables will be generated )
-
 * create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
 
     ```xml
