@@ -25,11 +25,14 @@
 - [la classe LinkedList](#la-classe-linkedlist)
 - [difference entre ArrayList et LinkedList](#difference-entre-arraylist-et-linkedlist)
 - [HashMap](#hashmap)
+- [LinkedHashMap<K,V>:](#linkedhashmapkv)
 - [TreeMap<K, V>](#treemapk-v)
 - [l'interface Set:](#linterface-set)
 - [HashSet:](#hashset)
 - [TreeSet:](#treeset)
 - [les types primitives en java (primitive types):](#les-types-primitives-en-java-primitive-types)
+- [variable locale:](#variable-locale)
+- [difference entre les types primitives et les objets (difference between primitive types and reference types):](#difference-entre-les-types-primitives-et-les-objets-difference-between-primitive-types-and-reference-types)
 - [le mot clé final:](#le-mot-clé-final)
 - [les modificateurs d'accés (access modifiers )](#les-modificateurs-daccés-access-modifiers-)
 - [Pourquoi les modificateurs d'accès aux membres d'une sous classes doivent-ils être moins restrictif que les modificateurs d'acces aux memes membres dans la super classe?](#pourquoi-les-modificateurs-daccès-aux-membres-dune-sous-classes-doivent-ils-être-moins-restrictif-que-les-modificateurs-dacces-aux-memes-membres-dans-la-super-classe)
@@ -39,6 +42,7 @@
 - [l'utilité des setters en java :](#lutilité-des-setters-en-java-)
 - [comment garantir qu'un bloc de code soit tjrs executé?](#comment-garantir-quun-bloc-de-code-soit-tjrs-executé)
 - [comment les chaines de caracteres (la classe String) est répresenté/implementé? todo:](#comment-les-chaines-de-caracteres-la-classe-string-est-répresentéimplementé-todo)
+- [generics:](#generics)
 
 ## la class Stack
 
@@ -1659,7 +1663,7 @@ public interface Collection<E> extends Iterable<E>{
 
 => chaq class qui implement l'interface Collection<E> va avoir cette méthode iterator()
 
-=> l'interface Iterator<E> a 3 méthodes:
+L'interface Iterator<E> a 3 méthodes:
 ```java
 public interface Iterator<E>{
 	boolean hasNext();
@@ -1972,7 +1976,7 @@ public class HashMap<K,​V> extends AbstractMap<K,​V> implements Map<K,​V>,
   
   	recherche, ajout, suppression: O(1)
 
-__LinkedHashMap<K,V>:
+## LinkedHashMap<K,V>:
 
 ```java
 public class LinkedHashMap<K,​V> extends HashMap<K,​V> implements Map<K,​V>
@@ -2268,18 +2272,18 @@ public class TreeMap<K,​V> extends AbstractMap<K,​V> implements NavigableMap
 
 * size en mémoire et valeurs par defaut:
 
-	```
-				size(bits)   valeur-par-defaut
-	boolean			1				false
-	byte			8				0
-	char			16				\u0000
-	short			16				0
-	int				32				0
-	long			64				0
-	float			32				0.0
-	double			64				0.0
-	````
-	ps: java ne vas affecter une valeur par defaut a un variable qui est locale a une fct
+	|<!---->|size(bits)|valeur-par-defaut|
+	|-|-|-|
+	|boolean|1|false|
+	|byte|8|0|
+	|char|16|\u0000|
+	|short|16|0|
+	|int|32|0|
+	|long|64|0|
+	|float|32|0.0|
+	|double|64|0.0|
+		
+	> java ne vas affecter une valeur par defaut a un variable qui est locale a une fct
 
 ## variable locale:
 	
@@ -2431,16 +2435,16 @@ déclaré dans une méthode, block de code {}
 
 ## les modificateurs d'accés (access modifiers )
 
-	les modificateurs d'accés controlent l'accés aux variables encapsulé dans une classe.
+les modificateurs d'accés controlent l'accés aux variables encapsulé dans une classe.
 
-	private			: le variable est visible seulement dans la classe
-	public			: le variable est visible partout
-	protected		: le variable est visible dans le meme package et dans les sous classes
-	none/friendly	: le variable est visible dans le meme package
+* private: le variable est visible seulement dans la classe
+* public: le variable est visible partout
+* protected: le variable est visible dans le meme package et dans les sous classes
+* none/friendly: le variable est visible dans le meme package
 
 ## Pourquoi les modificateurs d'accès aux membres d'une sous classes doivent-ils être moins restrictif que les modificateurs d'acces aux memes membres dans la super classe?
 
-	Selon le concept d'héritage, on doit  pouvoir utiliser un objet de sous-classe avec une référence de sa super classe. Cela ne sera pas possible si le membre de la classe est déclaré avec un modificateur d'accès plus restrictif que dans sa super classe.
+Selon le concept d'héritage, on doit  pouvoir utiliser un objet de sous-classe avec une référence de sa super classe. Cela ne sera pas possible si le membre de la classe est déclaré avec un modificateur d'accès plus restrictif que dans sa super classe.
 
 
 
@@ -2600,7 +2604,7 @@ la JVM crache
 avec un tableau de chars.
 
 
-__generics:
+## generics:
 
 * definition:
 
@@ -2739,23 +2743,23 @@ __generics:
 
 		Au premier lieu on peut penser a faire qlq chose comme ca:
 
-			```java
-			class Stats<T>{
-				T[] array;
+		```java
+		class Stats<T>{
+			T[] array;
 
-				public Stats(T[] array){
-					this.array = array;
-				}
-
-				public double average(){
-					double sum = 0.0;
-					for(int i = 0; i < array.length; i++)
-						sum += array[i].doubleValue();
-					
-					return sum / array.length;
-				}
+			public Stats(T[] array){
+				this.array = array;
 			}
-			```
+
+			public double average(){
+				double sum = 0.0;
+				for(int i = 0; i < array.length; i++)
+					sum += array[i].doubleValue();
+				
+				return sum / array.length;
+			}
+		}
+		```
 
 		mais ceci ne vas pas se compiler, car doubleValue est une méthode de la class Number, qui est la super classe d'Integer et Long et Double et ..etc
 
@@ -3080,7 +3084,8 @@ __generics:
 	animals = cats;
 	```
 	
-	meme si une Car est une Animal!! car commme on a vu, deux instances de la meme classe générique different en fonction de leurs type de parametres.\
+	meme si une Car est une Animal!! car commme on a vu, deux instances de la meme classe générique different en fonction de leurs type de parametres.
+	
 	donc comment par exemple on crée une méthode qui prend comme argument un arraylist d'animaux (Animal ou Car).
 
 	* sol1:
