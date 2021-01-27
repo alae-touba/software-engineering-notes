@@ -1,17 +1,41 @@
-- [set up a java project to work with hibernate (using maven quickstart)](#set-up-a-java-project-to-work-with-hibernate-using-maven-quickstart)
-- [Hibernate CRUD operations](#hibernate-crud-operations)
-- [hibernate OneToOne mapping (unidirictional)](#hibernate-onetoone-mapping-unidirictional)
-- [hiberanate OneToOne mapping (bidirictional)](#hiberanate-onetoone-mapping-bidirictional)
-- [hibernate OneToMany mapping (bidirectional)](#hibernate-onetomany-mapping-bidirectional)
-- [EAGER vs LAZY loading](#eager-vs-lazy-loading)
-- [HIbernate OneToMany (unidirectional)](#hibernate-onetomany-unidirectional)
-- [ManyToMany mapping (bidirectional)](#manytomany-mapping-bidirectional)
-- [How To View Hibernate SQL Parameter Values in the console:](#how-to-view-hibernate-sql-parameter-values-in-the-console)
+- [if you are using hibernate with Maven with Java 9, 10, 11 .. ( >8)](#if-you-are-using-hibernate-with-maven-with-java-9-10-11---8)
+- [spring and hibernate for beginners course (udemy): hibernate part](#spring-and-hibernate-for-beginners-course-udemy-hibernate-part)
+  - [set up a java project to work with hibernate (using maven quickstart)](#set-up-a-java-project-to-work-with-hibernate-using-maven-quickstart)
+  - [Hibernate CRUD operations](#hibernate-crud-operations)
+  - [hibernate OneToOne mapping (unidirictional)](#hibernate-onetoone-mapping-unidirictional)
+  - [hiberanate OneToOne mapping (bidirictional)](#hiberanate-onetoone-mapping-bidirictional)
+  - [hibernate OneToMany mapping (bidirectional)](#hibernate-onetomany-mapping-bidirectional)
+  - [EAGER vs LAZY loading](#eager-vs-lazy-loading)
+  - [HIbernate OneToMany (unidirectional)](#hibernate-onetomany-unidirectional)
+  - [ManyToMany mapping (bidirectional)](#manytomany-mapping-bidirectional)
+  - [How To View Hibernate SQL Parameter Values in the console:](#how-to-view-hibernate-sql-parameter-values-in-the-console)
+- [Hibernate advanced developpement techniques (chad darby, udemy course)](#hibernate-advanced-developpement-techniques-chad-darby-udemy-course)
+  - [mapping a collection (**Set**)](#mapping-a-collection-set)
 
+# if you are using hibernate with Maven with Java 9, 10, 11 .. ( >8)    
 
+you should include this at your pom.xml
 
+```
+ <!-- Support for Java 9/10/11 -->
+<!-- API, java.xml.bind module -->
+<dependency>
+    <groupId>jakarta.xml.bind</groupId>
+    <artifactId>jakarta.xml.bind-api</artifactId>
+    <version>2.3.2</version>
+</dependency>
 
-# set up a java project to work with hibernate (using maven quickstart)
+<!-- Runtime, com.sun.xml.bind module -->
+<dependency>
+    <groupId>org.glassfish.jaxb</groupId>
+    <artifactId>jaxb-runtime</artifactId>
+    <version>2.3.2</version>
+</dependency>
+```
+
+# spring and hibernate for beginners course (udemy): hibernate part
+
+## set up a java project to work with hibernate (using maven quickstart)
 
 * create a maven quick start project
 
@@ -36,7 +60,8 @@
             <property name="connection.username">root</property>
             <property name="connection.password"></property>
 
-            <!-- JDBC connection pool settings ... using built-in test pool -->
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
             <property name="connection.pool_size">100</property>
 
             <!-- Select our SQL dialect -->
@@ -183,7 +208,7 @@
 after executing the code we will notice that the table "students" gets created automatically and after each execution it gets updated!
 
 
-# Hibernate CRUD operations
+## Hibernate CRUD operations
 
 * set up a java project to work with hibernate (using maven quickstart)
 
@@ -210,7 +235,8 @@ after executing the code we will notice that the table "students" gets created a
             <property name="connection.username">root</property>
             <property name="connection.password"></property>
 
-            <!-- JDBC connection pool settings ... using built-in test pool -->
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
             <property name="connection.pool_size">100</property>
 
             <!-- Select our SQL dialect -->
@@ -673,7 +699,7 @@ Now for each operation (i.e delete, read, update, etc) I will create a Driver cl
 
     ![](imgs/002.png)
 
-# hibernate OneToOne mapping (unidirictional)
+## hibernate OneToOne mapping (unidirictional)
 
 This is a full example of OneToOne.
 
@@ -710,7 +736,8 @@ This a unidirectional OneToOne, meaning that we only can go from instructor to i
             <property name="connection.username">root</property>
             <property name="connection.password"></property>
 
-            <!-- JDBC connection pool settings ... using built-in test pool -->
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
             <property name="connection.pool_size">100</property>
 
             <!-- Select our SQL dialect -->
@@ -1048,7 +1075,7 @@ This a unidirectional OneToOne, meaning that we only can go from instructor to i
         ```
         
 
-# hiberanate OneToOne mapping (bidirictional)
+## hiberanate OneToOne mapping (bidirictional)
 
 We will have two tables in the db:\
 **instructors** (id, first_name, last_name, email, instructor_detail_id) \
@@ -1084,7 +1111,8 @@ This relationship will be bidirictioanl which means we can go from an instructor
             <property name="connection.username">root</property>
             <property name="connection.password"></property>
 
-            <!-- JDBC connection pool settings ... using built-in test pool -->
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
             <property name="connection.pool_size">100</property>
 
             <!-- Select our SQL dialect -->
@@ -1434,7 +1462,7 @@ This relationship will be bidirictioanl which means we can go from an instructor
     session.getTransaction().commit();
     ```
 
-# hibernate OneToMany mapping (bidirectional)
+## hibernate OneToMany mapping (bidirectional)
 
 
 We will have 3 entities: Instructor, InstructorDetail, Course .
@@ -1467,7 +1495,8 @@ an instructor has many courses & a course belongs to only one instrucor => ManyT
             <property name="connection.username">root</property>
             <property name="connection.password"></property>
 
-            <!-- JDBC connection pool settings ... using built-in test pool -->
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
             <property name="connection.pool_size">100</property>
 
             <!-- Select our SQL dialect -->
@@ -2008,7 +2037,7 @@ an instructor has many courses & a course belongs to only one instrucor => ManyT
         session.getTransaction().commit();
         ```
 
-# EAGER vs LAZY loading
+## EAGER vs LAZY loading
 
 Suppose we have 3 entities: Instructor, InstructorDeatil & Course.
 Instructor has one INstructorDetail and vice versa => one to one.
@@ -2058,7 +2087,7 @@ INstructor has many courses and a course belongs to one intstructor => ont to ma
     The instrucor's courses will not be retrieved from the DB.\
     They'll be retrieved when we do something like: instructor.getCourses() 
 
-# HIbernate OneToMany (unidirectional)
+## HIbernate OneToMany (unidirectional)
 
 we will have a one to many relationship between two entities: Course and Review (a course has many reviews)
 
@@ -2085,7 +2114,8 @@ we will have a one to many relationship between two entities: Course and Review 
             <property name="connection.username">root</property>
             <property name="connection.password"></property>
 
-            <!-- JDBC connection pool settings ... using built-in test pool -->
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
             <property name="connection.pool_size">100</property>
 
             <!-- Select our SQL dialect -->
@@ -2317,7 +2347,7 @@ we will have a one to many relationship between two entities: Course and Review 
     session.getTransaction().commit();
     ```
 
-# ManyToMany mapping (bidirectional)
+## ManyToMany mapping (bidirectional)
 
 
 We will work with two entities: Student.java & Course.java 
@@ -2351,7 +2381,8 @@ Lets see the steps to create a project:
             <property name="connection.username">root</property>
             <property name="connection.password"></property>
 
-            <!-- JDBC connection pool settings ... using built-in test pool -->
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
             <property name="connection.pool_size">100</property>
 
             <!-- Select our SQL dialect -->
@@ -2714,7 +2745,7 @@ Lets see the steps to create a project:
     ```java
     session.delete( session.get(Stduent.class, 1) );    
     ```
-# How To View Hibernate SQL Parameter Values in the console:
+## How To View Hibernate SQL Parameter Values in the console:
 
 * add the log4j dependency to pom.xml
 
@@ -2741,3 +2772,265 @@ Lets see the steps to create a project:
 
     log4j.logger.org.hibernate=TRACE  
     ````
+
+# Hibernate advanced developpement techniques (chad darby, udemy course)
+
+## mapping a collection (**Set**)  
+
+We are going to have a one to many relationship between a **student** and its **images**.
+
+The structure of the tables in the databases in the end will look smt like this:\
+**students** (id, first_name, last_name, email)\
+**students_images** (student_id, image_name)
+
+We are not going to use the **@OneToMany** annotation (we are going to see later the difference between @OneToMany and what we are going to use here)
+
+Here are the **SQL** scripts if you were to create the tables manually (we re going to rely on hibernate to this automatically based on the entities definitions)
+* the **students** table
+
+    ```sql
+    create table stundents(
+        id int(11) not null auto_increment,
+        first_name varchar(45) default null,
+        last_name varchar(45) default null,
+        email varchar(45) default null,
+
+        primary key(id) 
+    );
+    ```
+
+* the **students_images** table
+
+    ```sql
+    create table students_images(
+        student_id int(11) not null,
+        image_name varchar(45) default null
+    );
+    ```
+
+
+Here is the dev process:
+* create a maven quick start project
+
+* add dependencies to: mysql connector, hibernate orm
+
+* if you are using a java version >8, make sure you include theses dependecies
+
+    ```
+    <!-- Support for Java 9/10/11 -->
+    <!-- API, java.xml.bind module -->
+    <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+
+    <!-- Runtime, com.sun.xml.bind module -->
+    <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+    ```
+
+* create a database named: **hibernate-testing-db**
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
+            <property name="connection.pool_size">100</property>
+
+            <!-- Select our SQL dialect -->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+
+* create an entity named **Student**
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+    import java.util.HashSet;
+    import java.util.Set;
+
+    @Entity
+    @Table(name = "students")
+    public class Student {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private int id;
+
+        @Column(name = "first_name")
+        private String firstName;
+
+        @Column(name = "last_name")
+        private String lastName;
+
+        @Column(name = "email")
+        private String email;
+
+        @ElementCollection
+        @CollectionTable(name = "students_images", joinColumns = @JoinColumn(name = "student_id"))
+        @Column(name = "image_name")
+        private Set<String> images = new HashSet<>();
+
+        public Student(){}
+
+        public Student(String firstName, String lastName, String email) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public Set<String> getImages() {
+            return images;
+        }
+
+        public void setImages(Set<String> images) {
+            this.images = images;
+        }
+
+        @Override
+        public String toString() {
+            return "Student{" +
+                    "id=" + id +
+                    ", firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", email='" + email + '\'' +
+                    '}';
+        }
+    }
+
+    ```
+
+    * annotations explinations:
+
+        * @ElementCollection:   
+
+            Declares an element collection mapping. The data for the collection is stored in a separate table (**students_images**).
+
+        * CollectionTable:
+
+            Specifies the name of table (**students_images**) that will hold the collection. Also provides the join column (**student_id**) to refer to primary table. (studnet_id in stundents_images refers to id in students table)
+
+        * Column:
+
+            The name of the column to map in the collection table.
+
+    * whats the difference between this and **@OneToMany**?
+
+        we wont have a separate entity named **Image**.
+
+    * So **@ElementCollection** can be used to define a one to many relationship to a **Basic** object such as: int, Integer, Double, String, Date..
+
+    * another difference between **@ElementCollection** and **OneToMany** is that with the first one we will not have **Cascading** options and the target objects (in our case the images) will always be persisted, merged, removed with their parent object (in our case student)
+
+* create the main app
+
+    ```java
+    package org.example;
+
+
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    import java.util.Set;
+
+    public class App
+    {
+        public static void main( String[] args ) {
+
+            // create session factory
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(Student.class)
+                    .buildSessionFactory();
+
+
+            // create session
+            Session session = factory.getCurrentSession();
+
+            try{
+                Student student = new Student("alae", "touba", "alae@gmail.com");
+                Set<String> images = student.getImages();
+
+                images.add("photo1.jpg");
+                images.add("photo2.jpg");
+                images.add("photo3.jpg");
+
+                session.beginTransaction();
+                session.save(student);
+                session.getTransaction().commit();
+            }finally {
+                session.close();
+                factory.close();
+            }
+
+        }
+    }
+    ```
+
+    Here is what the DB looks like now: 
+    ![](imgs/015.png)
