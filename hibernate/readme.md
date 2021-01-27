@@ -3032,5 +3032,5 @@ Here is the dev process:
     }
     ```
 
-    Here is what the DB looks like now: 
+    Here is what the DB looks like now:\
     ![](imgs/015.png)
