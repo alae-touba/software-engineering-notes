@@ -17,10 +17,12 @@
   - [mapping a collection (**sorted Map**)](#mapping-a-collection-sorted-map)
   - [Embeddable](#embeddable)
   - [mapping **Enums**](#mapping-enums)
-  - [mapping inheritence (Single Table strategy)](#mapping-inheritence-single-table-strategy)
-  - [mapping inheritence (Table per Class strategy)](#mapping-inheritence-table-per-class-strategy)
-  - [mapping inheritence (Joined Table strategy)](#mapping-inheritence-joined-table-strategy)
-  - [mapping inheritence (Mapped Superclass)](#mapping-inheritence-mapped-superclass)
+  - [mapping inheritence (**Single Table strategy**)](#mapping-inheritence-single-table-strategy)
+  - [mapping inheritence (**Table per Class strategy**)](#mapping-inheritence-table-per-class-strategy)
+  - [mapping inheritence (**Joined Table strategy**)](#mapping-inheritence-joined-table-strategy)
+  - [mapping inheritence (**Mapped Superclass strategy**)](#mapping-inheritence-mapped-superclass-strategy)
+  - [Recap](#recap)
+  - [Comparaison](#comparaison)
 
 # if you are using hibernate with Maven with Java 9, 10, 11 .. ( >8)    
 
@@ -4718,7 +4720,7 @@ lets follow these steps to create the project:
 
     ![](imgs/021.png)
 
-## mapping inheritence (Single Table strategy)
+## mapping inheritence (**Single Table strategy**)
 
 supoose that we have this inheritence tree
 
@@ -5020,7 +5022,7 @@ lets follow these steps to create the project:
     ![](imgs/024.png)
 
 
-## mapping inheritence (Table per Class strategy)
+## mapping inheritence (**Table per Class strategy**)
 
 suppose we have this inheritence tree:
 
@@ -5308,7 +5310,7 @@ lets follow these steps to create the project:
     ![](imgs/027.png)
 
 
-## mapping inheritence (Joined Table strategy)
+## mapping inheritence (**Joined Table strategy**)
 
 suppose we have this inheritence tree:
 
@@ -5597,7 +5599,7 @@ lets follow these steps to create the project:
 
 
 
-## mapping inheritence (Mapped Superclass)
+## mapping inheritence (**Mapped Superclass strategy**)
 
 suppose we have this inheritence tree:
 
@@ -5893,3 +5895,69 @@ lets follow these steps to create the project:
     Here is what the db looks like
 
     ![](imgs/032.png)
+
+## Recap
+
+* **Single Table strategy**
+
+    ![](imgs/033.png)
+
+    * Advantages:
+
+        * Simple and straight-forward implementation
+        * Since data is in a single table, results in the best query performance
+
+    * Disadvantages
+        
+        * Each row only uses a subset of fields and sets others to null
+        * Since fields are nullable, this may present issues with data integrity
+
+* **Table per Class strategy**
+
+    ![](imgs/034.png)
+
+    * Advantages
+
+        * Simple and straight-forward implementation
+        * Queries on concrete sub-classes perform generally well
+
+    * Disadvantages
+
+        * Slow performance for queries on superclasses (results in many joins)
+        * Query performance slows down for very deep inheritance trees
+        * ID generation with sequence tables in a high-volume multi-threaded environment is slow
+
+* **Joined Table strategy**
+
+    ![](imgs/035.png)
+
+    * Advantages
+
+        * Normalized database model
+        * No duplicate mapping of inherited fields
+    
+    * Disadvantages
+    
+        * Slow performance for queries on subclasses (results in many joins)
+        * Query performance slows down for very deep inheritance trees
+
+* **Mapped superclass strategy**    
+
+    ![](imgs/036.png)
+
+    * Advantages
+
+        * Simple and straight-forward implementation
+        * Queries on concrete subclasses perform well (no need for joins)
+        
+    * Disadvantages
+
+        * For polymorphic queries, need to manually code HQL joins
+        * For example, to query for all Users, need to join across Student, Instructor etc …
+
+            * Requires manual HQL coding
+            * May result in slower performance (results in many joins)
+
+## Comparaison
+
+![](imgs/037.png)
