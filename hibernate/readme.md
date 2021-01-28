@@ -11,6 +11,16 @@
   - [How To View Hibernate SQL Parameter Values in the console:](#how-to-view-hibernate-sql-parameter-values-in-the-console)
 - [Hibernate advanced developpement techniques (chad darby, udemy course)](#hibernate-advanced-developpement-techniques-chad-darby-udemy-course)
   - [mapping a collection (**Set**)](#mapping-a-collection-set)
+  - [mapping a collection (**List**)](#mapping-a-collection-list)
+  - [Mapping a collection (**Map**)](#mapping-a-collection-map)
+  - [Mapping a collection (**Sorted set**)](#mapping-a-collection-sorted-set)
+  - [mapping a collection (**sorted Map**)](#mapping-a-collection-sorted-map)
+  - [Embeddable](#embeddable)
+  - [mapping **Enums**](#mapping-enums)
+  - [mapping inheritence (Single Table strategy)](#mapping-inheritence-single-table-strategy)
+  - [mapping inheritence (Table per Class strategy)](#mapping-inheritence-table-per-class-strategy)
+  - [mapping inheritence (Joined Table strategy)](#mapping-inheritence-joined-table-strategy)
+  - [mapping inheritence (Mapped Superclass)](#mapping-inheritence-mapped-superclass)
 
 # if you are using hibernate with Maven with Java 9, 10, 11 .. ( >8)    
 
@@ -32,6 +42,7 @@ you should include this at your pom.xml
     <version>2.3.2</version>
 </dependency>
 ```
+
 
 # spring and hibernate for beginners course (udemy): hibernate part
 
@@ -699,6 +710,9 @@ Now for each operation (i.e delete, read, update, etc) I will create a Driver cl
 
     ![](imgs/002.png)
 
+
+
+
 ## hibernate OneToOne mapping (unidirictional)
 
 This is a full example of OneToOne.
@@ -712,6 +726,10 @@ a constructor has a constructor detail and each instructor detail belongs to onl
 instructor_detail_id is a foreign key that references the instructor's detail in the instructor_detail table (**instructor_detail_id** is a **foreign key** that **references** the the **id** column that is the **primary key** in the instructors_details table)
 	
 This a unidirectional OneToOne, meaning that we only can go from instructor to instructor's detail
+
+<br>
+
+lets follow these steps to create the project:
 
 * create a maven quick start project
 
@@ -1075,6 +1093,8 @@ This a unidirectional OneToOne, meaning that we only can go from instructor to i
         ```
         
 
+
+
 ## hiberanate OneToOne mapping (bidirictional)
 
 We will have two tables in the db:\
@@ -1087,6 +1107,10 @@ instructor_detail_id is a foreign key that references the instructor's detail in
 
 
 This relationship will be bidirictioanl which means we can go from an instructor to its instructors details and vice versa.
+
+<br>
+
+lets follow these steps to create the project:
 
 * create a maven quick start project
 
@@ -1462,6 +1486,8 @@ This relationship will be bidirictioanl which means we can go from an instructor
     session.getTransaction().commit();
     ```
 
+
+
 ## hibernate OneToMany mapping (bidirectional)
 
 
@@ -1471,6 +1497,8 @@ an instrcutor has one instrcutor detail and an instrcutor detail belongs to an i
 
 an instructor has many courses & a course belongs to only one instrucor => ManyToMany.
 
+<br>
+lets follow these steps to create the project:
 
 * create a maven quick start project
 
@@ -2037,6 +2065,10 @@ an instructor has many courses & a course belongs to only one instrucor => ManyT
         session.getTransaction().commit();
         ```
 
+
+
+
+
 ## EAGER vs LAZY loading
 
 Suppose we have 3 entities: Instructor, InstructorDeatil & Course.
@@ -2087,9 +2119,14 @@ INstructor has many courses and a course belongs to one intstructor => ont to ma
     The instrucor's courses will not be retrieved from the DB.\
     They'll be retrieved when we do something like: instructor.getCourses() 
 
+
+
 ## HIbernate OneToMany (unidirectional)
 
-we will have a one to many relationship between two entities: Course and Review (a course has many reviews)
+we will have a one to many relationship between two entities: **Course** and **Review** (a course has many reviews)
+
+<br>
+lets follow these steps to create the project:
 
 * create a maven quick start project
 
@@ -2347,6 +2384,7 @@ we will have a one to many relationship between two entities: Course and Review 
     session.getTransaction().commit();
     ```
 
+
 ## ManyToMany mapping (bidirectional)
 
 
@@ -2359,8 +2397,10 @@ We will have 3 tables in the db:
 * **students**(id, first_name, last_name, email) for students
 * **course_student**(course_id, student_id) for the associations 
 
+<br>
 
 Lets see the steps to create a project:
+
 * create a maven quick start project
 * add dependencies to: mysql connector, hibernate orm
 * create a database named: **hibernate-testing-db** (tables will be generated )
@@ -2745,6 +2785,9 @@ Lets see the steps to create a project:
     ```java
     session.delete( session.get(Stduent.class, 1) );    
     ```
+
+
+
 ## How To View Hibernate SQL Parameter Values in the console:
 
 * add the log4j dependency to pom.xml
@@ -2771,7 +2814,11 @@ Lets see the steps to create a project:
     log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
 
     log4j.logger.org.hibernate=TRACE  
-    ````
+    ```
+    
+
+
+
 
 # Hibernate advanced developpement techniques (chad darby, udemy course)
 
@@ -2808,15 +2855,17 @@ Here are the **SQL** scripts if you were to create the tables manually (we re go
     );
     ```
 
+<br>
 
-Here is the dev process:
+lets follow these steps to create the project:
+
 * create a maven quick start project
 
 * add dependencies to: mysql connector, hibernate orm
 
 * if you are using a java version >8, make sure you include theses dependecies
 
-    ```
+    ```xml
     <!-- Support for Java 9/10/11 -->
     <!-- API, java.xml.bind module -->
     <dependency>
@@ -3034,3 +3083,2813 @@ Here is the dev process:
 
     Here is what the DB looks like now:\
     ![](imgs/015.png)
+
+
+
+
+
+## mapping a collection (**List**)  
+
+We are going to have a one to many relationship between a **student** and its **images**.
+
+The structure of the tables in the databases in the end will look smt like this:\
+**students** (id, first_name, last_name, email)\
+**students_images** (student_id, image_name, images_order)
+
+We are not going to use the **@OneToMany** annotation (we are going to see later the difference between @OneToMany and what we are going to use here)
+
+<br>
+
+lets follow these steps to create the project:
+
+* create a maven quick start project
+
+* add dependencies to: mysql connector, hibernate orm
+
+* if you are using a java version >8, make sure you include theses dependecies
+
+    ```xml
+    <!-- Support for Java 9/10/11 -->
+    <!-- API, java.xml.bind module -->
+    <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+
+    <!-- Runtime, com.sun.xml.bind module -->
+    <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+    ```
+
+* create a database named: **hibernate-testing-db**
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
+            <property name="connection.pool_size">100</property>
+
+            <!-- Select our SQL dialect -->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+
+* create an entity named **Student**
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+    import java.util.HashSet;
+    import java.util.Set;
+
+    @Entity
+    @Table(name = "students")
+    public class Student {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private int id;
+
+        @Column(name = "first_name")
+        private String firstName;
+
+        @Column(name = "last_name")
+        private String lastName;
+
+        @Column(name = "email")
+        private String email;
+
+        @ElementCollection
+        @CollectionTable(name = "students_images", joinColumns = @JoinColumn(name = "student_id"))
+        @Column(name = "image_name")
+        @OrderColumn(name = "images_order")
+        private List<String> images = new ArrayList<>();
+
+        public Student(){}
+
+        public Student(String firstName, String lastName, String email) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public List<String> getImages() {
+            return images;
+        }
+
+        public void setImages(List<String> images) {
+            this.images = images;
+        }
+
+        @Override
+        public String toString() {
+            return "Student{" +
+                    "id=" + id +
+                    ", firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", email='" + email + '\'' +
+                    '}';
+        }
+    }
+
+    ```
+
+    * annotations explinations:
+
+        * @ElementCollection
+
+            Declares an element collection mapping. The data for the collection is stored in a separate table (**students_images**).
+
+        * CollectionTable
+
+            Specifies the name of table (**students_images**) that will hold the collection. Also provides the join column (**student_id**) to refer to primary table. (studnet_id in stundents_images refers to id in students table)
+
+        * Column
+
+            The name of the column to map in the collection table.
+
+        * @OrderColumn
+
+            The name of the column to track element order / position.
+
+    * whats the difference between this and **@OneToMany**?
+
+        we wont have a separate entity named **Image**.
+
+    * So **@ElementCollection** can be used to define a one to many relationship to a **Basic** object such as: int, Integer, Double, String, Date..
+
+    * another difference between **@ElementCollection** and **OneToMany** is that with the first one we will not have **Cascading** options and the target objects (in our case the images) will always be persisted, merged, removed with their parent object (in our case student)
+
+* create the main app
+
+    ```java
+    package org.example;
+
+
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    import java.util.Set;
+
+    public class App
+    {
+        public static void main( String[] args ) {
+
+            // create session factory
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(Student.class)
+                    .buildSessionFactory();
+
+
+            // create session
+            Session session = factory.getCurrentSession();
+
+            try{
+                Student student = new Student("alae", "touba", "alae@gmail.com");
+                List<String> images = student.getImages();
+
+                images.add("photo1.jpg");
+                images.add("photo2.jpg");
+                images.add("photo3.jpg");
+                images.add("photo4.jpg");
+                images.add("photo4.jpg");
+
+                session.beginTransaction();
+                session.save(student);
+                session.getTransaction().commit();
+            }finally {
+                session.close();
+                factory.close();
+            }
+
+        }
+    }
+    ```
+
+    Here is what the DB looks like now:\
+    ![](imgs/016.png)
+
+
+
+
+## Mapping a collection (**Map**)
+
+These are some uses cases for a map:
+
+* Map of error codes and error messages
+    
+    |erorr code| error message|
+    |----------|--------------|
+    |20|disk full|
+    |30|syntax error|
+    |40|account blocked|
+
+* Map of country codes and country names
+    
+    |country code| country name|
+    |----------|--------------|
+    |IN|India|
+    |USA|unitae states of america|
+    |En|England|
+
+* Map of image file names and images descriptions
+    
+    |image name| image description|
+    |----------|--------------|
+    |photo1.jpg|description for photo1...|
+    |photo2.jpg|description for photo2...|
+    
+
+We are going to have a one to many relationship (without using @OneToMany of course, we are using @ElementCollection) between a **student** a its **images**. Each image will have a **key/value** form, where the **key** will be the **image_name** and the **value** will be **image_description**.
+
+The structure of the tables will be as follow in the DB:\
+**students** (id, first_name, last_name, email)\
+**stundets_images** (studnet_id, image_name, image_descritpion)
+
+<br>
+lets follow these steps to create the project:
+
+* create a maven quick start project
+* add dependencies to: mysql connector, hibernate orm
+* if you are using a java version >8, make sure you include theses dependecies
+
+    ```xml
+    <!-- Support for Java 9/10/11 -->
+    <!-- API, java.xml.bind module -->
+    <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+
+    <!-- Runtime, com.sun.xml.bind module -->
+    <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+    ```
+
+* create a database named: **hibernate-testing-db**
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
+            <property name="connection.pool_size">100</property>
+
+            <!-- 
+                I used to work with MySQL5Dialect, but when I ran this app iv got problems and changing
+                the dialect to this one solved the problem.
+
+                the problem was that hibernate wasnt able to create the table students_images automatically
+            -->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+
+* create the **Student** entity
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+    import java.util.*;
+
+    @Entity
+    @Table(name = "students")
+    public class Student {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private int id;
+
+        @Column(name = "first_name")
+        private String firstName;
+
+        @Column(name = "last_name")
+        private String lastName;
+
+        @Column(name = "email")
+        private String email;
+
+        @ElementCollection
+        @CollectionTable(name = "students_images", joinColumns = @JoinColumn(name = "student_id"))
+        @MapKeyColumn(name = "image_name")
+        @Column(name = "image_description")
+        private Map<String, String> images = new HashMap<>();
+
+        public Student(){}
+
+        public Student(String firstName, String lastName, String email) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public Map<String, String> getImages() {
+            return images;
+        }
+
+        public void setImages(Map<String, String> images) {
+            this.images = images;
+        }
+
+
+        @Override
+        public String toString() {
+            return "Student{" +
+                    "id=" + id +
+                    ", firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", email='" + email + '\'' +
+                    '}';
+        }
+    }
+
+    ```
+
+    * @MapKeyColumn(name = "image_name") is the key
+    * @Column(name = "image_description") is the value
+
+* create the main app:
+
+    ```java
+    package org.example;
+
+    import java.util.Map;
+
+    import org.example.Student;
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    public class App {
+
+        public static void main(String[] args) {
+
+            //create session factory
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(Student.class)
+                    .buildSessionFactory();
+
+
+            //create session
+            Session session = factory.getCurrentSession();
+
+            try {
+                //create the object
+                Student tempStudent = new Student("John","Doe","john@luv2code.com");
+                Map<String, String> theImages = tempStudent.getImages();
+
+                theImages.put("photo1.jpg", "Photo 1 desc");
+                theImages.put("photo2.jpg", "Photo 2 desc");
+                theImages.put("photo3.jpg", "Photo 3 desc");
+
+                //start a transaction
+                session.beginTransaction();
+
+                //save the object
+                System.out.println("Saving the student and images..");
+                session.persist(tempStudent);
+
+                //commit the transaction
+                session.getTransaction().commit();
+                System.out.println("Done!!");
+            }
+            finally {
+                //clean up code
+                session.close();
+                factory.close();
+            }
+
+        }
+
+    }
+    ```
+
+    Here is what the DB looks like:\
+    ![](imgs/017.png)
+
+
+
+
+## Mapping a collection (**Sorted set**)
+
+Here is an overview of Sorted set   
+
+* collection of items that contains no duplicates but when retrieved, sorted by a given field
+* use cases for a sorted set
+
+    * intersted in membership (yes/no decisions).. for ex: the student has the image?
+    * order during retrieval is important (for example when we retrieve images we want them to be sorted in ASC/DESC mode based on the image_name)
+
+
+In our case we will have a oneToMany relationship between a **student** and its **images**.\
+We want to retrieve the images in alphabetical order.\
+There should be no duplicate images.
+
+The structure of the table in the DB will be as follow:\
+**students** (id, first_name, last_name, email)\
+**images** (student_id, image_name)
+
+<br>
+lets follow these steps to create the project:
+
+* create a maven quick start project
+
+* add dependencies to: mysql connector, hibernate orm
+
+* if you are using a java version >8, make sure you include theses dependecies
+
+    ```xml
+    <!-- Support for Java 9/10/11 -->
+    <!-- API, java.xml.bind module -->
+    <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+
+    <!-- Runtime, com.sun.xml.bind module -->
+    <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+    ```
+
+* create a database named: **hibernate-testing-db**
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
+            <property name="connection.pool_size">100</property>
+
+            <!-- Select our SQL dialect -->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+
+* create the student entity
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+    import java.util.*;
+
+    @Entity
+    @Table(name = "students")
+    public class Student {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private int id;
+
+        @Column(name = "first_name")
+        private String firstName;
+
+        @Column(name = "last_name")
+        private String lastName;
+
+        @Column(name = "email")
+        private String email;
+
+        @ElementCollection
+        @CollectionTable(name = "students_images", joinColumns = @JoinColumn(name = "student_id"))
+        @OrderBy("image_name DESC")
+        @Column(name = "image_name")
+        private Set<String> images = new LinkedHashSet<>();
+
+        public Student(){}
+
+        public Student(String firstName, String lastName, String email) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public Set<String> getImages() {
+            return images;
+        }
+
+        public void setImages(Set<String> images) {
+            this.images = images;
+        }
+
+        @Override
+        public String toString() {
+            return "Student{" +
+                    "id=" + id +
+                    ", firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", email='" + email + '\'' +
+                    '}';
+        }
+    }
+    ```
+
+    * @ElementCollection
+
+        Declares an element collection mapping. The data for the collection is stored in a separate table (**students_images**).
+
+    * CollectionTable
+
+        Specifies the name of table (**students_images**) that will hold the collection. Also provides the join column (**student_id**) to refer to primary table. (studnet_id in stundents_images refers to id in students table)
+
+    * Column
+
+        The name of the column to map in the collection table.
+    * @OrderBy("image_name DESC")
+
+        when we retrieve the images for a student we will get them sorted in desc order based on the image_name.
+
+* create the main app to insert some data
+
+    ```java
+    package org.example;
+
+    import java.util.Map;
+    import java.util.Set;
+
+    import org.example.Student;
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+
+
+    public class App {
+
+
+        public static void main(String[] args) {
+
+            //create session factory
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(Student.class)
+                    .buildSessionFactory();
+
+
+            //create session
+            Session session = factory.getCurrentSession();
+
+            try {
+                //create the object
+                Student student = new Student("John","Doe","john@luv2code.com");
+                Set<String> images = student.getImages();
+                images.add("photo1.jpg");
+                images.add("photo3.jpg");
+                images.add("photo2.jpg");
+
+
+                session.beginTransaction();
+                session.persist(student);
+                session.getTransaction().commit();
+
+            }
+            finally {
+                //clean up code
+                session.close();
+                factory.close();
+            }
+        }
+    }
+
+    ```
+
+    Here is what the DB looks like now\
+    ![](imgs/018.png)
+
+* lets retrieve the user and its images
+
+    ```java
+    session.beginTransaction();
+    Student student = session.get(Student.class, 1);
+    System.out.println(student);
+    System.out.println(student.getImages());
+    session.getTransaction().commit();
+    ```
+
+    Here is the result:
+
+    ```
+    Student{id=1, firstName='John', lastName='Doe', email='john@luv2code.com'}
+    [photo3.jpg, photo2.jpg, photo1.jpg]
+    ```
+
+    see? we get the images in DESC order based on the image_name
+
+
+
+
+
+## mapping a collection (**sorted Map**)
+
+These are some uses cases for a map:
+
+* Map of error codes and error messages
+    
+    |erorr code| error message|
+    |----------|--------------|
+    |20|disk full|
+    |30|syntax error|
+    |40|account blocked|
+
+* Map of country codes and country names
+    
+    |country code| country name|
+    |----------|--------------|
+    |IN|India|
+    |USA|unitae states of america|
+    |En|England|
+
+* Map of image file names and images descriptions
+    
+    |image name| image description|
+    |----------|--------------|
+    |photo1.jpg|description for photo1...|
+    |photo2.jpg|description for photo2...|
+    
+
+We are going to have a one to many relationship (without using @OneToMany of course, we are using @ElementCollection) between a **student** a its **images**. Each image will have a **key/value** form, where the **key** will be the **image_name** and the **value** will be **image_description**.
+
+The structure of the tables will be as follow in the DB:\
+**students** (id, first_name, last_name, email)\
+**stundets_images** (studnet_id, image_name, image_descritpion)
+
+
+This is similar to just using a regular map. whats new with a sotrted map is that we can retrieve images based on some order (for example desc order based on image names).
+
+<br>
+lets follow these steps to create the project:
+
+* create a maven quick start project
+
+* add dependencies to: mysql connector, hibernate orm
+
+* if you are using a java version >8, make sure you include theses dependecies
+
+    ```xml
+    <!-- Support for Java 9/10/11 -->
+    <!-- API, java.xml.bind module -->
+    <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+
+    <!-- Runtime, com.sun.xml.bind module -->
+    <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+    ```
+
+* create a database named: **hibernate-testing-db**
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
+            <property name="connection.pool_size">100</property>
+
+            <!-- Select our SQL dialect -->
+            <!--its weird but MySQL5Dialect does not work with maps (hibernate cannot create table 
+            student_images)-->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+
+* create the entity **Student**
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+    import java.util.*;
+
+    @Entity
+    @Table(name = "students")
+    public class Student {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private int id;
+
+        @Column(name = "first_name")
+        private String firstName;
+
+        @Column(name = "last_name")
+        private String lastName;
+
+        @Column(name = "email")
+        private String email;
+
+        @ElementCollection
+        @CollectionTable(name = "students_images", joinColumns = @JoinColumn(name = "student_id"))
+        @MapKeyColumn(name = "image_name")
+        @Column(name = "image_description")
+        @OrderBy("image_name ASC")
+        private Map<String, String> images = new TreeMap();
+
+        public Student(){}
+
+        public Student(String firstName, String lastName, String email) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public Map<String, String> getImages() {
+            return images;
+        }
+
+        public void setImages(Map<String, String> images) {
+            this.images = images;
+        }
+
+
+        @Override
+        public String toString() {
+            return "Student{" +
+                    "id=" + id +
+                    ", firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", email='" + email + '\'' +
+                    '}';
+        }
+    }
+
+    ```
+
+    * @MapKeyColumn(name = "image_name")
+        
+        is the key
+    * @Column(name = "image_description")
+        
+        is the value
+    * @OrderBy("image_name ASC")
+
+        we specify the rerieval order to be based on image_name DESC (so when we will do retrieval we will get the images sorted based in ASC order and based on the image_name)
+
+* lets create a main app and add some data
+
+    ```java
+    package org.example;
+
+    import java.util.Map;
+    import java.util.Set;
+
+    import org.example.Student;
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    public class App {
+
+        public static void main(String[] args) {
+
+            //create session factory
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(Student.class)
+                    .buildSessionFactory();
+
+
+            //create session
+            Session session = factory.getCurrentSession();
+
+            try {
+
+                Student student = new Student("alae", "touba", "alae@gmail.com");
+                Map<String, String> images = student.getImages();
+
+                images.put("photo1.jpg", "desc for photo 1");
+                images.put("photo3.jpg", "desc for photo 3");
+                images.put("photo2.jpg", "desc for photo 2");
+
+                session.beginTransaction();
+                session.save(student);
+                session.getTransaction().commit();
+
+
+            }
+            finally {
+                //clean up code
+                session.close();
+                factory.close();
+            }
+
+        }
+    }
+    ```
+
+    Here is what the db looks like now:\
+    ![](imgs/019.png)
+
+* lets retrieve a student and its images
+
+    ```java
+    session.beginTransaction();
+
+    Student student = session.get(Student.class, 1);
+    System.out.println(student);
+    System.out.println(student.getImages());
+    session.getTransaction().commit();
+    ```
+
+    here is the output
+
+    ```
+    Student{id=1, firstName='alae', lastName='touba', email='alae@gmail.com'}
+    {photo1.jpg=desc for photo 1, photo2.jpg=desc for photo 2, photo3.jpg=desc for photo 3}
+    ```
+
+    see? images are sorted in ASC order based on key (image_name)
+
+
+
+## Embeddable
+
+We use this technique when we want to associate two objects and we want to store all the attributes in the same database table. For example we will have a **student** and this students has an **address**. In java we will have two classes, a class **Student** class and an **Address** class.  The **Student** will be an entity but the **Address** will not. the **Address** will be annotated with **@Embeddable**. Finanly we will have only one table in the database, named **students** for example and this table will contain all fields (student infos + address fields).
+
+In the example that we are going to see here, we will have two java classes:
+
+* Student class
+
+    ```java
+    class Student{
+        int id;
+        String fullName;
+        Address homeAddress;
+    }
+    ```
+* Address class
+
+    ```java
+    class Address{
+        String city;
+        String street;
+        String zipcode;
+    }
+    ```
+
+
+
+
+But in the database, we'll have only one table that has this structure:\
+**students** (id, full_name, city, street, zipcode )
+
+So, the fields of the **Address** are embedded in the **students** table.   
+
+This is a one to one relationship between a student and address.
+
+Whats cool here, is that, for a student for ex, we can use the address more than once, and have for ex a homeAddress and a schoolAddress. So the class for a student will be like this:
+
+*   
+    ```java
+    class Student{
+        int id;
+        String fullName;
+        Address homeAddress;
+        Address scholAddress;
+    }
+    ```
+
+with some annotations added to make the difference betwene the fields for the home adress and the fields for the schoolAddress in the **students** table in the DB.
+
+<br/>
+lets follow these steps to create the project:
+
+* create a maven quick start project
+
+* add dependencies to: mysql connector, hibernate orm
+
+* if you are using a java version >8, make sure you include theses dependecies
+
+    ```xml
+    <!-- Support for Java 9/10/11 -->
+    <!-- API, java.xml.bind module -->
+    <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+
+    <!-- Runtime, com.sun.xml.bind module -->
+    <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+    ```
+
+* create a database named: **hibernate-testing-db**
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
+            <property name="connection.pool_size">100</property>
+
+            <!-- Select our SQL dialect -->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+
+* lets create the **Address** class that will be embedded
+
+    ```java
+    package org.example;
+
+    import javax.persistence.Column;
+    import javax.persistence.Embeddable;
+
+    @Embeddable
+    public class Address {
+
+        @Column(name = "city")
+        private String city;
+
+        @Column(name = "street")
+        private String street;
+
+        @Column(name = "zipcode")
+        private String zipcode;
+
+        public Address(){}
+
+        public Address(String city, String street, String zipcode) {
+            this.city = city;
+            this.street = street;
+            this.zipcode = zipcode;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public String getStreet() {
+            return street;
+        }
+
+        public void setStreet(String street) {
+            this.street = street;
+        }
+
+        public String getZipcode() {
+            return zipcode;
+        }
+
+        public void setZipcode(String zipcode) {
+            this.zipcode = zipcode;
+        }
+
+        @Override
+        public String toString() {
+            return "Address{" +
+                    "city='" + city + '\'' +
+                    ", street='" + street + '\'' +
+                    ", zipcode='" + zipcode + '\'' +
+                    '}';
+        }
+    }
+    ```
+
+    notice that this class should be annotated with **@Embeddedable**
+
+* create the **Student** entity
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+    import java.util.*;
+
+    @Entity
+    @Table(name = "students")
+    public class Student {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private int id;
+
+        @Column(name = "full_name")
+        private String fullName;
+
+        @Embedded
+        private Address homeAddress;
+
+        @Embedded
+        @AttributeOverrides({
+                @AttributeOverride(name = "city", column = @Column(name = "school_city")),
+                @AttributeOverride(name = "street", column = @Column(name = "school_street")),
+                @AttributeOverride(name = "zipcode", column = @Column(name = "school_zipcode")),
+        })
+        private Address schoolAddress;
+
+        public Student(){}
+
+        public Student(String fullName) {
+            this.fullName = fullName;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getFullName() {
+            return fullName;
+        }
+
+        public void setFullName(String fullName) {
+            this.fullName = fullName;
+        }
+
+        public Address getHomeAddress() {
+            return homeAddress;
+        }
+
+        public void setHomeAddress(Address homeAddress) {
+            this.homeAddress = homeAddress;
+        }
+
+        public Address getSchoolAddress() {
+            return schoolAddress;
+        }
+
+        public void setSchoolAddress(Address schoolAddress) {
+            this.schoolAddress = schoolAddress;
+        }
+
+        @Override
+        public String toString() {
+            return "Student{" +
+                    "id=" + id +
+                    ", fullName='" + fullName + '\'' +
+                    '}';
+        }
+    }
+    ```
+
+    we have two fields for the **Address** class:
+
+    * homeAddress 
+    * schoolAddress
+
+    both should be annotated with **@Embedded** (I think this is optional because **Address class** is already annotated with **@Embeddable**)
+
+    @AttributesOverrides is used to make the difference in the **students** table in the db between **homeAddress** and **schoolAddress**.
+
+* lets create a main method to run the app
+
+    ```java
+    package org.example;
+
+    import java.util.Map;
+    import java.util.Set;
+
+    import org.example.Student;
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    public class App {
+
+
+        public static void main(String[] args) {
+
+            //create session factory
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(Student.class)
+                    .buildSessionFactory();
+
+
+            //create session
+            Session session = factory.getCurrentSession();
+
+            try {
+
+                Student student = new Student("alar touba");
+                Address homeAddress = new Address("temara", "street med5", "10000");
+                Address schoolAddress = new Address("rabat", "street nakhil", "10800");
+
+                session.beginTransaction();
+                student.setHomeAddress(homeAddress);
+                student.setSchoolAddress(schoolAddress);
+                session.save(student);
+                session.getTransaction().commit();
+            }
+            finally {
+                //clean up code
+                session.close();
+                factory.close();
+            }
+
+        }
+    }
+    ```
+
+    Here is what the db looks like:\
+    ![](imgs/020.png)
+
+
+
+
+
+
+
+
+
+
+## mapping **Enums**
+
+lets suppose we have an Enum named **Status** like this:
+
+* 
+    ```java
+    public Enum Status{
+        ACTIVE, INACTIVE
+    }
+    ```
+
+
+
+and a class named **Student** and we want to have a one to one relationship between these two. 
+
+In the end we will have one table in the DB like this\
+**students** (id, first_name, last_name, email, status)
+
+<br/>
+lets follow these steps to create the project:
+
+* create a maven quick start project
+
+* add dependencies to: mysql connector, hibernate orm
+
+* if you are using a java version >8, make sure you include theses dependecies
+
+    ```xml
+    <!-- Support for Java 9/10/11 -->
+    <!-- API, java.xml.bind module -->
+    <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+
+    <!-- Runtime, com.sun.xml.bind module -->
+    <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+    ```
+
+* create a database named: **hibernate-testing-db**
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
+            <property name="connection.pool_size">100</property>
+
+            <!-- Select our SQL dialect -->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+* create an enum named **Status**
+
+    ```java
+    package org.example;
+
+    public enum Status {
+
+        ACTIVE, INACTIVE;
+    }
+    ```
+
+* create a class named **Student**
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+    import java.util.*;
+
+    @Entity
+    @Table(name = "students")
+    public class Student {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private int id;
+
+        @Column(name = "first_name")
+        private String firstName;
+
+        @Column(name = "last_name")
+        private String lastName;
+        
+        @Column(name = "email")
+        private String email;
+
+        @Enumerated(EnumType.STRING)
+        @Column(name = "status")
+        private Status status;
+
+        public Student(){}
+
+        public Student(String firstName, String lastName, String email, Status status) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+            this.status = status;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public Status getStatus() {
+            return status;
+        }
+
+        public void setStatus(Status status) {
+            this.status = status;
+        }
+
+        @Override
+        public String toString() {
+            return "Student{" +
+                    "id=" + id +
+                    ", firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", email='" + email + '\'' +
+                    ", status=" + status +
+                    '}';
+        }
+    }
+    ```
+
+* lets create a main app
+
+    ```java
+    package org.example;
+
+    import java.util.Map;
+    import java.util.Set;
+
+    import org.example.Student;
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    public class App {
+        public static void main(String[] args) {
+
+            //create session factory
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(Student.class)
+                    .buildSessionFactory();
+
+
+            //create session
+            Session session = factory.getCurrentSession();
+
+            try {
+
+                Student student1 = new Student("alae", "touba", "alae@gmail.com", Status.ACTIVE);
+                Student student2 = new Student("yassine", "capitos", "yassine@gmail.com", Status.INACTIVE);
+
+                session.beginTransaction();
+                session.save(student1);
+                session.save(student2);
+                session.getTransaction().commit();
+
+            }
+            finally {
+                //clean up code
+                session.close();
+                factory.close();
+            }
+
+
+        }
+
+    }
+    ```
+
+    here is what the DB looks like:
+
+    ![](imgs/021.png)
+
+## mapping inheritence (Single Table strategy)
+
+supoose that we have this inheritence tree
+
+![](imgs/022.png)
+
+How to map this in hibernate?\
+Hibernate provides 4 strategies to do this, one of them is called **Single Table**.
+
+Here are some notes on this strategy:
+* Maps all entities in inheritance tree to a single database table
+* A discriminator column indicates the type/class of data in the row
+* Table has columns for all fields in the inheritance tree
+* Each row will only use a subset of the fields
+* Unused fields are null
+
+
+In the DB we will have a single table named **users** for example and it will ocntains the data for all users.
+
+Here is what the table will look like in the db:
+
+![](imgs/023.png)
+
+<br>
+In order to implement Inheritence with single table strategy we must follow these small steps:
+
+1. In the super class specifiy    
+    1. Inheritence startagey
+    1. Discriminator column name
+1. In subclass, specify discriminator value
+
+<br>
+Here are some annotations for Inhreitence mapping:
+
+| annotation | description |
+| ---------- | ----------- |
+| @Inheritance | Specify the inheritance strategy. Possible values: **SINGLE_TABLE**, **TABLE_PER_CLASS**, **JOINED**. Defaults to SINGLE_TABLE. |
+| @DiscriminatorColumn | Name of the column that holds the discriminator values. Defaults to DTYPE. |
+| @DiscriminatorValue | A unique value that describes a given subclass. Defaults to class name. |
+
+<br/>
+
+lets follow these steps to create the project:
+
+* create a maven quick start project
+
+* add dependencies to: mysql connector, hibernate orm
+
+* if you are using a java version >8, make sure you include theses dependecies
+
+    ```xml
+    <!-- Support for Java 9/10/11 -->
+    <!-- API, java.xml.bind module -->
+    <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+
+    <!-- Runtime, com.sun.xml.bind module -->
+    <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+    ```
+
+* create a database named: **hibernate-testing-db**
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
+            <property name="connection.pool_size">100</property>
+
+            <!-- Select our SQL dialect -->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+
+* create a **User** class
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+
+
+    @Entity
+    @Table(name = "users")
+    @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+    @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+    @DiscriminatorValue("USER")
+    public class User {
+
+        @Id
+        @Column(name = "id")
+        @GeneratedValue(strategy = GenerationType.AUTO)
+        private int id;
+
+        @Column(name = "first_name")
+        private String firstName;
+
+        @Column(name = "last_name")
+        private String lastName;
+
+        @Column(name = "email")
+        private String email;
+
+        public User(){}
+
+        public User(String firstName, String lastName, String email) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        @Override
+        public String toString() {
+            return "User{" +
+                    "id=" + id +
+                    ", firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", email='" + email + '\'' +
+                    '}';
+        }
+    }
+    ```
+
+* create a **Student** class    
+
+    ```java
+    package org.example;
+
+    import javax.persistence.DiscriminatorValue;
+    import javax.persistence.Entity;
+
+    @Entity
+    @DiscriminatorValue("STUDENT")
+    public class Student extends User{
+
+        private String course;
+
+        public Student(){}
+
+        public Student(String firstName, String lastName, String email, String course){
+            super(firstName, lastName, email);
+            this.course = course;
+        }
+
+        public String getCourse() {
+            return course;
+        }
+
+        public void setCourse(String course) {
+            this.course = course;
+        }
+    }
+    ```
+
+* create an **Instructor** class
+
+    ```java
+    package org.example;
+
+    import javax.persistence.DiscriminatorValue;
+    import javax.persistence.Entity;
+
+    @Entity
+    @DiscriminatorValue("INSTRUCTOR")
+    public class Instructor extends User {
+
+        private double salary;
+
+        public Instructor(){}
+
+        public Instructor(String firstName, String lastName, String email, double salary){
+            super(firstName, lastName, email);
+            this.salary = salary;
+        }
+
+        public double getSalary() {
+            return salary;
+        }
+
+        public void setSalary(double salary) {
+            this.salary = salary;
+        }
+    }
+    ```
+
+* create the main app:
+
+    ```java
+    package org.example;
+
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    public class App {
+        public static void main(String[] args) {
+
+            //create session factory
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(User.class)
+                    .addAnnotatedClass(Student.class)
+                    .addAnnotatedClass(Instructor.class)
+                    .buildSessionFactory();
+
+
+            //create session
+            Session session = factory.getCurrentSession();
+
+            try {
+
+                User user = new User("jhon", "doe", "jhon@doe.com");
+                Student student = new Student("alae", "touba", "alae@gmail.com", "hibernate");
+                Instructor instructor = new Instructor("chad", "darby", "chad@luv2code.com", 5555.776);
+
+                session.beginTransaction();
+
+                session.save(user);
+                session.save(student);
+                session.save(instructor);
+
+                session.getTransaction().commit();
+            }
+            finally {
+                //clean up code
+                session.close();
+                factory.close();
+            }
+        }
+
+    }
+    ```
+
+    Here is what the db looks like:
+
+    ![](imgs/024.png)
+
+
+## mapping inheritence (Table per Class strategy)
+
+suppose we have this inheritence tree:
+
+![](imgs/025.png)
+
+How to map it? Well, hibernate provides 4 mapping strategies, one of them is **Table Per Concrete Class** strategy.
+
+These are some notes about this strategy:
+* For the inheritance tree, all **concrete** classes are mapped to a table per class
+    * a concrete class is a non-abstract class
+* the table for each class contains, of course, the class fields in addition to inherited fields.
+
+
+Here is what the DB will look like for our inheritence tree:
+
+![](imgs/026.png)
+
+> if User was a concrete class it would be mapped to its own table in the DB as well  
+
+<br/>
+
+In order to implement this strategy we must follow these small steps:
+1. In superclass, specify inheritance strategy: TABLE_PER_CLASS
+1. In User superclass, update the ID generation strategy to TABLE
+1. make an update to hibernate config file (we should change the mysql dialect to MySQL8Dialect instead of MySQL5Dialect or MySQL5InnoDBDialect)
+
+<br/>
+
+
+lets follow these steps to create the project:
+
+* create a maven quick start project
+
+* add dependencies to: mysql connector, hibernate orm
+
+* if you are using a java version >8, make sure you include theses dependecies
+
+    ```xml
+    <!-- Support for Java 9/10/11 -->
+    <!-- API, java.xml.bind module -->
+    <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+
+    <!-- Runtime, com.sun.xml.bind module -->
+    <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+    ```
+
+* create a database named: **hibernate-testing-db**
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
+            <property name="connection.pool_size">100</property>
+
+            <!-- Select our SQL dialect -->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+
+* create the super class **User**
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+
+    @Entity
+    @Table(name = "users")
+    @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+    public abstract class User {
+
+        @Id
+        @Column(name = "id")
+        @GeneratedValue(strategy = GenerationType.TABLE)
+        private int id;
+
+        @Column(name = "first_name")
+        private String firstName;
+
+        @Column(name = "last_name")
+        private String lastName;
+
+        @Column(name = "email")
+        private String email;
+
+        public User(){}
+
+        public User(String firstName, String lastName, String email) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        @Override
+        public String toString() {
+            return "User{" +
+                    "id=" + id +
+                    ", firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", email='" + email + '\'' +
+                    '}';
+        }
+    }
+    ```
+
+* create the **Student** class:
+
+    ```java
+    package org.example;
+
+    import javax.persistence.Entity;
+    import javax.persistence.Table;
+
+    @Entity
+    @Table(name = "students")
+    public class Student extends User{
+
+        private String course;
+
+        public Student(){}
+
+        public Student(String firstName, String lastName, String email, String course){
+            super(firstName, lastName, email);
+            this.course = course;
+        }
+
+        public String getCourse() {
+            return course;
+        }
+
+        public void setCourse(String course) {
+            this.course = course;
+        }
+
+    }
+    ```
+
+* create the **Instructor** class:
+
+    ```java
+    package org.example;
+
+    import javax.persistence.Entity;
+    import javax.persistence.Table;
+
+    @Entity
+    @Table(name = "instructors")
+    public class Instructor extends User {
+
+        private double salary;
+
+        public Instructor(){}
+
+        public Instructor(String firstName, String lastName, String email, double salary){
+            super(firstName, lastName, email);
+            this.salary = salary;
+        }
+
+        public double getSalary() {
+            return salary;
+        }
+
+        public void setSalary(double salary) {
+            this.salary = salary;
+        }
+
+
+    }
+    ```
+
+* create the main app:
+
+    ```java
+    package org.example;
+
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    public class App {
+        public static void main(String[] args) {
+
+            //create session factory
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(User.class)
+                    .addAnnotatedClass(Student.class)
+                    .addAnnotatedClass(Instructor.class)
+                    .buildSessionFactory();
+
+            //create session
+            Session session = factory.getCurrentSession();
+
+            try {
+
+
+                Student student = new Student("alae", "touba", "alae@gmail.com", "hibernate");
+                Instructor instructor = new Instructor("chad", "darby", "chad@luv2code.com", 5555.776);
+
+                session.beginTransaction();
+
+                session.save(student);
+                session.save(instructor);
+
+                session.getTransaction().commit();
+            }
+            finally {
+                //clean up code
+                session.close();
+                factory.close();
+            }
+        }
+
+    }
+    ```
+
+    Here is what the db looks like now:
+
+    ![](imgs/027.png)
+
+
+## mapping inheritence (Joined Table strategy)
+
+suppose we have this inheritence tree:
+
+![](imgs/029.png)
+
+How to map it? Well, hibernate provides 4 mapping strategies, one of them is **Joined Table** strategy.
+
+These are some notes about this strategy:
+* For the inheritance tree, all classes are mapped to a table (each class has a table) 
+* Superclass table contains fields common to all subclasses
+* Subclass tables contain only fields specific to the subclass
+* Inheritance is modeled with a foreign key
+
+<br/>
+
+Here is what the db will look like using this mapping strategy:
+
+![](imgs/028.png)
+id in the students table is a foreign key that references the id (primary key) in the users table (same of instructors table)
+
+<br/>
+
+In order to implement this strategy we should follow these steps:
+
+1. In superclass, specify inheritance strategy: JOINED
+1. In superclass, update the ID generation strategy to IDENTITY (we want the auto increment feature of Mysql, no need for AUTO here)
+
+
+<br/>
+
+lets follow these steps to create the project:
+
+* create a maven quick start project
+
+* add dependencies to: mysql connector, hibernate orm
+
+* if you are using a java version >8, make sure you include theses dependecies
+
+    ```xml
+    <!-- Support for Java 9/10/11 -->
+    <!-- API, java.xml.bind module -->
+    <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+
+    <!-- Runtime, com.sun.xml.bind module -->
+    <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+    ```
+
+* create a database named: **hibernate-testing-db**
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
+            <property name="connection.pool_size">100</property>
+
+            <!-- Select our SQL dialect -->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+
+* create the **User** class
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+
+    @Entity
+    @Table(name = "users")
+    @Inheritance(strategy = InheritanceType.JOINED)
+    public class User {
+
+        @Id
+        @Column(name = "id")
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private int id;
+
+        @Column(name = "first_name")
+        private String firstName;
+
+        @Column(name = "last_name")
+        private String lastName;
+
+        @Column(name = "email")
+        private String email;
+
+        public User(){}
+
+        public User(String firstName, String lastName, String email) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        @Override
+        public String toString() {
+            return "User{" +
+                    "id=" + id +
+                    ", firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", email='" + email + '\'' +
+                    '}';
+        }
+    }
+    ```
+* create the **Student** class
+
+    ```java
+    package org.example;
+
+    import javax.persistence.Entity;
+    import javax.persistence.Table;
+
+    @Entity
+    @Table(name = "students")
+    public class Student extends User{
+
+        private String course;
+
+        public Student(){}
+
+        public Student(String firstName, String lastName, String email, String course){
+            super(firstName, lastName, email);
+            this.course = course;
+        }
+
+        public String getCourse() {
+            return course;
+        }
+
+        public void setCourse(String course) {
+            this.course = course;
+        }
+
+
+    }
+    ```
+
+* create the **Instructor** class
+
+    ```java
+    package org.example;
+
+    import javax.persistence.Entity;
+    import javax.persistence.Table;
+
+    @Entity
+    @Table(name = "instructors")
+    public class Instructor extends User {
+
+        private double salary;
+
+        public Instructor(){}
+
+        public Instructor(String firstName, String lastName, String email, double salary){
+            super(firstName, lastName, email);
+            this.salary = salary;
+        }
+
+        public double getSalary() {
+            return salary;
+        }
+
+        public void setSalary(double salary) {
+            this.salary = salary;
+        }
+    }
+    ```
+
+* create a main app:
+
+    ```java
+    package org.example;
+
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    public class App {
+        public static void main(String[] args) {
+
+            //create session factory
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(User.class)
+                    .addAnnotatedClass(Student.class)
+                    .addAnnotatedClass(Instructor.class)
+                    .buildSessionFactory();
+
+            //create session
+            Session session = factory.getCurrentSession();
+
+            try {
+
+                User user = new User("jhon", "doe", "jhon@gmail.com");
+                Student student = new Student("alae", "touba", "alae@gmail.com", "hibernate");
+                Instructor instructor = new Instructor("chad", "darby", "chad@luv2code.com", 5555.776);
+
+                session.beginTransaction();
+
+                session.save(user);
+                session.save(student);
+                session.save(instructor);
+
+                session.getTransaction().commit();
+            }
+            finally {
+                //clean up code
+                session.close();
+                factory.close();
+            }
+        }
+
+    }
+    ```
+
+    Here is what the db looks like
+
+    ![](imgs/030.png)
+
+
+
+## mapping inheritence (Mapped Superclass)
+
+suppose we have this inheritence tree:
+
+![](imgs/029.png)
+
+How to map it? Well, hibernate provides 4 mapping strategies, one of them is **Mapped Superclass** strategy.
+
+These are some notes about this strategy:
+* For the inheritance tree, subclasses are mapped to separate tables
+* Each table has the inherited fields and fields defined in the subclass
+* The mapped superclass is no longer a separate table/entity (no @Entity) (which means no table for it the DB, in other words)
+* only subclasses will use @Entity
+* only subclasses will have tables in the DB
+
+<br>
+
+Here is what th db schema will look like
+
+![](imgs/031.png)
+
+<br/>
+
+**Mapped superclass** strategy looks familiar to **Table per class** starategy but:
+* No table for superclass
+* No table joins or inheritance exists in the database schema
+* Inheritance only exists in the Java object model
+
+<br>
+
+To implement this strategy we should follow these steps:
+
+1. In superclass, annotate superclass with @MappedSuperclass
+1. In superclass, remove the annotations:
+    1. @Entity
+    1. @Table
+    1. @Inheritence
+1. In subclasses, use normal Hibernate annotation: @Entity
+
+
+So **@MappedSuperclass** Designates a class whose mapping is applied to entities that inherit from it (A mapped superclass has no separate table defined for it).
+
+<br>
+
+lets follow these steps to create the project:
+
+* create a maven quick start project
+
+* add dependencies to: mysql connector, hibernate orm
+
+* if you are using a java version >8, make sure you include theses dependecies
+
+    ```xml
+    <!-- Support for Java 9/10/11 -->
+    <!-- API, java.xml.bind module -->
+    <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+
+    <!-- Runtime, com.sun.xml.bind module -->
+    <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>2.3.2</version>
+    </dependency>
+    ```
+
+* create a database named: **hibernate-testing-db**
+
+* create the hibernate configuration file: **hibernate.cfg.xml** inside **src/main/resources** (or inside any folder that is in the classpath)
+
+    ```xml
+    <!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+    <hibernate-configuration>
+
+        <session-factory>
+
+            <!-- JDBC Database connection settings -->
+            <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+            <property name="connection.url">jdbc:mysql://localhost:3306/hibernate-testing-db</property>
+            <property name="connection.username">root</property>
+            <property name="connection.password"></property>
+
+            <!-- I dont really understand this -->
+            <!-- the most used value is 1-->
+            <property name="connection.pool_size">100</property>
+
+            <!-- Select our SQL dialect -->
+            <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+
+            <!-- Echo the SQL to stdout -->
+            <property name="show_sql">true</property>
+
+            <!-- Set the current session context -->
+            <property name="current_session_context_class">thread</property>
+
+            <!-- create tables if they dont exist (automatically), otherwise update-->
+            <property name="hbm2ddl.auto">update</property>
+        </session-factory>
+
+    </hibernate-configuration>
+    ```
+
+* create a **User** class
+
+    ```java
+    package org.example;
+
+    import javax.persistence.*;
+
+    @MappedSuperclass
+    public abstract class User {
+
+        @Id
+        @Column(name = "id")
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private int id;
+
+        @Column(name = "first_name")
+        private String firstName;
+
+        @Column(name = "last_name")
+        private String lastName;
+
+        @Column(name = "email")
+        private String email;
+
+        public User(){}
+
+        public User(String firstName, String lastName, String email) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.firstName = firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.lastName = lastName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        @Override
+        public String toString() {
+            return "User{" +
+                    "id=" + id +
+                    ", firstName='" + firstName + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", email='" + email + '\'' +
+                    '}';
+        }
+    }
+    ```
+
+* create the **Student** class
+
+    ```java
+    package org.example;
+
+    import javax.persistence.Entity;
+    import javax.persistence.Table;
+
+    @Entity
+    @Table(name = "students")
+    public class Student extends User{
+
+        private String course;
+
+        public Student(){}
+
+        public Student(String firstName, String lastName, String email, String course){
+            super(firstName, lastName, email);
+            this.course = course;
+        }
+
+        public String getCourse() {
+            return course;
+        }
+
+        public void setCourse(String course) {
+            this.course = course;
+        }
+
+
+    }
+    ```
+
+* create the **Instructor** class
+
+    ```java
+    package org.example;
+
+    import javax.persistence.Entity;
+    import javax.persistence.Table;
+
+    @Entity
+    @Table(name = "instructors")
+    public class Instructor extends User {
+
+        private double salary;
+
+        public Instructor(){}
+
+        public Instructor(String firstName, String lastName, String email, double salary){
+            super(firstName, lastName, email);
+            this.salary = salary;
+        }
+
+        public double getSalary() {
+            return salary;
+        }
+
+        public void setSalary(double salary) {
+            this.salary = salary;
+        }
+    }
+    ```
+
+* create the main app
+
+    ```java
+    package org.example;
+
+    import org.hibernate.Session;
+    import org.hibernate.SessionFactory;
+    import org.hibernate.cfg.Configuration;
+
+    public class App {
+        public static void main(String[] args) {
+
+            //create session factory
+            SessionFactory factory = new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .addAnnotatedClass(User.class)
+                    .addAnnotatedClass(Student.class)
+                    .addAnnotatedClass(Instructor.class)
+                    .buildSessionFactory();
+
+            //create session
+            Session session = factory.getCurrentSession();
+
+            try {
+
+                Student student = new Student("alae", "touba", "alae@gmail.com", "hibernate");
+                Instructor instructor = new Instructor("chad", "darby", "chad@luv2code.com", 5555.776);
+
+                session.beginTransaction();
+
+                session.save(student);
+                session.save(instructor);
+
+                session.getTransaction().commit();
+            }
+            finally {
+                //clean up code
+                session.close();
+                factory.close();
+            }
+        }
+
+    }
+    ```
+
+    Here is what the db looks like
+
+    ![](imgs/032.png)
