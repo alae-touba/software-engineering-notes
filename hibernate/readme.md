@@ -28,7 +28,7 @@
 
 you should include this at your pom.xml
 
-```
+```xml
  <!-- Support for Java 9/10/11 -->
 <!-- API, java.xml.bind module -->
 <dependency>

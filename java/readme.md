@@ -31,18 +31,29 @@
 - [HashSet:](#hashset)
 - [TreeSet:](#treeset)
 - [les types primitives en java (primitive types):](#les-types-primitives-en-java-primitive-types)
-- [variable locale:](#variable-locale)
-- [difference entre les types primitives et les objets (difference between primitive types and reference types):](#difference-entre-les-types-primitives-et-les-objets-difference-between-primitive-types-and-reference-types)
-- [le mot clé final:](#le-mot-clé-final)
-- [les modificateurs d'accés (access modifiers )](#les-modificateurs-daccés-access-modifiers-)
-- [Pourquoi les modificateurs d'accès aux membres d'une sous classes doivent-ils être moins restrictif que les modificateurs d'acces aux memes membres dans la super classe?](#pourquoi-les-modificateurs-daccès-aux-membres-dune-sous-classes-doivent-ils-être-moins-restrictif-que-les-modificateurs-dacces-aux-memes-membres-dans-la-super-classe)
-- [le modificateur static pour les variables et les méthodes:](#le-modificateur-static-pour-les-variables-et-les-méthodes)
-- [les classes statiques (static classes):](#les-classes-statiques-static-classes)
-- [les blocs statiques dans une classe (static blocks / class initializer):](#les-blocs-statiques-dans-une-classe-static-blocks--class-initializer)
-- [l'utilité des setters en java :](#lutilité-des-setters-en-java-)
-- [comment garantir qu'un bloc de code soit tjrs executé?](#comment-garantir-quun-bloc-de-code-soit-tjrs-executé)
-- [comment les chaines de caracteres (la classe String) est répresenté/implementé? todo:](#comment-les-chaines-de-caracteres-la-classe-string-est-répresentéimplementé-todo)
-- [generics:](#generics)
+- [differentes façons de lire un fichier:](#differentes-façons-de-lire-un-fichier)
+- [est ce que la méthode "main" est obligatoire:](#est-ce-que-la-méthode-main-est-obligatoire)
+- [les annotations:](#les-annotations)
+- [definition](#definition)
+- [what is a raw type:](#what-is-a-raw-type)
+- [utilité de l'annotation @Override:](#utilité-de-lannotation-override)
+- [quelque régles qu'on redefinit une méthode / overriding:](#quelque-régles-quon-redefinit-une-méthode--overriding)
+- [est ce que java pass-by-referene ou pass-by-value (is java pass by reference or pass by value):](#est-ce-que-java-pass-by-referene-ou-pass-by-value-is-java-pass-by-reference-or-pass-by-value)
+- [c'est quoi javac?](#cest-quoi-javac)
+- [les conventions de nommage dans java:](#les-conventions-de-nommage-dans-java)
+- [c'est quoi l'encapsulation (concept de OOP) (what is encapsulation):](#cest-quoi-lencapsulation-concept-de-oop-what-is-encapsulation)
+- [c'est quoi l'héritage (concept de OOP) (what is inheritence):](#cest-quoi-lhéritage-concept-de-oop-what-is-inheritence)
+- [composition(concept de OOP) (what is composition):](#compositionconcept-de-oop-what-is-composition)
+- [diamond problem:](#diamond-problem)
+- [difference entre les classes abstraites et les interfaces en terme de design / quand utiliser l'une et quand l'autre??:](#difference-entre-les-classes-abstraites-et-les-interfaces-en-terme-de-design--quand-utiliser-lune-et-quand-lautre)
+- [comment rendre les objets d'une classe immutables?](#comment-rendre-les-objets-dune-classe-immutables)
+- [pourquoi java a les types primitives:](#pourquoi-java-a-les-types-primitives)
+- [Type wrappers:](#type-wrappers)
+- [énumérations (enumerations) todo:](#énumérations-enumerations-todo)
+- [l'opérateur == teste l'égalité des valeurs de deux variables.](#lopérateur--teste-légalité-des-valeurs-de-deux-variables)
+- [comparer deux floats](#comparer-deux-floats)
+- [BigInteger todo:](#biginteger-todo)
+- [jdbc todo:](#jdbc-todo)
 
 ## la class Stack
 
@@ -3105,3 +3116,1763 @@ avec un tableau de chars.
 		}
 		```
 		
+## gestion des exceptions (handling exceptions):
+
+* definition:
+	
+	Une exception est une condition anormale qui survient dans un code au moment de l'exécution. En d'autres termes, une exception est une erreur d'exécution. 
+
+* Hiérarchie d'exception en Java:
+	
+	Tous les types d'exceptions sont des sous-classes de la classe Throwable. Ainsi, Throwable est au sommet de la hiérarchie des classes d'exception. Immédiatement en dessous de Throwable se trouvent deux sous-classes importante. Une qui s'appelle Exception. Cette classe est la classe mére de tous les exceptions que java definit. C'est également de cette classe qu'on va hériter pour créer nos propres types d'exceptions. Il existe une sous-classe importante d'exception, appelée RuntimeException. Les exceptions de ce type sont définies automatiquement pour les programmes qu'on ecrit et qui incluent des éléments tels que la division par zéro et l'indexation de tableau non valide.
+	L'autre sous classe du Throwable est: Error et qui indique des problèmes graves qu'une application raisonnable ne devrait pas essayer de catcher
+
+	![](imgs/001.png)
+
+* utiliser try & catch:
+	
+	on place le code qu'on suspecte qu'il va lever une exception dans le bloc try, et quand l'exception est levé, Java va donner le control au bloc catch associé a ce bloc try pour executer un code qui gére l'erreur.
+
+	```java
+	try{
+		
+	}catch(ExceptionType e){
+
+	}
+	```
+
+* afficher une description de l'exception:
+	
+	la classe Throwable redefinit la méthode toString(), ce qui va nous permetter d'afficher une descritpion de l'exception qu'on va la catcher.
+
+	```java
+	try{
+		int a  = 10 / 0;
+	
+	}catch(ArithmeticException e){
+		System.out.println(e);
+	}
+	```
+
+* plusieurs bloc catch:
+
+	* Dans certains cas, plusieurs exceptions peuvent être levéé par un seul morceau de code. Pour gérer ce type de situation, on peut spécifier plusieurs clauses catch, chacune traite un type d'exception différent. Lorsqu'une exception est levée, chaque instruction catch est inspectée dans l'ordre, et la première dont le type correspond à celle de l'exception est exécutée. Après l'exécution d'une instruction catch, l'exécution se poursuit après le bloc try / catch. (on passe/ne-regarde-pas les autres catch).
+
+	* exemple:
+  
+		ce code est capable de lever deux types d'exception, ArithmeticException si le variable a est egale a 0, ou ArrayIndexOutOfBoundsException si a >= arr.length.
+
+		```java
+		try{
+			int a = 10;
+
+			int arr[] = {1, 2, 3};
+			
+			System.out.println( arr[a] );
+			System.out.println( 9 / a );
+
+		}catch(ArrayIndexOutOfBoundsException e){
+			System.out.println(e);
+		}catch(ArithmeticException e){
+			System.out.println(e);
+		}
+		```
+
+	* lorsqu'on definit plusieurs bloc catch, on doit se rappeler de ne pas mettre en premier les super classe des exceptions qu'on va definit.
+	exemple:
+
+		```java
+		try{
+			int  a / 0;
+		}catch(Exception e){
+			bloc1;
+		}catch(ArithmeticException e){
+			bloc2;
+		}
+		```
+		
+		c'est bloc1 qui va etre executer meme si l'exception est de type ArithmeticException, car ArithmeticException est une sous classe de la classe Exception. on doit jamaias précder une exception par sa super classe, le code doit etre:
+
+		```java
+		try{
+				int  a / 0;
+		}catch(ArithmeticException e){
+			bloc1;
+		}catch(Exception e){
+			bloc2;
+		}
+		```
+
+* des blocs try / catch imbriqué:
+	
+	on peut créer des blocs try /  catch imbriqué, c-a-d des bloc try/catch a l'interieure d'autres blocs try/catch.
+	si un bloc catch ne gére pas l'exception levéé par son bloc try alors les autres blocs catch qui sont au dessus de ce bloc catch sont inspecté pour savoir si l'un deux gére l'exception.
+
+	exemple:
+			
+	```java
+	try{
+		try{
+			System.out.println(10 / 0);
+		}catch (ArrayIndexOutOfBoundsException e){
+			System.out.println(e);
+		}
+		System.out.println("after the inner try / catch");
+	}catch (ArithmeticException e){
+		System.out.println(e);
+	}
+	System.out.println("after the exterior try / catch");
+	```
+	resultats
+
+	```
+	java.lang.ArithmeticException: / by zero
+	after the exterior try / catch
+	```
+	
+	le catch du try a l'interieure ne gere pas l'exception ArithmeticException, donc on monte un niveau et on trouve un bloc catch qui la gére, et ce bloc est executé. et l'execution se poursuit aprés ce bloc catch executé.
+
+* throw:
+	
+	jusq'a maintenant on a traiter seulement les cas ou les exceptions on été levé par java. Avec le mot clé throw on va pouvoir lever nous meme explicitement une exception.
+
+	exemple:
+
+	```java
+	try{
+		String name = null;
+		if(name == null)
+			throw new NullPointerException();
+	}catch(NullPointerException e){
+		System.out.println(e);
+	}
+
+	```
+
+* throws:
+	
+	Si une méthode est capable de lever une exception qui ne gere pas alors elle doit utiliser le mot clé throws dans sa déclaration pour informer les utilisateurs du méthodes de ces exceptions pour qu'ils les gérent.(c'est ca l'utilité du throws => quand on veut utiliser une méthode qui a cette clause, le compilateur va nous informer que la méthode peut lever une exception et donc il faut la gérer).
+	throws liste tous les exceptions qu'une méthode est capable de lever sauf ceux qui sont sous classes de Error ou RuntimeException.
+
+	exemple
+
+	```java
+	public class Main {
+
+		public static void main(String[] args) {
+			try {
+				throwOne();
+			} catch (IllegalAccessException e) {
+				System.out.println(e);
+			}
+		}
+
+		static void throwOne() throws IllegalAccessException {
+			System.out.println("inside throwOne");
+			throw new IllegalAccessException();
+		}
+	}
+	```
+
+	resultats:
+	```
+	inside throwOne
+	java.lang.IllegalAccessException
+	```
+		
+
+	puisq la méthode throwOne est capable de lever l'exception IllegalAccessException mais elle ne la gére pas alors elle doit ajouter "throws IllegalAccessException" a sa declaration. sinon le code ne va pas compiler.
+
+* finally:
+	
+	* un bloc finnaly est executé toujours apres un bloc try/catch et avant le code qui suit le bloc try/catch.. le bloc finnaly est executé dans tous les cas, c-a-d, si une exeption est levéé ou non.
+
+	* généralement ce bloc est utiliser pour fermer des resources comme des fichiers par exemple qu'on a ouvert et traivailler avec dans un bloc try
+
+	*
+		```java
+		try{
+
+		}catch(){
+
+		}finally{
+			//s'execute tjrs
+		}
+		```
+		
+
+	* un bloc finally peut etre utilisé seulement avec un bloc try et sans le catch.
+
+* les exceptions java standards:
+	
+	* dans le package java.lang java definit plusieurs type d'exceptions.
+	* Parmi les exceptions les plus utilisé on trouve celles qui héritent de RuntimeException. ces exceptions n'ont pas besoin d'etre inclus dans une déclaration de méthode avec la clause throws. Elle sont appélé en anglais "unchecked exceptions" car le compilateur ne les verifient pas au moment du compilation, et c'est le role du développeur de les gérer. (les programmes avec des exeption de type "unchecked exceptions" se compilent correctement).
+
+	* voila une liste des exceptions qui héritent de RuntimeException (unchecked exceptions) et qui existent dans java.lang:
+		
+		* ArithmeticException					
+		
+		* ArrayIndexOutOfBoundsException		
+		
+		* ArrayStoreException					
+
+			ajouter un elements a une tableau qui n'est pas de types compatibles.
+
+			```java
+			Number[] arr = new Double[1];
+			arr[0] = new Integer(1);
+			```
+					
+		
+		* ClassCastException
+			
+			cast invalide
+
+			```java
+			Object i = Integer.valueOf(42);
+			String s = (String)i;            // ClassCastException thrown here.
+			```
+
+		* EnumConstantNotPresentException
+		
+		* IndexOutOfBoundsException			
+		 
+			```java
+			List<String> s = List.of("alae");
+			System.out.println(s.get(9)); //la liste conteint seuelement 1 element!!
+			```
+
+		* NumberFormatException				
+
+			invalide conversion de string vers nombre
+
+			```java
+			System.out.println(Integer.parseInt("edf"));
+			```
+
+		* NullPointerException
+
+		* NegativeArraySizeException			
+			
+			creation d'un tableau avec un longeur negative
+			
+			```java
+			int[] arr = new int[-1];
+			```
+
+		* UnsupportedOperationException
+  
+			une opération non supporté
+			
+			exemple:
+
+			```java
+			List<String> list = List.of("alae");	//créer une list immutable
+			list.add("salma");	//modification!!!
+			```
+			
+		* StringIndexOutOfBoundsException	
+
+			```java
+			String name = "alae";
+			System.out.println(name.charAt(111));
+			```
+			
+		
+	
+	* On a aussi les exception qui sont vérifiés au moment du compilation, On les appelles "checked exceptions". Si du code dans une méthode lève une exception vérifiée, la méthode doit soit gérer l'exception, soit spécifier l'exception à l'aide du mot clé throws.
+
+		exemple:
+
+		```java
+		public class Main {
+			public static void main(String[] args){
+				var file = new File("[path-to-file]");
+
+				//1er méthode (tous le contenu)
+				var content = Files.readString(file.toPath());	//str  
+			}
+		}
+		```
+			
+		
+		Ce programme ne va pas se compiler car la méthode readString peut lever une exception de type IOException, et donc on doit soit gérer cette "checked exception", soit ajouter la clause throws a la déclaration de la mthode main comme ceci:
+
+		```java
+		public class Main {
+			public static void main(String[] args) throws IOException {
+				var file = new File("[path-to-file]");
+
+				//1er méthode (tous le contenu)
+				var content = Files.readString(file.toPath());	//str
+			}
+		}
+		```
+	* des exemples des "checked exceptions" qui existent dans java.lang:
+	
+		* ClassNotFoundException:
+			
+			```java
+			Class.forName("Dog"); //supposons que la classe Dog n'existe pas
+			```
+
+		* CloneNotSupportedException
+		 
+		 	tentative de cloner un objet sans implementer l'interface Cloneable
+		
+		* IllegalAccessException:	
+			
+			exemple:
+			
+			```java
+			class Person{
+				private String name;
+			}
+			public class Main {
+				public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
+					Person p = new Person();
+					Class<?> cls = p.getClass();
+					Field f = cls.getDeclaredField("name");
+					f.set(p, "alae");
+				}
+			}
+			```
+				
+			ce programme leve une exception de type IllegalAccessException car l'attribut name est privé
+
+		* NoSuchFieldException:
+		 
+			exemple:
+			
+			```java
+			class Person{
+				private String name;
+			}
+			public class Main {
+				public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
+					Person p = new Person();
+					Class<?> cls = p.getClass();
+					Field f = cls.getDeclaredField("namsfee");
+				}
+			}
+			```
+			ce programme leve une exception NoSuchFieldException car pas d'attribut nommé: namsfee dans la classe.
+		
+
+
+## reflection API:
+
+* definition:
+  
+	* c'est une API en java (dans le package java.lang.reflect) qui va nous permettre d'inspecter/recuperer-des-informations-sur les classes, les méthodes, les interfaces et les attributs au temps d'execution, par exemple on va pouvoir savoir tous les méthodes defini par une classe, executer ces méthodes sur un objet de la classe meme s'elles sont declarés privé, on va pouvoir accéder a des attributs d'un objet meme s'ils sont déclaré privé et beaucoup d'autres choses..
+
+	* un objet inconnu --> reflection API --> inspecter et modifier le comportement de cet objet (sa classe, les méthodes déclarés....)
+
+	* la réflexion peut etre utilisé pour obtenir des informations sur:
+	
+		* Une classe,
+		* Les constructeurs,
+		* les méthodes,
+		* les attributs
+
+	* pour obtenir les infos sur une classe et donc savoir ses méthodes, ses constructeurs et ses attributs et tout ca on doit créer un objet de type Class.
+
+* créer un objet de type Class:
+	
+	```java
+	package org.example;
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	class Person{
+		int age;
+		String name;
+	}
+	```
+	
+	main():
+
+	```java
+	var p = new Person(21, "alae");
+
+	//récuprer (de diffrenete maniere) une instance de l'objet Class qui represente une classe donné
+	Class<?> c1 = p.getClass();
+	Class<?> c2 = Person.class;
+	Class<?> c3 = Class.forName("org.example.Person");
+
+	System.out.println(c1); //class org.example.Person
+	System.out.println(c2); //class org.example.Person
+	System.out.println(c3); //class org.example.Person
+
+	System.out.println(c1.equals(c2) && c2.equals(c3)); //trur
+
+	System.out.println(c1.getName());   //org.example.Person
+	```
+		
+	maintenant aprés qu'on a une instance de type Class (c2/c2/c3) qui représente la classe Person, on peut récuperer dufferentes infos sur la classe, par exemple des infos sur les constructeurs, les méthodes, les variables d'instances, sa super classe, les interfaces implementés ...etc 
+
+* récupérer des infos sur les interfaces implementé par la classe:
+	
+	```java
+	package org.example;
+
+	interface A{
+		void methodeA();
+
+		default String hola(){
+			return "hola";
+		}
+	}
+
+	interface B{
+		float PI =  3.14f;
+		void methodeB();
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor		
+	class Person implements A, B{
+		private int age;
+		private String name;
+
+
+		@Override
+		public void methodeA() {
+
+		}
+
+		@Override
+		public void methodeB() {
+
+		}
+	}
+	```
+	
+	main()
+
+	```java
+	var p = new Person(21, "alae");
+	Class<?> cls = p.getClass();
+
+	Class<?>[] interfaces = cls.getInterfaces();
+
+	for (var i: interfaces){
+		System.out.println("name: " + i.getName());
+		System.out.println("methods: " + Arrays.toString(i.getDeclaredMethods()));
+		System.out.println("fiels: " + Arrays.toString(i.getDeclaredFields()));
+		System.out.println("");
+	}
+	```
+	
+	résultats
+
+	```
+	name: org.example.A
+	methods: [public abstract void org.example.A.methodeA(), public default java.lang.String org.example.A.hola()]
+	fiels: []
+
+	name: org.example.B
+	methods: [public abstract void org.example.B.methodeB()]
+	fiels: [public static final float org.example.B.PI]
+	```
+	
+	on pu récuperer les interfaces que la classe Person implémente ainsi que les méthodes déclarés et les attributs statiques dans ces interfaces aussi.
+
+* récupérer des infos sur la super class de la classe:
+	
+	```java
+	package org.example;
+	class Person{
+	}
+	class Student extends Person{
+	}
+
+	```
+	main():
+
+	```java
+	var s = new Student();
+	Class<?> cls = s.getClass();
+	System.out.println(cls.getSuperclass()); 	//class org.example.Person
+
+	```
+	on a pu récuprer une instace de type Class qui représente la super classe (Person) de notre class Student, donc on peut maintenat savoir tous constructeurs, méthodes..pour Person.
+
+* récuprerer le modificateur d'accés de la classe:
+	
+	```java
+	package org.example;
+	public class Programmer{
+
+	}
+	```
+
+	main():
+	
+	```java
+	var s = new Programmer();
+	Class<?> cls = s.getClass();
+	int modifier = cls.getModifiers(); //modificateur d'accés
+	System.out.println(Modifier.toString(modifier));	//public
+	```
+
+* récuprerer des infos sur les constructeurs de la classe:
+	
+	```java
+	//tous les constructeurs public declaré dans cette classe et sa super classe aussi
+	Constructor<?>[] Class.getConstructors();			
+
+	//tous constructeurs declaré dans cette classe
+	Constructor<?>[] Class.getDeclaredConstructors();	
+
+	String Constructor.getName();
+
+	int	Constructor.getParamCount();
+
+	Class<?>[] Constructor.getParameterTypes();
+
+	int Constructor.getModifiers();
+
+	...
+	```
+	
+
+	demo:
+	
+	```java
+	package org.example;
+	class Person{
+		private int age;
+		private String name;
+
+		public Person(){
+
+		}
+
+		public Person(int age, String name) {
+			this.age = age;
+			this.name = name;
+		}
+
+		//getters & setters
+	}
+	```
+
+	main():	
+	
+	```java
+	var p = new Person(21, "alae");
+	Class<? extends Person> cls = p.getClass();
+
+	Constructor<?>[] declaredConstructors = cls.getDeclaredConstructors();
+
+	for(var constructor: declaredConstructors){
+		System.out.println("constructor: " + constructor);
+		System.out.println("name       : " + constructor.getName());
+		System.out.println("param count: " + constructor.getParameterCount());
+		System.out.println("param types: " + Arrays.toString(constructor.getParameterTypes()));
+		System.out.println("modifier   :" + Modifier.toString(constructor.getModifiers()));
+		constructor.getParameterTypes()
+	}
+	```
+
+	résultats:
+
+	```
+	constructor: public org.example.Person()
+	name       : org.example.Person
+	param count: 0
+	param types: []
+	modifier   : public
+
+	constructor: public org.example.Person(int,java.lang.String)
+	name       : org.example.Person
+	param count: 2
+	param types: [int, class java.lang.String]
+	modifier   : public
+	```
+	
+*  récuprerer des infos sur les méthodes de la classe:
+	* on va pouvoir faire un tas de choses avec les méthodes declarés dans une classe, par exempler, recuprer des infos sur tous ces méthodes (ces noms, types de retour, params..), on va etre caoable aussi d'invoquer ces méthodes sur les objets de la class meme si ces méthodes ont on modificateur d'acéés private.
+
+	* méthodes:	
+		
+		```java
+		//tous les méthodes public declarés dans cette classe et sa super class.
+		Method[] Class.getMethods();			
+
+		//tous les méthodes declaré dans cette classe.
+		Method[]  Class.getDeclaredMethods();	
+
+		//modificateur d'accés
+		int Method.getModifiers();			
+		
+		Class<?> Method.getDeclaringClass();
+
+		int	Method.getParamCount();
+
+		Class<?>[] Method.getParameterTypes();
+
+		Class<?> Method.getReturnType();
+		```
+
+
+	* demo:
+	
+		```java
+		package org.example;
+
+		import java.lang.reflect.InvocationTargetException;
+		import java.lang.reflect.Method;
+		import java.lang.reflect.Modifier;
+		import java.util.Arrays;
+		import java.util.Objects;
+
+		interface A{
+			void methodeA();
+
+			default String hola(){
+				return "hola";
+			}
+		}
+
+		interface B{
+			float PI =  3.14f;
+			void methodeB();
+		}
+
+		class Person implements A, B{
+			private int age;
+			private String name;
+
+			public Person(){
+
+			}
+
+			public Person(int age, String name) {
+				this.age = age;
+				this.name = name;
+			}
+
+			public int getAge() {
+				return age;
+			}
+
+			public String getName() {
+				return name;
+			}
+
+			public void setAge(int age) {
+				this.age = age;
+			}
+
+			public void setName(String name) {
+				this.name = name;
+			}
+
+			@Override
+			public String toString() {
+				return "Person{" +
+						"age=" + age +
+						", name='" + name + '\'' +
+						'}';
+			}
+
+			@Override
+			public boolean equals(Object o) {
+				if (this == o) return true;
+				if (o == null || getClass() != o.getClass()) return false;
+				Person person = (Person) o;
+				return age == person.age &&
+						Objects.equals(name, person.name);
+			}
+
+			@Override
+			public int hashCode() {
+				return Objects.hash(age, name);
+			}
+
+			@Override
+			public void methodeA() {
+
+			}
+
+			@Override
+			public void methodeB() {
+
+			}
+
+			public void sayHey(){
+				System.out.println("hey my name is " + name);
+			}
+
+			private void privateMethod(int a){
+				System.out.println("im a private method, a = " + a);
+			}
+		}
+
+		public class Main {
+
+			public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+				var p = new Person(21, "alae");
+				Class<? extends Person> cls = p.getClass();
+
+				Method[] methods = cls.getMethods();
+				for (var method: methods){
+					System.out.println("method          : " + method);
+					System.out.println("name            : " + method.getName());
+					System.out.println("modifier        : " + Modifier.toString(method.getModifiers()));
+					System.out.println("declaring class : " + method.getDeclaringClass());
+					System.out.println("param count     : " + method.getParameterCount());
+					System.out.println("param types     : " + Arrays.toString(method.getParameterTypes()));
+					System.out.println("return type     : " + method.getReturnType() + "\n");
+				}
+				
+				//invoquer une méthode privé sur un objet (cool isnt it?)
+				Method privateMethod = cls.getDeclaredMethod("privateMethod", int.class);
+				privateMethod.setAccessible(true);
+				privateMethod.invoke(p, 10);
+			}
+
+		}
+		```
+
+		résultats:
+
+		```
+		method          : public java.lang.String org.example.Person.getName()
+		name            : getName
+		modifier        : public
+		declaring class : class org.example.Person
+		param count     : 0
+		param types     : []
+		return type     : class java.lang.String
+
+		method          : public boolean org.example.Person.equals(java.lang.Object)
+		name            : equals
+		modifier        : public
+		declaring class : class org.example.Person
+		param count     : 1
+		param types     : [class java.lang.Object]
+		return type     : boolean
+
+		method          : public java.lang.String org.example.Person.toString()
+		name            : toString
+		modifier        : public
+		declaring class : class org.example.Person
+		param count     : 0
+		param types     : []
+		return type     : class java.lang.String
+
+		method          : public int org.example.Person.hashCode()
+		name            : hashCode
+		modifier        : public
+		declaring class : class org.example.Person
+		param count     : 0
+		param types     : []
+		return type     : int
+
+		method          : public void org.example.Person.setName(java.lang.String)
+		name            : setName
+		modifier        : public
+		declaring class : class org.example.Person
+		param count     : 1
+		param types     : [class java.lang.String]
+		return type     : void
+
+		method          : private void org.example.Person.privateMethod(int)
+		name            : privateMethod
+		modifier        : private
+		declaring class : class org.example.Person
+		param count     : 1
+		param types     : [int]
+		return type     : void
+
+		method          : public int org.example.Person.getAge()
+		name            : getAge
+		modifier        : public
+		declaring class : class org.example.Person
+		param count     : 0
+		param types     : []
+		return type     : int
+
+		method          : public void org.example.Person.setAge(int)
+		name            : setAge
+		modifier        : public
+		declaring class : class org.example.Person
+		param count     : 1
+		param types     : [int]
+		return type     : void
+
+		method          : public void org.example.Person.methodeA()
+		name            : methodeA
+		modifier        : public
+		declaring class : class org.example.Person
+		param count     : 0
+		param types     : []
+		return type     : void
+
+		method          : public void org.example.Person.methodeB()
+		name            : methodeB
+		modifier        : public
+		declaring class : class org.example.Person
+		param count     : 0
+		param types     : []
+		return type     : void
+
+		method          : public void org.example.Person.sayHey()
+		name            : sayHey
+		modifier        : public
+		declaring class : class org.example.Person
+		param count     : 0
+		param types     : []
+		return type     : void
+
+		im a private method, a = 10
+		```
+			
+
+
+* récuprerer des infos sur les attributs de la classe:
+	
+	* methods:
+		
+		```java
+		//tous les attributes public de la classe et aussi de la super classe
+		Field[] Class.getFields()					
+
+		//tous les attributs de la classe
+		Field[] Class.getDeclaringFields()			
+		
+		//recuprer la valeur de l'attribut pour l'objet obj (field.get(object))
+		Object Field.get​(Object obj)				
+
+		Class<?> Field.getDeclaringClass()		
+
+		int Field.getModifiers()
+
+		String Field.getName()
+
+		Class<?> Field.getType()
+
+		boolean Field.isEnumConstant()
+
+		void Field.set​(Object obj, Object value)
+
+		//on doit faire setAccessible(true) pour acceder aux attributs privés
+		void Field.setAccessible​(boolean flag)	
+		...
+		```
+
+	* demo:
+
+		```java
+		@Data
+		@AllArgsConstructor
+		@NoArgsConstructor
+		class Person{
+			private int age;
+			private String name;
+		}
+		```
+		
+		
+		main():
+
+		```java
+		public static void main(String[] args) throws IllegalAccessException, NoSuchFieldException {
+			var p = new Person(21, "alae");
+			Class<? extends Person> cls = p.getClass();
+
+			Field[] fields = cls.getDeclaredFields();
+			for (var field: fields){
+				field.setAccessible(true);  //donner l'acces aux attributs privés
+
+				System.out.println("field           : " + field);
+				System.out.println("name            : " + field.getName());
+				System.out.println("modifier        : " + Modifier.toString(field.getModifiers()));
+				System.out.println("declaring class : " + field.getDeclaringClass());
+
+				System.out.println("value for p     : " + field.get(p));
+				System.out.println("type            : " + field.getType());
+				System.out.println("is enum constant: " + field.isEnumConstant() + "\n");
+
+			}
+
+			//changer la valeur d'un attribut privé au temps de l'execution
+			var fieldName = "name";
+			Field field = cls.getDeclaredField(fieldName);
+			field.setAccessible(true);
+			field.set(p, "yassine");
+			System.out.println(p);
+		}
+		```
+			
+		résultats:
+
+		```
+		field           : private int org.example.Person.age
+		name            : age
+		modifier        : private
+		declaring class : class org.example.Person
+		value for p     : 21
+		type            : int
+		is enum constant: false
+
+		field           : private java.lang.String org.example.Person.name
+		name            : name
+		modifier        : private
+		declaring class : class org.example.Person
+		value for p     : alae
+		type            : class java.lang.String
+		is enum constant: false
+
+		Person{age=21, name='yassine'}
+		```
+		
+## differentes façons de lire un fichier:
+	
+* suppose we have this file
+	
+	```java
+	var file = new File("[path-to-file]");
+	```
+
+* 1er méthode (tous le contenu)
+	
+	```java
+	var content = Files.readString(file.toPath());	//str
+	```
+
+* 2eme méthode (tous le contenue)
+
+	```java
+	var sc = new Scanner(file);
+	sc.useDelimiter("\\z");
+	var content = sc.next();
+	```
+
+* 3éme méthode (ligne par ligne)
+
+	```java
+	var sc = new Scanner(file);
+	while(sc.hasNextLine())
+		System.out.println(sc.nextLine());
+	```
+
+* 4éme méthode (tous les lignes)
+
+	```java
+	var lines = Files.readAllLines(file.toPath()); List<str>
+	```
+* 5éme méthode
+
+	```java
+	var fileReader = new FileReader(file);
+	int c;
+	while( (c=fileReader.read()) != -1 )
+		System.out.println((char)c);
+	```
+
+
+## est ce que la méthode "main" est obligatoire:
+
+* avant Java7:
+	
+	non c'est pas obligatoire, on peut mettre notre code dans un bloc statique dans la classe qui est supposé contenir la méthode main et tout va marcher comme d'habitude.
+	(le bloc statique s'execute au mement de chargement de la classe)
+
+  	demo:
+	
+	```java
+	class staticExample { 
+		static	{ 
+			System.out.println("Inside Static Block."); 
+			System.exit(0); 
+		} 
+	}
+	``` 
+
+* aprés Java 7 (7+):
+	
+	oui, c'est obligatoire d'avoir main et le compilateur va génerer une erreur: "Error: Main method not found" s'il ne la trouve pas
+
+
+## les annotations: 
+	
+definition
+-----------
+	les annotations sont un moyen pour ajouter des meta-data (meta-données) a un code, c'est a dire qu'on va pouvoir fournir des informations supplémentaires aux éléments de notre programme, c-a-d aux classes, attributs, méthodes, paramétres des méthodes...etc
+
+	les annotations ne sont pas supposé changer le comportement d'un programme mais seulement, par exemple, aider le compilateur a capturer des erreur (@override: erreur en ce qui concerne la redéfinition d'une méthode) ou bien générer du code source, afin de faciliter le travail des développeurs notamment sur des tâches répétitives (project lombok: @Data, @Getter, @Setter...). 
+
+* creation d'annotation:
+	
+	Java propose la possibilité de définir ses propres annotations.\
+	On utilise ce syntaxe:
+
+	```java
+	@interface MyAnno{
+		String str();
+		int val();
+		String[] arr();
+	}
+	```
+		
+
+	Une annotation ne peut pas avoir une clause extends.
+
+	Tous les annotation hérite de l'interface Annotation, cette interface a ces méthodes:
+	
+	```java
+	Class<? extends Annotation> annotationType()
+	boolean equals​(Object obj)
+	int hashCode()
+	String toString()
+	```
+
+
+	Lorsqu'une annotation est crée, elle peut etre utilisé pour annoter qlq choses(classes, methodes, attributs, paramétres de méthodes, les constantes d'une énumeration et les annotations).
+
+	Quand on applique une annotation, on fournit une valeur pour ses membres, exemple:
+		
+	
+	```java
+	@MyAnno(str="this is a str", value=10)
+	public static void myMethod(){
+
+	}
+	```
+
+* Specifying a Retention Policy:
+	
+	* "retention Policy" précise à quel niveau les informations concernant l'annotation seront conservées. On peut spécifier ceci pour une annotation en utilisant une autre annotation: @Retention, cette annotation attend comme valeur un élément de l'énumération RetentionPolicy.
+
+		* RetentionPolicy.SOURCE	
+		 	
+			informations conservées dans le code source uniquement (fichier .java) : le compilateurles ignore
+
+		* RetentionPolicy.CLASS	
+		 
+		 	informations conservées dans le code source et le bytecode (fichiers .java et .class)
+
+		* RetentionPolicy.RUNTIME	
+		 	
+			informations conservées dans le code source et le bytecode : elles sont disponibles àl'exécution par introspection
+
+	* utilisation: @Retention(RetentionPolicy.RUNTIME)
+
+
+* Obtenir une annotation au temps de l'execution en utilisant la réflexion (reflection API):
+
+	```java
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface MyAnno{
+		String str();
+		int value();
+	}
+
+	public class Main {
+
+		public static void main(String[] args) throws NoSuchMethodException {
+			Class<?> cls = Main.class;
+			Method m = cls.getDeclaredMethod("m");
+			MyAnno annotation = m.getAnnotation(MyAnno.class);
+			System.out.println(annotation.str() + " / " + annotation.value());
+		}
+
+		@MyAnno(str="this is a string", value=10)
+		static void m(){
+
+		}
+	}
+	```
+	
+	résultat
+
+	```
+	this is a string / 10
+	```
+	
+	en premier lieu on crée une annotation qui a deux membres: str & value. Aprés on annote la méthode m avec cette annotation et on fournit une valuer pour les deux membres de l'annotation bien sur.
+
+* Obtenir tous les annotations qui annotent un objet en utilisant la reflexion:
+	
+	```java
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface MyAnno{
+		String str();
+		int value();
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface What{
+		String descritpion();
+	}
+
+	public class Main {
+
+		public static void main(String[] args) throws NoSuchMethodException {
+			Class<?> cls = Main.class;
+			Method m = cls.getDeclaredMethod("m");
+			Annotation annotations[] = m.getAnnotations();
+
+			for(var annotation: annotations){
+				System.out.println(annotation);
+			}
+		}
+
+		@What(descritpion = "this is a description")
+		@MyAnno(str="this is a string", value=10)
+		static void m(){
+
+		}
+	}
+	```
+	
+	```
+	@org.example.What(descritpion="this is a description")
+	@org.example.MyAnno(str="this is a string", value=10)
+	```
+	
+	on récuprer tous les annotations dans un tableau d'Annotation (reppelle twa, Annotation est la super interface de tous les interfaces d'annotations, et elle definit toString() c'est pour cela on a pu faire System.out.println(annotation); )
+
+* l'interface AnnotatedElement:
+	
+	on a pu appler les méthodes: getAnnotation & getAnnotations sur des objets du type Method, car la class Method implémente l'interface java.lang.reflect.AnnotatedElement, qui definit ces méthodes et d'autres.
+	
+	Parmi les autres méthodes definit par cette interface on trouve:
+
+	```java
+	default boolean isAnnotationPresent(Class<? extends Annotation> annoType)
+	```
+
+	qui retourne true si, l'annotation annoType annote l'élement qui invoque cette méthode.
+
+
+* utilisation des valeurs par default pour les membres d'une annotation:
+	- on peut utiliser des valeurs par defaut pour les membres d'une annotations, ces valeurs vont etre utilisé si aucune valeur n'est spécifier pour le membre specifique.
+
+	- syntaxe:
+	
+		type member() defautl [value];
+
+	- exemple:	
+	 
+	
+		```java
+		@Retention(RetentionPolicy.RUNTIME)
+		@interface MyAnno{
+			String str() default "default str";
+			int val() default -1;
+		}
+
+		public class Main {
+
+			public static void main(String[] args) throws NoSuchMethodException {
+				Class<?> cls = Main.class;
+				Method m = cls.getDeclaredMethod("m");
+				MyAnno myAnno = m.getAnnotation(MyAnno.class);
+				System.out.println(myAnno);
+				System.out.println(myAnno.str() + " / " + myAnno.val());
+			}
+
+			@MyAnno
+			static void m(){
+			}
+		}
+		```
+
+		résultat
+
+		```
+		@org.example.MyAnno(val=-1, str="default str")
+		default str / -1
+		```
+* marker annotations / marqueurs:
+	
+	- c'est un type special d'annotation qui n'a pas de members. sa raison d'etre est de marquer un element et cela suffit.
+	La meilleur moyen de savoir si une annotation marque ou pas un element est d'utiliser la méthode isAnnotationPresent qui est definit par l"interface AnnotatedElement.
+
+	- demo:
+
+		```java
+		@Retention(RetentionPolicy.RUNTIME)
+		@interface  MyMarker{}
+
+		public class Main {
+
+			public static void main(String[] args) throws NoSuchMethodException {
+				Class<?> cls = Main.class;
+				Method m = cls.getDeclaredMethod("m");
+
+				System.out.println(m.isAnnotationPresent(MyMarker.class));	//true
+			}
+
+			@MyMarker
+			static void m(){
+			}
+		}
+		```
+
+* les annotations d'un seul membre / single member annotations:
+	
+	c'est une annotation normal mais qui a seulement un seul membre, ce qui alloue une sténographie lors de l'annotation d'un element avec elle.
+	forcément le nom de cette membre doit etre nommé value.
+
+	demo:
+		
+	```java
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface MyAnno{
+		String value();
+	}
+
+
+	public class Main {
+
+		public static void main(String[] args) throws NoSuchMethodException {
+			Class<?> cls = Main.class;
+			Method m = cls.getDeclaredMethod("m");
+
+			System.out.println(m.getAnnotation(MyAnno.class).value());	//striiiing
+		}
+
+		@MyAnno("striiiing")
+		static void m(){
+		}
+	}
+	```
+
+* les annotations standards:
+	* @Deprecated: 
+  
+		- C'est un marqueur qui précise que l'entité est obsolète et qu'il ne faudrait plus l'utiliser. Elle peut être utilisée avec une classe, une interface ou un membre (méthode ou champ).
+		- Lors du compilation d'un programme qui utilise une entité annoté avec @Deprecated, le compilateur va générer un avertissement.
+	
+	* @Override
+
+	* @FunctionalInterface:
+	 
+		- Annote une interface fonctionnelle, c-a-d qui a une seule méthode abstraite. Les interfaces fonctionnelles sont utilisés par les lambda expressions.
+		- Ce n'est pas nécessaire d'annoté une interface fonctionnelle par cette annotation, c'est simplememnt informative.
+
+	* @SuppressWarning:
+  
+		- demande au compilateur d'ignorer certaines avertissements qui sont pris encompte par défaut.
+		- parmie les avertssements qu'on peut demander au compilateur d'ignorer sont:
+		 
+			- deprecation: 
+				
+				utilisé pour informer les developpeurs que certaines entités ne sont pas recommandé a utilisé. 
+
+			- unchecked: 
+			 
+				lors d'une utilisation d'un raw type le compilateur va nous avertir, donc pour ignoer ce types d'avertissements on peut utiliser @SuppressWarning("unchecked")
+
+		- utilisation de @SuppressWarning:
+
+			```java		 
+			@SuppressWarning({"unchecked", "deprecation"})
+			```
+	* @Target:
+		
+		- Utilisé seulement comme annotation a d'autres annotations.
+		- Elle spécifie le type des entités auxquelles l'annotation peut etre appliquer.
+		- Elle prend comme argument une liste {"", ""} de constantes de type ElementType.
+
+		- voila une liste des differentes déclarations auxquelles une annotation peut etre appliqué:
+		 
+			* ElementType.ANNOTATION_TYPE	
+
+				l'annotation peut etre appliqué a seulement une autre annotation  	
+			* ElementType.CONSTRUCTOR 
+			* ElementType.FIELD
+			* ElementType.LOCAL_VARIABLE
+			* ElementType.METHOD
+			* ElementType.MODULE
+			* ElementType.PACKAGE
+			* ElementType.PARAMETER		
+
+				Paramètres d'une méthode ou d'un constructeur
+
+			* ElementType.TYPE				
+
+				classe, interface et enumeration
+			* ElementType.TYPE_PARAMETER
+			* ElementType.TYPE_USE
+
+
+		-exemple d'utilisation:
+			@Target{ElementType.METHOD, ElementType.TYPE}
+			@interface MyAnno{
+
+			}
+
+	* @Inherited:
+	
+		est une annotation marqueur qui ne peut être utilisée que sur une autre déclaration d'annotation. De plus, cela n'affecte que les annotations qui seront utilisées sur les déclarations de classe. Si on marque une annotation avec @Inherited, alors si une class est annoté avec cette annotation, tous ses sous classes vont hérité de cette annotation.
+
+	* @Retention:
+	
+		utilisé seulement comme annotation a d'autres annotations. Elle spécifie à quel niveau les informations concernant l'annotation seront conservées. Cetteannotation attend comme valeur un élément de l'énumération RetentionPolicy.
+
+## what is a raw type:
+	
+un raw type est une class ou interface generique mais qui n'a pas d'arguments lors de l'utilsiation.
+
+* exemple:
+
+	considerons la classe ArrayList:
+	
+	```java
+	public class ArrayList<E>{
+
+	}
+	```
+
+	ceci est une classe generique, si on l'utilise comme sa:
+	
+	```java
+	ArrayList<Integer> list = new ArrayList<>();
+	```
+	alors ici on est entrain de créer un type paramétré (parameterized type), car on fournit un argument pour le parametre T.
+
+	sinon si on l'utilise comme ca:
+	
+	```java
+	ArrayList list = new ArrayList();
+	```
+
+	alors on est entrain de creer un "raw type" (type brut) de ArrayList<T>
+
+## utilité de l'annotation @Override:
+	
+L'annotation @Override est une vérification extrêmement utile à la compilation. C'est une instruction au compilateur qu'une méthode de superclasse est entrain d'etre redefini. S'il n'y a pas de signature de méthode correspondante sur une superclasse, il s'agit d'une erreur et ne doit pas compiler..
+
+considerons cette exmeple:
+
+```java
+class Person{
+	public void sayHey(){
+		System.out.println("person");
+	}
+}
+
+class Student extends Person{
+	public void sayhey(){
+		System.out.println("person");
+	}
+}
+```
+
+
+si on execute ce code:
+
+```java	
+Student s = new Student();
+s.sayHey();
+```
+
+on tombe sur cette résultat: person, c'est pas ca qu'on a attendu.
+C'est clair qu'a voulu redefini la méthode sayHey, mais a cause de faute d'ortographe qu'on a fait, on a tombé sur un résultat indésirable.
+
+Si on a annoté la méthode avec @Override, alors le compilateur aurait généré une erreur distant que la méthode sayhey n'existe pas dans la classe mére.
+
+## quelque régles qu'on redefinit une méthode / overriding:
+
+* les parametres doivent etre les memes et dans le meme ordre dans les deux méthodes (celle qui est dans la super classe/interface et celle redéfinit dans la sous classe)
+* la méthode qu'on est entrain de rédefinir (dans la sous classe) doit avoir le meme type de retour ou un sous type de la méthode originale.
+* le modificateur d'accés ne peut pas etre plus restrictive.
+* les constructeurs, les méthode final et les méthode statiques ne peuvent pas etre redefinit.
+
+
+## est ce que java pass-by-referene ou pass-by-value (is java pass by reference or pass by value):
+	
+java est tjrs pass-by-value, mais lorsqu'on un passe un objet comme argument a une méthode on est actuellement entrain de passer une adresse de l'objet en mémoire, et donc n'import quel changement de l'objet dans la méthode va etre reflété.
+
+## c'est quoi javac?
+
+C'est un outil de ligne de commande qui va compiler nos fichier java, donc c'est le compilateur fourni avec le JDK
+
+## les conventions de nommage dans java:
+	
+* class, interface, enum	: PascalCase
+* identifiers				: camelCase
+* constantes				: UPPERCASE
+
+QUELs avantages? Les convention de nommage améliorent la lisibilité du code, ce qui facilite la révision et la compréhension globale du code.
+
+
+## c'est quoi l'encapsulation (concept de OOP) (what is encapsulation):
+
+* mécanisme qui sert a encapsuler et cacher les variables ou les données de la classe des autres classes et utilisateurs et on peut réaliser ceci en méttant les attributs privés et créer des méthodes pour gerer l'accé a ces attributs. 
+
+* Ce mecanisme s'appelle aussi "data hiding" et a plusieurs avantages:
+
+	- maintenabilité du code
+  		
+		par exemple supposons qu'on a un attribut privé et on a créer comme interface d'interaction avec cet attribut un getter et un setter, on peut a tout moment changer l'implementation du code du getter ou setter et donc on a modifié le code a l'interieur de notre classe sans casser le code qui est a l'exterieure de la classe et qui l'utilise.
+
+	- certaines attributs de la classe peuvent en lecture seule (read-only) on le déclarant privé et ne fournissant qu'un getter pour eux ou au contraire, en ecriture seul ..
+
+	- on veut pas acceder directement a l'attribut mais a travers une méthode .. supp qu'on a un attribut age donc on veut un setter comme ceci peut etre:
+	 
+		```java
+		public void setAge(int age){
+			if (age < 0){
+				//fait qlqch
+			}else{
+				this.age = age;
+			}
+		}
+		```
+
+
+		
+__c'est quoi la polymorphisme (concept de OOP) (what is polymorphism)
+
+* definition:
+	
+	le polymorphisme veut dire littéralement: "plusieurs formes", elle est utilisé dans un contexte ou on a plusieurs classes lies les unes les autres avec une relation d'héritage.
+	D'une facon générale, le polymorphisme est le fait qu'un meme code puisse s'adapter automatiquement aux types de donnés aux quelles il s'applique.
+
+* exemple:
+ 
+	supposons qu'on a une class Person comme ca:
+	
+	```java
+	class Person{
+		public void sayHey(){
+			System.out.println("hey im  a person");
+		}
+	} 
+	```
+
+	et on a deux autres classe qui héritent de cette classe:
+
+	```java
+	class Student extends Person{
+		@Override
+		public void sayHey(){
+			System.out.println("hey im  a student");
+
+		}
+	}
+
+
+	class Programmer extends Person{
+		@Override
+		public void sayHey(){
+			System.out.println("hey im  a programmer");
+		}
+	}
+	```
+	main():
+	
+	```java
+	Person people[] = new Person[]{new Student(), new Programmer()};
+	for (Person p: people)
+		p.sayHey();
+	```
+
+	résultats
+
+	```
+	hey im  a student
+	hey im  a programmer
+	```
+	
+		
+		
+	* 1é point:
+	
+		on remarque qu'on un tableau de Person et pourtant on a pu mettre dedans des variables de type Student et Programmer, sans le polymorphisme ceci est impossible . mais avec le polymorphisme on est capable de faire ceci car l'héritage modelise la relation "est-un", un étudiant est une personne, donc on est capable de faire:
+		
+		```java
+		Person p = new Student(); 
+		```
+
+	* 2eme point:
+
+		aprés on remarque que le meme code, p.sayHey(), produit deux résultat differents, et ceci car ce code s'adapte aux types de donnés aux quelles il s'applique, dans un premier temps Java voit que meme si p est de type Person mais le variable effectivement stocké dans p est de type Student donc choisit d'executer la méthode sayHey definit dans la classe Student, et dans le deuxiemme cas, la meme chose, p pointe vers un variable de type Programmer donc c'est sayHey de la classe Programmer qui est definit.
+		ceci s'appelle: résolution dynmaique des lien ;)
+
+		- resolution dynamique des liens (Runtime polymorphism or Dynamic Method Dispatch):
+		 
+			le type effectif (celui de l'objet effectivement stocké dans la variable) est déterminant pour la choix de la méthode a executer.
+			dans la premiere itertaion du boucle for each, p contient une réference a un objet de type Student, donc sayHey de Student qui est utilisé.
+ 
+		- résolution statique des liens (compile time polymorphism):
+		 
+			le type du variable est détérminant.
+
+			si on etait dans langauge qui met en oeuvre le principe de résolution statique des liens, alors la boucle aurait produire deux fois "hey am a person".
+
+
+
+* utilité du polymorphisme:
+	
+	pour comprendre l'utilité du polymorphism je vais donner un probleme et sa solution sans polymorphism.
+
+	supposons que je veux creer une méthode qui travaille avec differents type de personnes.
+	
+	j'ai les etudiants et les programmeurs:
+
+    - sans polymorphism, je vais creer 3 méthodes:
+
+		```java
+		public void m(Person p){
+			//todo..
+			p.sayHey();
+			//todo..
+		}
+
+		public void m(Student p){
+			//todo..
+			p.sayHey();
+			//todo..
+		}
+
+		public void m(Programmer p){
+			//todo..
+			p.sayHey();
+			//todo..
+		}
+		```
+
+		> remarquons que y en beaucoup de redandance dans le code.
+
+	- avec le polymorphism:
+  
+		```java
+		public void m(Person p){
+			//todo
+			p.sayHey();
+			//todo
+		}
+
+		m(new Person());
+		m(new Student());
+		m(new Programmer());
+		```
+		
+		si on decide aprés d'ajouter un autre type de personne, alors c'est pas la peine d'ajouter une méthode pour ce personne ;)
+
+## c'est quoi l'héritage (concept de OOP) (what is inheritence):
+	
+* definition:
+	
+	L'héritage est un concept dans la programmation orienté objet qui permet la réutilisation d'une définition de classe existante (connue sous le nom de super classe) et de la définition de catégories plus spéciales de classe (appelés sous-classes) en héritant de cette classe. Il se concentre sur l'établissement d'une relation est-un (is-a) entre la sous-classe et sa super classe. L'héritage est également utilisé comme technique pour mettre en œuvre le polymorphisme; 
+
+* qlq régles de l'héritage en java:
+	
+	- Il peut y avoir plusieurs niveaux d'héritage (classe qui herite d'une classe qui herite d'une autre classe...)
+
+	- Seul l'héritage unique est autorisé en Java, car l'héritage multiple est un peu complexe; voir Diamond Problem.
+
+	- une classe déclarée finale ne peut pas être hérité.
+
+	- une méthode de classe déclarée finale ne peut pas être redefini.
+
+	- Le constructeur et les membres privés de la super classe ne sont pas hérités.
+
+	- Le constructeur de la sousclasse peut être appelé en utilisant super().
+
+	- si on veut appél une méthode de la super classe qu'on a defini dans cette sous classe alors on utilise le mot clé super.
+
+## composition(concept de OOP) (what is composition):
+
+* definition:
+ 
+	c'est un concept en programmation orienté objet, il va nous permettre de créer un objet qui est composé d'autre objet, donc on trouve ce concept dans une classe qui a comme variables d'instances des objets d'autres classes . Il permet de reutiliser du code en utilisant la relation a-un (has a).
+
+* exemple:
+ 
+	```java
+	class Computer{
+		HardDrive hardDrive;
+		Processor processor;
+
+		//...
+	}
+
+	class HarDrive{
+	String company;
+		int storageCapacity;
+
+		//...
+	}
+
+	class Processor{
+		String model;
+		float speed;
+
+		//...
+	}
+	```
+
+		
+
+## diamond problem:
+	
+* definition:
+	
+	c'est un probelem qui existe dans les languages qui supportent l'héritage multiple, il se produit quand on a une classe qui hérite de deux classe qui, les deux, definissent la meme méthode (avec la meme signature).
+
+* exemple:
+	
+	```java
+	class SuperClass1{
+		void m(){
+			//..
+		}
+	}
+
+	class SuperClass2{
+		void m(){
+			//..
+		}
+	}
+
+	class SubClass extends SuperClass1, SuperClass2{}
+	```
+	main():
+	
+	```java
+	SubClass sub = new SubClass();
+	sub.m(); 	//quelle m??!!!
+	```
+
+* diamond problem avec les interfaces:
+
+	on peut tomber sur ce probleme si on a une classe qui implemente deux interfaces, et ces dernieres les deux definissent une meme méthode par defaut, c-a-d avec la meme signature.
+
+	```java
+	interface A{
+		default void m(){
+			//...
+		}
+	}
+
+	interface B{
+		default void m(){
+			//...
+		}
+	}
+
+	//Erreur, lors de l'instantion du C et si on veut travailler avec m, on sait pas quelle m utiliser!!
+	class C implement A, B{
+
+	}
+	```
+
+	---
+	solution?
+
+	re-implementer la méthode m pour enlever toute collision qui peut se produire.
+
+	```java
+	class C implements A,B{
+		public void m(){
+
+		}
+	}
+	```
+
+
+## difference entre les classes abstraites et les interfaces en terme de design / quand utiliser l'une et quand l'autre??:
+
+- on doit utiliser les classes abstraites quand on veut imposer une structure/forme commune a des sous classes.
+- on doit utiliser une interface quand on veut definir des méthodes communes a des classes qui ne sont pas relié (par une relation d'héritage par ex)
+
+## comment rendre les objets d'une classe immutables?
+
+* rendre la classe final
+* pas de setter
+* tous les champs privé
+
+## pourquoi java a les types primitives:
+
+Pour des raisons de performances. Les variables de types primitifs contiennent directement la valeur; les variables de types non primitifs sont des références, ils stockent l'adresse d'un objet stocké ailleurs en mémoire.
+
+Chaque fois qu'on veut utiliser un 'type wrapper' (comme Integer, Double), JVM a besoin d'aller chercher l'objet en mémoire pour récuperer la valeur. Ceci n'est pas nécaissaire pour les types primitives car ces types contiennent la valeur elle-même, au lieu d'une référence à un objet qui contient la valeur.  
+
+Donc puisq on travaille avec les entiers et les floats beaucoup c'est pour cela que java a crée des types primitive pour eux. ces types n'exsites pas dans la hiérarchi des objets.
+
+
+## Type wrappers:
+
+* définition et utilité:
+	
+	- les types primitives sont utilisé en java pour des raisons de pérformance mais dans des situations on peut pas utilisé ces types primitives, par exemple l'API collection en java ne les supportent pas, car l'API travaille beaucoup avec la généricité et la généricité utilise seuelement les types de référence et n'ont pas les types primitives.
+	
+		POur cela java a ce qu'on appelle 'wrapper classes' qui sont des classes qui encapsulent un type primitive dans un objet, et donc offrent plusieurs méthodes pour travailler avec ces types.
+
+	- les differents type wrappers en java sont: Double, Float, Long, Integer, Short, Byte,Character, and Boolean.
+
+* creation des objets a partir des types primitives
+	
+	exemple:
+
+	```java
+	static Character valueOf(char ch)
+	```
+	
+	ceci va créer un objet de type Character qui contient/encapsule le caractere ch. 
+	si on veut récuperer le caractere (type char) contenue, on utilise la méthode: 
+	```java
+	char charValue(); 
+	```
+	les autres type wrappers ont les meme fonctionnalités et méthodes.
+
+* autoboxing & auto-unboxing:
+ 
+	- autoboxing		
+	 	
+		un processus par lequel un type primitive est automatiquement encapsulé dans son équivalent type wrapper / conversion d'un type primitif a un objet de type wrapper class equivalent
+
+	- auto-inboxing	
+	 
+		un processus par lequel la valeur d'un type primitive est automatiquement extrait d'un type wrapper / converion d'un objet de type wrapper class a son type primitif equivalent
+
+	- donc avec l'autoboxing et l'auto-unboxing c'est pa la peine de manuelement créer un objet pour encapsuler un type primitif ou manuelement faire l'extraction d'un type primitif de son type wrapper.
+
+	- demo:
+
+		```java
+		//autoboxing, pas la peine de faire intObj = Integer.valueOf(19);
+		Integer intObj = 19;	
+
+		//auto-unboxing, pas la peine de faire intObj.intValue();
+		int a = intObj;			
+		````=
+
+    l'autoboxing et l'autounboxing est fait automatiquement par java dans tous les cas ou une converions d'un type primitif vers un objet ou le contraire est nécessaire.
+
+## énumérations (enumerations) todo:
+
+## l'opérateur == teste l'égalité des valeurs de deux variables. 
+
+Pour les types primitives c'est ce qu'on veut mais pour les objets tester l'égalité des valeurs des deux objets veut dire tester est ce que les deux pointent vers le meme objets en mémoire ou pas.
+
+## comparer deux floats
+
+on doit pas utiliser l'opérateur == pour tester l'égalité de deux variables de type float, car le meme nombre peut ne pas etre stocké le meme dans deux variables.
+Par exemple 0.33 peut etre stocké dans un variable 0.3300000007 et dans l'autre 0.329999927.
+
+Donc pour comparer les deux on utilise cette méthode:
+	
+```java
+if(Math.abs(var1, var2) < EPSIOLON){
+	//..
+}
+```
+
+ou EPSIOLON a une valeur trés petite qui dépend du precision désiré.
+
+## BigInteger todo:
+
+## jdbc todo:
