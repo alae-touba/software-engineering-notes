@@ -34,7 +34,6 @@
 - [differentes façons de lire un fichier:](#differentes-façons-de-lire-un-fichier)
 - [est ce que la méthode "main" est obligatoire:](#est-ce-que-la-méthode-main-est-obligatoire)
 - [les annotations:](#les-annotations)
-- [definition](#definition)
 - [what is a raw type:](#what-is-a-raw-type)
 - [utilité de l'annotation @Override:](#utilité-de-lannotation-override)
 - [quelque régles qu'on redefinit une méthode / overriding:](#quelque-régles-quon-redefinit-une-méthode--overriding)
@@ -42,6 +41,7 @@
 - [c'est quoi javac?](#cest-quoi-javac)
 - [les conventions de nommage dans java:](#les-conventions-de-nommage-dans-java)
 - [c'est quoi l'encapsulation (concept de OOP) (what is encapsulation):](#cest-quoi-lencapsulation-concept-de-oop-what-is-encapsulation)
+- [c'est quoi la polymorphisme (concept de OOP) (what is polymorphism)](#cest-quoi-la-polymorphisme-concept-de-oop-what-is-polymorphism)
 - [c'est quoi l'héritage (concept de OOP) (what is inheritence):](#cest-quoi-lhéritage-concept-de-oop-what-is-inheritence)
 - [composition(concept de OOP) (what is composition):](#compositionconcept-de-oop-what-is-composition)
 - [diamond problem:](#diamond-problem)
@@ -75,11 +75,20 @@ Elle représente l'algorithme last in first out
 * methodes:
 
 	```java
-	boolean empty()				:teste si elle est vide 	
-	E 		peek() 				:top du stack
-	E 		pop() 				:top du stack avec suppression
-	E 		push​(E item) 		 :ajouter un element 
-	int 	search​(Object o)	 :-1 si n'existe pas
+	//teste si elle est vide
+	boolean empty()			
+
+	//top du stack
+	E peek() 	
+
+	//top du stack avec suppression
+	E pop() 				
+
+	//ajouter un element
+	E push​(E item) 		  
+
+	//-1 si n'existe pas
+	int search​(Object o)	
 	```
 
 ## garbage collection 
@@ -1807,13 +1816,13 @@ interfaces implementés	: **Serializable, Cloneable, Iterable<E>, Collection<E>,
 * méthodes (au plus des méthodes hérité de l'interface List<E>):
 	
 	```java
-	Object 	clone()
+	Object clone()
 
 	//supprime tous les elements de la collection qui satisfaissent le filtre.
 	boolean removeIf​(Predicate<? super E> filter)
 
 	//Réduit la capacité de l'instance à la taille actuelle de la liste.
-	void 	trimToSize() 
+	void trimToSize() 
 	```
 
 * Lors de l'ajout d'un élément dans la collection, si le tableau de stockage est trop petit alors un nouveau, plus grand, est créé pour contenir les éléments courants plus le nouvel élément.
@@ -4102,8 +4111,8 @@ avec un tableau de chars.
 
 ## les annotations: 
 	
-definition
------------
+* definition
+	
 	les annotations sont un moyen pour ajouter des meta-data (meta-données) a un code, c'est a dire qu'on va pouvoir fournir des informations supplémentaires aux éléments de notre programme, c-a-d aux classes, attributs, méthodes, paramétres des méthodes...etc
 
 	les annotations ne sont pas supposé changer le comportement d'un programme mais seulement, par exemple, aider le compilateur a capturer des erreur (@override: erreur en ce qui concerne la redéfinition d'une méthode) ou bien générer du code source, afin de faciliter le travail des développeurs notamment sur des tâches répétitives (project lombok: @Data, @Getter, @Setter...). 
@@ -4405,11 +4414,14 @@ definition
 			* ElementType.TYPE_USE
 
 
-		-exemple d'utilisation:
+		- exemple d'utilisation:
+			
+			```java
 			@Target{ElementType.METHOD, ElementType.TYPE}
 			@interface MyAnno{
 
 			}
+			```
 
 	* @Inherited:
 	
@@ -4532,7 +4544,7 @@ QUELs avantages? Les convention de nommage améliorent la lisibilité du code, c
 
 
 		
-__c'est quoi la polymorphisme (concept de OOP) (what is polymorphism)
+## c'est quoi la polymorphisme (concept de OOP) (what is polymorphism)
 
 * definition:
 	
@@ -4769,7 +4781,7 @@ __c'est quoi la polymorphisme (concept de OOP) (what is polymorphism)
 	}
 	```
 
-	---
+	
 	solution?
 
 	re-implementer la méthode m pour enlever toute collision qui peut se produire.
