@@ -1471,7 +1471,7 @@ Une classe anonyme est une classe interne sans nom et pour laquelle un seul obje
 
 * utilité de Comparable<T>:
 	
-	Lorsqu'on utilise Arrays.sort ou collection.sort sur un ensemble d'objets qui implementent Comparable<T> alors java utilise cette ordre naturelle (compareTo) pour détérminer quel objet est plus grand que l'autre pour trié la list ;)
+	Lorsqu'on utilise Arrays.sort ou collections.sort sur un ensemble d'objets qui implementent Comparable<T> alors java utilise cette ordre naturelle (compareTo) pour détérminer quel objet est plus grand que l'autre pour trié la list ;)
 
 	exemple:
 		
@@ -1947,9 +1947,9 @@ public class HashMap<K,​V> extends AbstractMap<K,​V> implements Map<K,​V>,
 
 * caractéristique:
 
-	-HashMap n'autorise pas les clés en double mais autorise les valeurs en double.
-	-HashMap autorise également la clé null, mais une seule fois et plusieurs valeurs nulles.
-	-Elle ne garantit aucun ordre lors du parcours des éléments de la collection.
+	- HashMap n'autorise pas les clés en double mais autorise les valeurs en double.
+	- HashMap autorise également la clé null, mais une seule fois et plusieurs valeurs nulles.
+	- Elle ne garantit aucun ordre lors du parcours des éléments de la collection.
 
 * constructeurs:
 	
@@ -2173,7 +2173,7 @@ public class TreeMap<K,​V> extends AbstractMap<K,​V> implements NavigableMap
     * elle ne propose aucune garantie sur l'ordre de parcours lors de l'itération sur les éléments qu'elle contient
     * elle ne permet pas d'ajouter des doublons mais elle permet l'ajout d'un élément null
 
-	La classe HashSet utilise en interne une HashMap dont la clé est l'élément et dont la valeur est une instance d'Objectidentique pour tous les éléments.
+	La classe HashSet utilise en interne une HashMap dont la clé est l'élément et dont la valeur est une instance d'Objecti dentique pour tous les éléments.
 
 
 * constructeurs:
@@ -2378,6 +2378,17 @@ déclaré dans une méthode, block de code {}
 			final int a; 
 		}
 		```
+
+		ce code est aussi correcte:
+
+		```java
+		{
+			final int a;
+			//faire qlq chose qui n'a pas de relation avec a
+			a = 10;
+		}
+		```
+		
 
 	- si un variable d'instance est déclaré final alors il doit etre initialisé lors de sa déclaration ou dans le constructeur
 
@@ -2671,7 +2682,7 @@ avec un tableau de chars.
 	
 	Gen est une classe générique qui prend en parametre un type T. T est utilisé seulement comme un placeholder pour le type qui va etre passé a la classe Gen quand une instance de la classe est crée.
 
-	la derniere ligne est une erreur car intObj est de type Gen<Integer> et dont ne peut pas référencer un objet strObj qui est de type Gen<String>.
+	la derniere ligne est une erreur car intObj est de type Gen\<Integer\> et dont ne peut pas référencer un objet strObj qui est de type Gen\<String\>.
 
 * convetions de nommage pour les parametres:
 	
@@ -2822,7 +2833,7 @@ avec un tableau de chars.
 		}
 		```
 			
-		la syntaxe Stats<T extends Number> veut dire que notre classe generique Stats va maintenat n'accepter que les types T qui sont la classe Number ou une sous classe  de la classe Number (ie Integer, Long...).\
+		la syntaxe Stats\<T extends Number\> veut dire que notre classe generique Stats va maintenat n'accepter que les types T qui sont la classe Number ou une sous classe  de la classe Number (ie Integer, Long...).\
 		et c'est ca ce qu'on veut nous car on voulait travailler avec un tableau de nombres :)
 
 		Et si maintenant on tente de passer une classe qui n'est pas une sous classe du Number comme param T, le progamme ne vas pas se compiler, par exemple, si on tente de faire:
@@ -2855,7 +2866,7 @@ avec un tableau de chars.
 	```
 
 	le probleme avec ce code est qu'il ne va travailler qu'avec des objet Stats dont le type T est le meme que l'objet invoquant.\
-	par exemple si l'objet invoquant est de type Stats<Integer> alors l'argument passé a sameAvergae doit aussi etre de type Stats<Integer> (peut pas etre par ex Stats<Double>).Pour résoudre ce probleme on peut utiliser le wildcard(?) comme ceci:
+	par exemple si l'objet invoquant est de type Stats\<Integer\> alors l'argument passé a sameAvergae doit aussi etre de type Stats\<Integer\> (peut pas etre par ex Stats\<Double\>).Pour résoudre ce probleme on peut utiliser le wildcard(?) comme ceci:
 		
 	```java
 	//? représente l'inconne (c-a-d o peut etre de type Stats<Integer> ou Stats<Double> ou Stats<Float> ...etc)
@@ -2912,7 +2923,7 @@ avec un tableau de chars.
 	```java 	
 	public boolean sameAverage(Stats<?> o){
 	```
-	veut dire qu'on peut passer a la méthode n'importe quel objet Stats valide. c-a-d on peut passer soit Stats<Integer> soit Stats<Double>...
+	veut dire qu'on peut passer a la méthode n'importe quel objet Stats valide. c-a-d on peut passer soit Stats\<Integer\> soit Stats\<Double\>...
 
 * bounded wildcard:
 
@@ -2966,7 +2977,7 @@ avec un tableau de chars.
 	static void showAB(Coords<?> coords)
 	```
 		
-	veut dire que la méthode accepte n'importe objet de type Coords meme un objet de type Coords<TwoDim> et la classe TwoDim n'a pas la dimension c.
+	veut dire que la méthode accepte n'importe objet de type Coords meme un objet de type Coords\<TwoDim\> et la classe TwoDim n'a pas la dimension c.
 	
 	Donc la solution est l'utilisation du "bounded wildcards" comme ceci:
 	```java
@@ -3136,7 +3147,7 @@ avec un tableau de chars.
 	Tous les types d'exceptions sont des sous-classes de la classe Throwable. Ainsi, Throwable est au sommet de la hiérarchie des classes d'exception. Immédiatement en dessous de Throwable se trouvent deux sous-classes importante. Une qui s'appelle Exception. Cette classe est la classe mére de tous les exceptions que java definit. C'est également de cette classe qu'on va hériter pour créer nos propres types d'exceptions. Il existe une sous-classe importante d'exception, appelée RuntimeException. Les exceptions de ce type sont définies automatiquement pour les programmes qu'on ecrit et qui incluent des éléments tels que la division par zéro et l'indexation de tableau non valide.
 	L'autre sous classe du Throwable est: Error et qui indique des problèmes graves qu'une application raisonnable ne devrait pas essayer de catcher
 
-	![](imgs/001.png)
+	![](imgs/001.PNG)
 
 * utiliser try & catch:
 	
