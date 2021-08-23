@@ -2363,31 +2363,6 @@ déclaré dans une méthode, block de code {}
 		a[0] = 199; //OK!
 		```
 
-	- si un variable locale est déclaré final alors il doit etre initialisé lors de sa declaration.
-
-		```java
-		void f(){
-			//OK
-			final int a;
-			a = 10;
-
-			//OK
-			final int a  = 10;
-
-			//ERREUR
-			final int a; 
-		}
-		```
-
-		ce code est aussi correcte:
-
-		```java
-		{
-			final int a;
-			//faire qlq chose qui n'a pas de relation avec a
-			a = 10;
-		}
-		```
 		
 
 	- si un variable d'instance est déclaré final alors il doit etre initialisé lors de sa déclaration ou dans le constructeur
@@ -2419,6 +2394,14 @@ déclaré dans une méthode, block de code {}
 			}
 		}
 		```
+
+		//Erreur
+		```java
+		class Student{
+			final int age; //non initailisé!!
+		}
+		```
+		pourquoi erreur dans ces deux cas? dans le 1er cas on un constructeur par defaut, et dans le 2eme cas on aussi un constructeur par défaut.. on sait que avec un constructeur par defaut comme celui defini dans le 1er cas ou que java definit pous nous dans le 2eme cas, on va avoir nos attribut initialisé par Java a leurs valeurs par défaut, c-a-d 0, 0.0, et false pour les primitives et null pour les objets. Donc dans les deux cas on va avoir **age** qui est initialisé a 0, et puisq age est final alors on va pas etre capable de lui donner une autre valeur, c'est pour cela que Java nous impose d'initialisé un attribut final dans le constructeur :) 
 	
 	- un variable qui est "blank final" c'est un variable qui n'est pas initialisé lors de sa déclaration. comme par ex:
 		
