@@ -68,8 +68,6 @@ mvn --version
     <!--kind of packaging we want? jar? war? etc-->
     <packaging>jar</packaging>
 
-    <!--properties of the app-->
-    w
     <!--list of all the dependencies that this project has-->
     <dependencies>
         <dependency>
@@ -91,12 +89,12 @@ mvn --version
 		
 ### Some phases 
 
-* validate   : validations done before compilation. Do we have pom.xml? all java files in the right folder? right config?
-* compile    : takes all the .java files and compile them (if we run this phase, validate will be automatically called)
-* test           : running the test cases (if you run this phase, previous ones validate and compile will be automatically called)
-* package   : package the app into a jar, war, etc 
-* install       : installs the artifact into the local Maven repository
-* deploy      : used to publish the artifact to the remote Maven reposiroty for other developers to use
+* **validate** : validations done before compilation. Do we have pom.xml? all java files in the right folder? right config?
+* **compile** : takes all the .java files and compile them (if we run this phase, validate will be automatically called)
+* **test** : running the test cases (if you run this phase, previous ones validate and compile will be automatically called)
+* **package** : package the app into a jar, war, etc 
+* **install** : installs the artifact into the local Maven repository
+* **deploy** : used to publish the artifact to the remote Maven reposiroty for other developers to use
 			
 ### How to run a phase?
 
@@ -207,6 +205,7 @@ mvn --version
 
 		
 * Now you can work with Maven in eclipse and forgot about CMD   
+  
     ![aa](imgs/1.png)
 
 * also if you click Run as, you will find the Maven commands:
@@ -258,7 +257,8 @@ mvn --version
     1. right click on the Maven project
     1. Maven -> update
     1. make sure these 3 are checked
-    ![a](imgs/3.png)
+
+       ![a](imgs/3.png)
 
 ### Java 9 and beyond
 
