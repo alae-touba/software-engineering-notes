@@ -45,11 +45,11 @@ website: tomcat.apache.org
        
     4. configure Tomcat (port number, manager username/password)
 
-       ![](imgs/3.png)
+       ![](imgs/3.PNG)
 
     5. select the Java virtual machine path (tomcat 9 requires Java 1.8 and above)
 
-        ![](imgs/4.PNG)   
+        ![](imgs/4.png)   
 
     6. specify the tomcat installation destination directory
 
@@ -91,7 +91,7 @@ website: tomcat.apache.org
 * using startup.bat/    
 	* from command line, head to bin folder and run the batch file startup.bat
 
-		![](imgs/11.png)
+		![](imgs/11.PNG)
 
 ## Deploy a Java Web app into Tomcat
 
