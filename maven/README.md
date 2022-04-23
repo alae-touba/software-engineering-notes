@@ -14,6 +14,7 @@
   - [Eclipse plugin](#eclipse-plugin)
   - [Setting the Java Version in Maven](#setting-the-java-version-in-maven)
     - [Java 9 and beyond](#java-9-and-beyond)
+- [Export a Maven app into a Runnable Jar file using Eclipse](#export-a-maven-app-into-a-runnable-jar-file-using-eclipse)
 
 # JavaBrains Maven tutorial
 
@@ -289,3 +290,66 @@ mvn --version
     ![](imgs/2.png)
 
     org/javabrains/testMaven/App has been compiled by a more recent version of the Java runtime (Java 11, class file version 55.0). This version (Java 1.8) only recognizes class file versions up to 52.0 (which means only able to run classes compiled for a Java version lower than 1.8)
+
+
+# Export a Maven app into a Runnable Jar file using Eclipse
+
+* We want to have a Maven project with some dependecies and at the end package it into jar file and be able to run without providing classpath to used dependencies. We want all the dependecies to be inside the jar file (this is not good because the generated jar file will be huge if we are using multiple other jar files, but its Okay if we just for ex want to package the app and send it to someone in the internet to run it in his computer).
+
+    * From eclipse create a Maven quickstart project
+    * add these dependencies
+
+        ```xml
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>30.1.1-jre</version>
+        </dependency>
+        ```
+        
+    * put some content on the Main class App.java
+
+        ```java
+        package ma.enset.myapp;
+        
+        import org.apache.commons.lang3.*;
+        
+        public class App {
+            public static void main( String[] args ) {
+                System.out.println( "Hello World!" );
+                System.out.println(StringUtils.equals(null, null));
+            }
+        }
+        ```
+    
+    * right click on the project -> Maven -> update Project
+    * on Eclipse menu, click File -> Export -> Java -> Runnable Jar file
+    * Select the Launch configuration: run config of App class
+    * Export destination
+    * Library handling: Export required libraries into generated jar
+
+* Now you will have the jar into the specified export destination and all you have to do to run it is:
+
+    ```bash
+    java -jar path/to/jarfile.jar
+    ```
+
+* If we look inside the generated jar, we will file all the dependencies that we used in our project are there
+
+    ![](imgs/4.png)
+    ![](imgs/5.png)
+
+* Lets look at the MANIFEST.MF file
+
+    ![](imgs/6.png)
+
+    * we have an entry for __*Main-Class*__ because this is a runnable jar that needs to know the entry point of the app and we specified this using the Launch configuration.
+    
+    * we have an entry for the Class-Path and it is the current directory (root of the jar where we have the structure of our package and all the packages/classes from the dependencies, thats why we are able to run the jar file directly using **_java -jar myapp.jar_**) 
