@@ -1,3 +1,47 @@
+- [Les balises de la techno jsp](#les-balises-de-la-techno-jsp)
+- [JSP: les directives](#jsp-les-directives)
+- [<jsp:useBean>, <jsp:getProperty>, <jsp:setProperty>](#jspusebean-jspgetproperty-jspsetproperty)
+- [<jsp:forward>](#jspforward)
+- [La portéé des objets (=visibilité, scope):](#la-portéé-des-objets-visibilité-scope)
+- [EL (expression langauge):](#el-expression-langauge)
+- [Les objets implicites met à notre disoisition à travers la téchnologie jsp:](#les-objets-implicites-met-à-notre-disoisition-à-travers-la-téchnologie-jsp)
+- [Les objets implicites met a notre dispostion a travers la téchnologie EL](#les-objets-implicites-met-a-notre-dispostion-a-travers-la-téchnologie-el)
+- [JSTL core: affichage d'une expression, la balise out:](#jstl-core-affichage-dune-expression-la-balise-out)
+- [JSTL core: gestion d'un variable](#jstl-core-gestion-dun-variable)
+- [JSTL core: les condition simples (if):](#jstl-core-les-condition-simples-if)
+- [JSTL core: les conditions multiples (choose/when):](#jstl-core-les-conditions-multiples-choosewhen)
+- [JSTL core: itération sur une collection](#jstl-core-itération-sur-une-collection)
+- [JSTL core: itération sur une chaine de caracteres:](#jstl-core-itération-sur-une-chaine-de-caracteres)
+- [JSTL core: les urls](#jstl-core-les-urls)
+- [JSTL core: redirection de l'utilisateur (redirect):](#jstl-core-redirection-de-lutilisateur-redirect)
+- [Différence entre la redirection et le forwarding:](#différence-entre-la-redirection-et-le-forwarding)
+- [Inclure automatiquement JSTL core a toutes les pages JSP:](#inclure-automatiquement-jstl-core-a-toutes-les-pages-jsp)
+- [Où mettre les fichiers dont le contenue est statique (css/js/images ..etc)?](#où-mettre-les-fichiers-dont-le-contenue-est-statique-cssjsimages-etc)
+- [Comment lier les fichiers jsp avec leurs feuilles de style css?](#comment-lier-les-fichiers-jsp-avec-leurs-feuilles-de-style-css)
+- [Comment specifier où ils seront envoyer les données(pour etre traiter) d'une formulaire (attribut action dans la balise form) ?](#comment-specifier-où-ils-seront-envoyer-les-donnéespour-etre-traiter-dune-formulaire-attribut-action-dans-la-balise-form-)
+- [Faire une redirection depuis une servlet](#faire-une-redirection-depuis-une-servlet)
+- [Les sessions](#les-sessions)
+- [Travailler avec une base de donné mysql:](#travailler-avec-une-base-de-donné-mysql)
+- [Three rules/properties that define a JavaBean](#three-rulesproperties-that-define-a-javabean)
+- [netbeans/eclipse how forward a request from a servlet to a jsp page](#netbeanseclipse-how-forward-a-request-from-a-servlet-to-a-jsp-page)
+- [Map http requests to servlets](#map-http-requests-to-servlets)
+- [How to set initialization parameters](#how-to-set-initialization-parameters)
+- [How to get initialization parameters (this code must be inside a servlet :) )](#how-to-get-initialization-parameters-this-code-must-be-inside-a-servlet--)
+- [Implement custom error handling == respond to errors with custum error pages:](#implement-custom-error-handling--respond-to-errors-with-custum-error-pages)
+- [Include a file in a jsp file at compile time:](#include-a-file-in-a-jsp-file-at-compile-time)
+- [Sessions (HttpSession java object)](#sessions-httpsession-java-object)
+- [Cookies:](#cookies)
+- [JPA implementation using hibernate (eclipse web app project with maven):](#jpa-implementation-using-hibernate-eclipse-web-app-project-with-maven)
+- [Create a Maven Java EE project inside Eclipse EE (2022):](#create-a-maven-java-ee-project-inside-eclipse-ee-2022)
+- [JPA docs:](#jpa-docs)
+- [Describe the phases of the servlet lifecycle?](#describe-the-phases-of-the-servlet-lifecycle)
+- [What are the different types of JSP tags?](#what-are-the-different-types-of-jsp-tags)
+- [Create a maven java ee web app that will work with hibernate inside eclipse ee (2022)](#create-a-maven-java-ee-web-app-that-will-work-with-hibernate-inside-eclipse-ee-2022)
+- [What is a servlet container?](#what-is-a-servlet-container)
+- [Difference between web server & web/servlet container](#difference-between-web-server--webservlet-container)
+- [Describe the steps in the HTTP Request and Response flow from a Servlet?](#describe-the-steps-in-the-http-request-and-response-flow-from-a-servlet)
+- [What are the handler methods defined in the HttpServlet class?](#what-are-the-handler-methods-defined-in-the-httpservlet-class)
+- [What is the difference between Request attributes and Request parameters?](#what-is-the-difference-between-request-attributes-and-request-parameters)
 
 ## Les balises de la techno jsp
 * commentaires
@@ -474,14 +518,14 @@ on passe a __delims__ une expression réguliere qui va nous servir comme délimi
 
         sans cette balise:
 
-            ```html
-            <a href="/pro/file.html"> lien </a>
-            ```
+        ```html
+        <a href="/pro/file.html"> lien </a>
+        ```
         avec cette balise: 
             
-            ```html
-            <a href="/file.html"> lien </a>
-            ```
+        ```html
+        <a href="/file.html"> lien </a>
+        ```
 
     * __quel interet__? supposons qu'on a pas utilisé cette balise lorsq nous avons manipulé les lien absolue et aprés on decide de changer le nom du projet :o. En ce qui concerne les chemins relatives? pas d'interet, on peut ne pas l'utiliser
 
@@ -763,9 +807,9 @@ C'est pour pallier cette lacune que le concept de session a été créé : il pe
 	
 exemple
 
-    ```java
-	this.getServletContext().getRequestDispatcher("/path_fo_file").forward(request, response);
-	```
+```java
+this.getServletContext().getRequestDispatcher("/path_fo_file").forward(request, response);
+```
 
 > __/__ represents the WebPages folder (WebContent folder in eclipse / webapp in eclipse with maven)
 
