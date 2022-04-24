@@ -1,8 +1,49 @@
 <!-- markdownlint-disable -->
 
-# JavaScript interview questions 
+- [Quels sont les différents types de données présents dans javascript?](#quels-sont-les-différents-types-de-données-présents-dans-javascript)
+- [Expliquer le *hoisting* en JavaScript](#expliquer-le-hoisting-en-javascript)
+- [Difference entre '==' et '==='](#difference-entre--et-)
+- [Est ce que Js est un language de typage statique ou language de typage dynamique?](#est-ce-que-js-est-un-language-de-typage-statique-ou-language-de-typage-dynamique)
+- [C'est quoi **NaN** en Js?](#cest-quoi-nan-en-js)
+- [Expliquer le passage par valeur et le passage par référence dans JavaScript?](#expliquer-le-passage-par-valeur-et-le-passage-par-référence-dans-javascript)
+- [Quels sont les fonctions auto invoqué en js (Immediately Invoked Functions)?](#quels-sont-les-fonctions-auto-invoqué-en-js-immediately-invoked-functions)
+- [Expliquer 'Higher order functions'](#expliquer-higher-order-functions)
+- [Expliquer le mot clé *'this'*](#expliquer-le-mot-clé-this)
+- [Expliquer la méthode call()](#expliquer-la-méthode-call)
+- [Expliquer la méthode apply()](#expliquer-la-méthode-apply)
+- [Expliquer la méthode bind()](#expliquer-la-méthode-bind)
+- [Expliquer c'est quoi *currying* in JavaScript](#expliquer-cest-quoi-currying-in-javascript)
+- [Citer/expliquer les 3 portées des variables qu'on a dans JavaScript](#citerexpliquer-les-3-portées-des-variables-quon-a-dans-javascript)
+- [Expliquer qu'est ce que *scope chain*?](#expliquer-quest-ce-que-scope-chain)
+- [Expliquer les *closures*](#expliquer-les-closures)
+- [Expliquer la fonction constructeur et l'opérateur *new* (function constructor / *new* operator)](#expliquer-la-fonction-constructeur-et-lopérateur-new-function-constructor--new-operator)
+- [Expliquer l'héritage par prototype trouvé dans](#expliquer-lhéritage-par-prototype-trouvé-dans)
+- [Expliquer F.prototype (propriété *prototype* d'une fonction constructeur)](#expliquer-fprototype-propriété-prototype-dune-fonction-constructeur)
+- [Supposons qu'on une fonction constructeur F, quelle est la valeur par défaut de sa propriété *prototype*?](#supposons-quon-une-fonction-constructeur-f-quelle-est-la-valeur-par-défaut-de-sa-propriété-prototype)
+- [Object.prototype (les prototypes natives au JavaScript)](#objectprototype-les-prototypes-natives-au-javascript)
+- [Les prototypes natives dans JavaScript (Array, Date, Math, etc)](#les-prototypes-natives-dans-javascript-array-date-math-etc)
+- [C'est quoi une fonction de callback?](#cest-quoi-une-fonction-de-callback)
+- [Arrow functions n'ont pas **"this"**](#arrow-functions-nont-pas-this)
+- [Expliquer le mot clé "var" et citer qlq differences entre lui et "let/const"](#expliquer-le-mot-clé-var-et-citer-qlq-differences-entre-lui-et-letconst)
+- [What is a rest parameter](#what-is-a-rest-parameter)
+- [C'est quoi l'opérateur spread (spread operator)?](#cest-quoi-lopérateur-spread-spread-operator)
+- [Quels sont les 3 syntaxes pour créer des objets?](#quels-sont-les-3-syntaxes-pour-créer-des-objets)
+- [Pourquoi **self** est parfois utilisé dans JavaScript au lieu de **this**](#pourquoi-self-est-parfois-utilisé-dans-javascript-au-lieu-de-this)
+- [Quels sont les différents moyens pour créer des tableau en JavaScript?](#quels-sont-les-différents-moyens-pour-créer-des-tableau-en-javascript)
+- [Quelle est la valeur de retour d'une fonction qui ne retourne rien en JavaScript?](#quelle-est-la-valeur-de-retour-dune-fonction-qui-ne-retourne-rien-en-javascript)
+- [Dans quelles situations on ne peut pas utiliser une *arrow function*?](#dans-quelles-situations-on-ne-peut-pas-utiliser-une-arrow-function)
+- [La structure de donnée Map](#la-structure-de-donnée-map)
+- [Comment vider un tablau en JavaScript?](#comment-vider-un-tablau-en-javascript)
+- [Comment vérifier si un objet est un tableau ou non?](#comment-vérifier-si-un-objet-est-un-tableau-ou-non)
+- [Comment passer des arguments a une fonction auto invoqué (immediatly invoked function)?](#comment-passer-des-arguments-a-une-fonction-auto-invoqué-immediatly-invoked-function)
+- [Quelle est l'output de ce code?](#quelle-est-loutput-de-ce-code)
+- [Quelle est l'output de ce code?](#quelle-est-loutput-de-ce-code-1)
+- [Object.create()](#objectcreate)
+- [Quelle est l'output de ce code:](#quelle-est-loutput-de-ce-code-2)
+- [Quelle est l'output de ce code?](#quelle-est-loutput-de-ce-code-3)
+- [L'opérateur *instanceof*](#lopérateur-instanceof)
 
-### _Quels sont les différents types de données présents dans javascript?
+## Quels sont les différents types de données présents dans javascript?
 
 On a 8 types:
 
@@ -101,7 +142,7 @@ console.log(typeof obj) //"object"
 ```
 
 
-### _Expliquer le *hoisting* en JavaScript
+## Expliquer le *hoisting* en JavaScript
 
 c'est un comportement par défaut de javascript où toutes les déclarations de variables et de fonctions sont déplacées au top du script, c-a-d qu'on peut utiliser une variable avant sa déclaration.
 
@@ -150,7 +191,7 @@ c'est un comportement par défaut de javascript où toutes les déclarations de 
     ```
 
 
-### _Difference entre '==' et '==='
+## Difference entre '==' et '==='
 
 ce sont les deux des opérateurs de comparaison. 
 
@@ -183,11 +224,11 @@ ce sont les deux des opérateurs de comparaison.
     true
     ```
 
-### _Est ce que Js est un language de typage statique ou language de typage dynamique?
+## Est ce que Js est un language de typage statique ou language de typage dynamique?
 typage dynamique.
 
 
-### _C'est quoi **NaN** en Js? 
+## C'est quoi **NaN** en Js? 
 *NaN* signifie Not a Number. Ceci indique que la valeur n'est un nombre valude.
 
 Le type d'une valeur *NaN* va retourné *number*
@@ -210,7 +251,7 @@ Le type d'une valeur *NaN* va retourné *number*
     console.log( isNaN(undefined) ) //true
     ```
 
-### _Expliquer le passage par valeur et le passage par référence dans JavaScript?
+## Expliquer le passage par valeur et le passage par référence dans JavaScript?
 
 les valeurs primitives dans js (string, number, etc) stocke directement la valeur. donc lorsq on copie par ex une variable de type nombre, qui s'appele **a**, dans une autre variable **b** alors c'est seuelement la valeur qui est copié dans b. Ceci implqiue que si on change l'une, alors l'autre ne sera pas affecté.
 
@@ -242,7 +283,7 @@ Ceci est different avec les objets js, car un objet ne stocke pas directement l'
     console.log(b.name) //yassine
     ```
 
-### _Quels sont les fonctions auto invoqué en js (Immediately Invoked Functions)?
+## Quels sont les fonctions auto invoqué en js (Immediately Invoked Functions)?
 
 c'est une fonction qui s'éxecute au moment de sa definition.
 
@@ -254,7 +295,7 @@ c'est une fonction qui s'éxecute au moment de sa definition.
 
 les premiers parenthéses sont la pour declarer une fonction anonymes et les dernier paréntheses pour l'appeler.
 
-### _Expliquer 'Higher order functions'
+## Expliquer 'Higher order functions'
 
 ce sont es fonctions qui opèrent sur d'autres fonctions, soit en les prenant comme arguments, soit en les renvoyant comme valeur de retour.
 
@@ -284,7 +325,7 @@ ce sont es fonctions qui opèrent sur d'autres fonctions, soit en les prenant co
     x() // "hello world"
     ```
 
-### _Expliquer le mot clé *'this'*
+## Expliquer le mot clé *'this'*
 
 Le mot-clé «this» fait référence à l'objet dont la fonction est une propriété.
 
@@ -368,7 +409,7 @@ Si la fonction n'est pas une proprieté d'un objet et on est dans le mode *stric
     f() //undefined
     ```
 
-### _Expliquer la méthode call()
+## Expliquer la méthode call()
 
 c'est une méthode qui permet d'appeler une fonction en spécifiant la valeur de *'this'* et autre arguments.
 
@@ -428,7 +469,7 @@ c'est une méthode qui permet d'appeler une fonction en spécifiant la valeur de
     f.call(obj, "awesome")  //"jhon is awesome"
     ```
 
-### _Expliquer la méthode apply()
+## Expliquer la méthode apply()
 
 fonctionne de la meme maniére que *call()*. La seule difference est que *call()* accépte l'objet qui va remplacer *this* et un ensemble d'arguments tandis que *apply()* accépte l'objet qui va remplacer *this* et un tableau d'arguments.
 
@@ -460,7 +501,7 @@ fonctionne de la meme maniére que *call()*. La seule difference est que *call()
     5
     ```
 
-### _Expliquer la méthode bind()
+## Expliquer la méthode bind()
 
 Cette méthode renvoie une nouvelle fonction, où la valeur du mot clé "this" sera remplacé par l'objet passé comme argument a bind.
 
@@ -486,7 +527,7 @@ Cette méthode renvoie une nouvelle fonction, où la valeur du mot clé "this" s
     sayHey()    //alae is awesome
     ```
 
-### _Expliquer c'est quoi *currying* in JavaScript
+## Expliquer c'est quoi *currying* in JavaScript
 
 *currying* est une technique pour transformer une fonction de n arguments , en n fonctions d'au plus un argument.
 
@@ -542,7 +583,7 @@ let addFour = sum(4)
 au lieu de définir plusieurs fonctions avec le meme logique on definit une seule fonction *sum*.
 
 
-### _Citer/expliquer les 3 portées des variables qu'on a dans JavaScript
+## Citer/expliquer les 3 portées des variables qu'on a dans JavaScript
 
 1. la portée global (*global scope*)
 
@@ -605,7 +646,7 @@ au lieu de définir plusieurs fonctions avec le meme logique on definit une seul
     ```
 
 
-### _Expliquer qu'est ce que *scope chain*?
+## Expliquer qu'est ce que *scope chain*?
 
 *scope chain* est une téchnique utilisé par JavaScript pour trouver la valeur d'une variable donnée. Comprenons cela à l'aide d'un exemple:
 
@@ -639,7 +680,7 @@ f()
 quand la fonction **f2** est appélé, alors JavaScript va essayer de trouver la variable *name* dans le scope actuelle de la foncition mais il ne va pas la trouver. Puis il va essayer de la trouver dans le scope de la fonction **f1** mais envain, puis dans le scope de la fonction **f** puis finalement il va la trouver (name) dans le **global scope**.   
 
 
-### _Expliquer les *closures*
+## Expliquer les *closures*
 
 c'est un moyen par lequel une fonction peut se rappeler des variables déclarés dans sa porté externe (its outer scope).
 
@@ -703,7 +744,7 @@ essayons de comprendre ce qu'il s'est passé dans les étapes 1, 2, 3, 4, 5 et 6
 
 1. **counter2()** est appélé, elle incréménte la valeur de **count** dont elle a accés a l'aide des **closures**. (la valeur de *count* a l'intérieure de *counter2* est maintenant 1)
 
-### _Expliquer la fonction constructeur et l'opérateur *new* (function constructor / *new* operator) 
+## Expliquer la fonction constructeur et l'opérateur *new* (function constructor / *new* operator) 
 
 La syntaxe régulière {...} permet de créer un objet. Mais souvent, on veut créer de nombreux objets similaires, comme plusieurs utilisateurs par exemple.
 
@@ -748,7 +789,7 @@ function User(name) {
 }
 ```
 
-### _Expliquer l'héritage par prototype trouvé dans 
+## Expliquer l'héritage par prototype trouvé dans 
 
 En programmation, nous voulons souvent prendre quelque chose et l'étendre.
 
@@ -890,7 +931,7 @@ L'héritage par prototype est une fonctionnalité de langage qui permet ceci.
     ![img](./imgs/5.png)
 
 
-### _Expliquer F.prototype (propriété *prototype* d'une fonction constructeur)
+## Expliquer F.prototype (propriété *prototype* d'une fonction constructeur)
 
 On sait que on peut créer de nouveaux objets avec la fonction constructeur comme ca: **new F()**.
 
@@ -917,7 +958,7 @@ console.log(rabbit.eats) // true
 
 ![img](./imgs/6.png)
 
-### _Supposons qu'on une fonction constructeur F, quelle est la valeur par défaut de sa propriété *prototype*?
+## Supposons qu'on une fonction constructeur F, quelle est la valeur par défaut de sa propriété *prototype*?
 
 Chaque fonction a une propriété **prototype** meme si on ne la fournit pas.
 La valeur par defaut de cette propriété **prototype** est un objet, avec une seul propriété **constructor** qui pointe sur la fonction elle meme.
@@ -962,7 +1003,7 @@ en résumé:
 
 - La propriété **"prototype"** n'a un tel effet spécial que lorsqu'elle est définie sur une fonction constructeur et appelée avec **new**.
 
-### _Object.prototype (les prototypes natives au JavaScript)
+## Object.prototype (les prototypes natives au JavaScript)
 
 La propriété **"prototype"** est largement utilisée par JavaScript. Toutes les fonctions constructeurs dans le language (Object, Array, Math, etc) l'utilisent.
 
@@ -997,7 +1038,7 @@ console.log(obj.toString === Object.prototype.toString) //true
 > <span style="color:red">Note: </span> Object.prototype.\_\_proto\_\_ est égale a null
 
 
-### _Les prototypes natives dans JavaScript (Array, Date, Math, etc)
+## Les prototypes natives dans JavaScript (Array, Date, Math, etc)
 
 Toutes les fonctions constructeurs fournis par JavaScript comme par exemple *Array*, *Date*, *Math* gardent les méthodes dans leurs prototypes.
 
@@ -1018,7 +1059,7 @@ console.log( arr.__proto__.__proto__ === Object.prototype ); // true
 console.log( arr.__proto__.__proto__.__proto__ ); // null, top de la chaine
 ```
 
-### _C'est quoi une fonction de callback?
+## C'est quoi une fonction de callback?
 
 Les fonctions en JavaScript sont appelé **"first class citizens"**, c-a-d qu'elles sont capable de faire ce que les autres peuvent faire, c-a-d qu'une fonction peut etre mis dans une variable, passé comme argument a une autre fonction et retourné d'une fonction.
 
@@ -1067,7 +1108,7 @@ fs.readFile("./file.txt", "utf8", callback)
 *callback* est une fonction de callback qui va etre executé lorsq la lecture du fichier a fini.
 
 
-### _Arrow functions n'ont pas **"this"**
+## Arrow functions n'ont pas **"this"**
 
 arrow functions n'ont pas **"this"**, si on essaie d'accéder a **this** depuis une arrow functions alors il est pris de l'éxterieur (le scope où l'arrow function est décalré).
 
@@ -1112,7 +1153,7 @@ obj.sayHey()    //alae
 notre arrow function prend la valeur du **this** du scope dans laquelle elle est déclaté c-a-d de la fonction **sayHey**, d'où le résultat (this c'est l'**obj** avant le point.)
 
 
-### _Expliquer le mot clé "var" et citer qlq differences entre lui et "let/const"
+## Expliquer le mot clé "var" et citer qlq differences entre lui et "let/const"
 
 **var** c'était l'ancien moyen de déclarer des variables dans JavaScript. Il qlqs difference avec **let/const**.
 
@@ -1188,7 +1229,7 @@ notre arrow function prend la valeur du **this** du scope dans laquelle elle est
     let name    
     ```
     
-### _What is a rest parameter 
+## What is a rest parameter 
 
 un moyen a travers lequel on peut passer un nombre variable d'arguments a une fonction.
 
@@ -1210,7 +1251,7 @@ console.log(sum(1, 2, 3, 4))    //10
 ```
 > un **rest parameter** doit etre le dernier argument dans une fonction.
 
-### _C'est quoi l'opérateur spread (spread operator)?
+## C'est quoi l'opérateur spread (spread operator)?
 
 c'est un élément qui est utilisé pour répandre (=spread) un tableau ou un objet. (il est similaire en syntaxe a un *rest parameter*)
 
@@ -1252,7 +1293,7 @@ c'est un élément qui est utilisé pour répandre (=spread) un tableau ou un ob
     console.log(clone)  //{ name: 'jhon', age: 40 }
     ```
 
-### _Quels sont les 3 syntaxes pour créer des objets?
+## Quels sont les 3 syntaxes pour créer des objets?
 1. Object literal
 
     ```js
@@ -1286,7 +1327,7 @@ c'est un élément qui est utilisé pour répandre (=spread) un tableau ou un ob
     console.log(user) //User { name: 'alae', age: 22 }
     ```
 
-### _Pourquoi **self** est parfois utilisé dans JavaScript au lieu de **this**
+## Pourquoi **self** est parfois utilisé dans JavaScript au lieu de **this**
 
 On sait que chaque fonction normal (déclaré avec le mot clé function) a son propre **this**. Si une fonction normale **f** est déclaré a l'intérieure d'une méthode d'un objet alors cette fonction **f** va avoir son propre this qui ne vas pas etre l'objet appelant la méthode.\
 Voila un exemple:
@@ -1331,7 +1372,7 @@ let obj = {
 obj.sayHey()    //alae
 ```
 
-### _Quels sont les différents moyens pour créer des tableau en JavaScript?
+## Quels sont les différents moyens pour créer des tableau en JavaScript?
 
 1. array literal
     
@@ -1353,7 +1394,7 @@ obj.sayHey()    //alae
     console.log(arr3.length)            //10                  
     ```
 
-### _Quelle est la valeur de retour d'une fonction qui ne retourne rien en JavaScript?
+## Quelle est la valeur de retour d'une fonction qui ne retourne rien en JavaScript?
 
 undefined.
 
@@ -1371,12 +1412,12 @@ console.log(test2())    //undefined
 ```
 
 
-### _Dans quelles situations on ne peut pas utiliser une *arrow function*?
+## Dans quelles situations on ne peut pas utiliser une *arrow function*?
 
 1. comme méthode pour un objet
 1. comme fonction constructeur
 
-### _La structure de donnée Map
+## La structure de donnée Map
 
 une **Map** est une collection de donnée juste comme un objet, mais la difference est que: dans une **Map** on peut utilisé des clés de n'importe quels types (pas juste des chaines de caracteres comme dans les objets).
 
@@ -1451,7 +1492,7 @@ for (const entry of ages.entries()) {
 }
 ```
 
-### _Comment vider un tablau en JavaScript?
+## Comment vider un tablau en JavaScript?
 
 supposons qu'on a ce tableau 
 ```js
@@ -1529,7 +1570,7 @@ Y en plusieurs méthodes pour le vider:
     console.log(arrayList)  //[]
     ```
 
-### _Comment vérifier si un objet est un tableau ou non?
+## Comment vérifier si un objet est un tableau ou non?
 
 ```js
 "use strict"
@@ -1541,7 +1582,7 @@ console.log(Array.isArray(arrayList))   //true
 console.log(Array.isArray(o))           //false
 ```
 
-### _Comment passer des arguments a une fonction auto invoqué (immediatly invoked function)?
+## Comment passer des arguments a une fonction auto invoqué (immediatly invoked function)?
 
 ```js
 "use strict"
@@ -1551,7 +1592,7 @@ console.log(Array.isArray(o))           //false
 })(10, 11)
 ```
 
-### _Quelle est l'output de ce code?
+## Quelle est l'output de ce code?
 ```js
 "use strict"
 
@@ -1564,7 +1605,7 @@ console.log(res)
 
 10
 
-### _Quelle est l'output de ce code?
+## Quelle est l'output de ce code?
 
 ```js
 "use strict"
@@ -1582,7 +1623,7 @@ console.log(output)
 undefined
 
 
-### _Object.create()
+## Object.create()
 
 c'est une méthode qui va créer un nouveau **objet** en utilisant un autre objet existant comme prototype de **objet**.
 
@@ -1608,7 +1649,7 @@ me.name = "alae"    //name existe maintenant dans me
 me.sayHey() //My name is alae. Am I human? true
 ```
 
-### _Quelle est l'output de ce code:
+## Quelle est l'output de ce code:
 ```js
 "use strict"
 
@@ -1628,7 +1669,7 @@ On essaie de supprimer la proprité *name* de l'objet **p** mais cette propriét
 Donc lorsque dans la derniere ligne on essaie d'acceder a la propriété *name* de p, alors JavaScript va chercher dans p, ne vas pas la trouver, et va chercher dans son prototype et va la trouver.
 
 
-### _Quelle est l'output de ce code?
+## Quelle est l'output de ce code?
 
 ```js
 "use strict"
@@ -1643,7 +1684,7 @@ console.log(trees.length)
 
 **Explication**: lorsq on fait <span style="color:darkblue">delete</span> a un element d'un tableau sa valeur devient *undefined* et c'est tout. la propriété *length* n'est pas affecté par ceci.
 
-### _L'opérateur *instanceof*
+## L'opérateur *instanceof*
 
 L'opérateur **instanceof** teste pour voir si la propriété *prototype* d'une fonction constructeur apparaît n'importe où dans la chaîne de prototype d'un objet. La valeur de retour est un boolean.
 
