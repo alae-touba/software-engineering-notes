@@ -2,16 +2,13 @@
 
 ### About
 
-a collection of interview questions by subject (js, java, java ee, spring, node.js, etc...) created by me.
+A collection of notes/cheat-sheets taken by me while learning from different resources (books, youtube, forums)
 
 ### Links
-* [JavaScript](./js) 
 
-* [Hibernate](./hibernate)
-
-* [Java](./java)
-
-* [Maven](./maven)
-
+* [Java EE](./java-ee)
 * [Webservers](./webservers)
-
+* [Maven](./maven)
+* [JavaScript](./js) 
+* [Hibernate](./hibernate)
+* [Java](./java)
