@@ -92,3 +92,38 @@
     ```
 
     copier coller de uneAutreJSP.jsp vers la page jsp courante.
+
+
+## <jsp:useBean>, <jsp:getProperty>, <jsp:setProperty>
+
+* pour créer et utiliser de objets java beans dans les pages jsp:
+
+* ex (ceci ce fait a l'interieure d'une page jsp):
+
+    ```jsp
+    <%-- L'action suivante récupère un bean de type Coyote et nommé "coyote" dans la portée requête s'il existe, ou en crée un sinon. --%>
+    <jsp:useBean id="coyote" class="com.sdzee.beans.Coyote" scope="request" />
+    
+    <%-- L'action suivante affiche le contenu de la propriété 'prenom' du bean 'coyote' : --%>
+    <jsp:getProperty name="coyote" property="prenom" />
+    
+    <%-- L'action suivante associe une valeur à la propriété 'prenom' du bean 'coyote' : --%>
+    <jsp:setProperty name="coyote" property="prenom" value="Wile E." />
+    
+    <%-- L'action suivante associe directement la valeur récupérée depuis le paramètre de la requête nommé ici 'prenomCoyote' à la propriété 'prenom' : --%>
+    <jsp:setProperty name="coyote" property="prenom" param="prenomCoyote"/>
+    ```
+
+## <jsp:forward>
+
+* permet d'effectuer une redirection vers une autre page. Comme toutes les actions standard, elle s'effectue côté serveur et pour cette raison il est impossible via cette balise de rediriger vers une page extérieure à l'application (par exemple vers https://www.google.com). L'action de forwarding est ainsi limitée aux pages présentes dans le contexte de la servlet ou de la JSP utilisée :
+
+* ex (ceci se fait dans une page jsp)
+    
+    ```jsp
+    <%-- Le forwarding vers une page de l'application fonctionne par URL relative : --%>
+    <jsp:forward page="/page.jsp" />
+    
+    <%-- Son équivalent en code Java  est : --%>
+    <% request.getRequestDispatcher( "/page.jsp" ).forward( request, response ); %>
+    ```
