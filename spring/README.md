@@ -1,7 +1,7 @@
 
 - [Create a Maven Spring Core project in Eclipse EE 2022 (if you want to play with beans for example):](#create-a-maven-spring-core-project-in-eclipse-ee-2022-if-you-want-to-play-with-beans-for-example)
 - [Create a Maven Spring MVC app using Eclipse EE (2022)](#create-a-maven-spring-mvc-app-using-eclipse-ee-2022)
-- [API using spring boot + persistence layer (JPA & Hibernate) + content negiciation (JSON & XML)](#api-using-spring-boot--persistence-layer-jpa--hibernate--content-negiciation-json--xml)
+- [API using spring boot + persistence layer (JPA & Hibernate) + content negotiation (JSON & XML)](#api-using-spring-boot--persistence-layer-jpa--hibernate--content-negotiation-json--xml)
 
 ## Create a Maven Spring Core project in Eclipse EE 2022 (if you want to play with beans for example):
 
@@ -194,7 +194,7 @@
 * Go to the browser and go to http://localhots:8080/#project_name#/posts 
 
 
-## API using spring boot + persistence layer (JPA & Hibernate) + content negiciation (JSON & XML)
+## API using spring boot + persistence layer (JPA & Hibernate) + content negotiation (JSON & XML)
 
 
 * head to https://start.spring.io/ and Create a spring boot project.
