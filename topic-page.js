@@ -40,7 +40,7 @@ const TopicManager = {
             .map(file => ({
                 title: this.formatTitle(file.name),
                 filename: file.name,
-                url: file.download_url
+                // url: file.download_url
             }));
     },
 
@@ -58,7 +58,7 @@ const TopicManager = {
         container.innerHTML = files.length > 0 
             ? files.map(file => `
                 <div class="file-item">
-                    <a href="${file.filename}" target="_blank">${file.title}</a>
+                    <a href="${file.filename.replace('.md', '')}" target="_blank">${file.title}</a>
                 </div>
             `).join('')
             : `<div class="no-results">No files found</div>`;
