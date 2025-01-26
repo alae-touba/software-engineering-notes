@@ -1,0 +1,46 @@
+:root {
+    --background-color: #ffffff;
+    --card-background: #f5f5f5;
+    --text-color: #333;
+    --border-color: #ddd;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.8;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 3rem;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    color: var(--text-color);
+}
+
+/* navigation */
+.nav-back {
+    margin-bottom: 2rem;
+    padding: 0.5rem 1rem;
+}
+
+.nav-back a {
+    color: #2f80ed;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.nav-back a:hover {
+    background: #2f80ed;
+    color: white;
+}
