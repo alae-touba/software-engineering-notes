@@ -6,56 +6,70 @@
     <title>Software Engineering Notes</title>
     <style>
         :root {
-            --primary-color: #2f80ed;
-            --background-color: #f5f5f5;
+            --background-color: #ffffff;
+            --card-background: #f5f5f5;
+            --text-color: #333;
+            --border-color: #ddd;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            line-height: 1.6;
-            max-width: 800px;
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.8;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 3rem;
             background-color: var(--background-color);
+            color: var(--text-color);
         }
 
         .header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--text-color);
         }
 
         .topic-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
         }
 
         .topic-card {
-            background: white;
-            padding: 1.5rem;
+            background: var(--card-background);
+            padding: 2rem;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
         }
 
         .topic-card:hover {
-            transform: translateY(-2px);
+            transform: translateY(-5px);
         }
 
         a {
-            color: var(--primary-color);
+            color: var(--text-color);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 700;
         }
 
-        .github-corner {
-            position: absolute;
-            top: 0;
-            right: 0;
+        a:hover {
+            font-size: 1.7rem;
+            text-decoration: none;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #666;
         }
     </style>
 </head>
 <body>
+
     <!-- GitHub corner ribbon -->
     <a href="https://github.com/alae-touba/software-engineering-notes" class="github-corner" aria-label="View source on GitHub">
         <svg width="80" height="80" viewBox="0 0 250 250" style="fill:#2f80ed; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true">
@@ -65,41 +79,60 @@
         </svg>
     </a>
 
+        
     <div class="header">
-        <h1>📚 Software Engineering Notes</h1>
-        <p>A curated collection of technical notes and cheat sheets</p>
+        <h1>Software Engineering Notes</h1>
     </div>
 
-    <div class="topic-grid">
-        <div class="topic-card">
-            <h2><a href="git/">Git</a></h2>
-            <p>Cheat sheets, workflows, and version control concepts</p>
-        </div>
-
-        <div class="topic-card">
-            <h2><a href="java/">Java</a></h2>
-            <p>Core Java concepts and best practices</p>
-        </div>
-
-        <div class="topic-card">
-            <h2><a href="spring/">Spring Framework</a></h2>
-            <p>Dependency injection, Spring Boot, and Spring MVC</p>
-        </div>
-
-        <div class="topic-card">
-            <h2><a href="maven/">Maven</a></h2>
-            <p>Build automation and dependency management</p>
-        </div>
-
-        <div class="topic-card">
-            <h2><a href="js/">JavaScript</a></h2>
-            <p>Modern JavaScript concepts and patterns</p>
-        </div>
-
-        <div class="topic-card">
-            <h2><a href="webservers/">Web Servers</a></h2>
-            <p>Configuration and deployment strategies</p>
-        </div>
+    <div class="topic-grid" id="topicContainer">
+        <div class="loading">Loading topics...</div>
     </div>
+
+    <script>
+        const API_URL = 'https://api.github.com/repos/alae-touba/software-engineering-notes/contents/';
+        const IGNORE_FILES = ['.gitignore', 'index.html', 'readme.md'];
+
+        async function loadTopics() {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch topics');
+                }
+                const items = await response.json();
+                const topics = items.filter(item => 
+                    item.type === 'dir' && 
+                    !item.name.startsWith('.') && 
+                    !IGNORE_FILES.includes(item.name.toLowerCase())
+                );
+
+                renderTopics(topics);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('topicContainer').innerHTML = `
+                    <div class="error">Failed to load topics. Please try again later.</div>
+                `;
+            }
+        }
+
+        function formatTopicName(name) {
+            return name
+                .split('-')
+                // .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .map(word => word.toLowerCase())
+                .join(' ');
+        }
+
+        function renderTopics(topics) {
+            const container = document.getElementById('topicContainer');
+            container.innerHTML = topics.map(topic => `
+                <div class="topic-card">
+                    <h2><a href="${topic.name}/">${formatTopicName(topic.name)}</a></h2>
+                </div>
+            `).join('');
+        }
+
+        // Initial load
+        loadTopics();
+    </script>
 </body>
 </html>

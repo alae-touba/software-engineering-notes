@@ -2,15 +2,7 @@
 
 ### About
 
-A collection of notes/cheat-sheets taken by me while learning from different resources (books, youtube, forums)
+A collection of notes and cheat sheets I've taken. I used to keep them in my Notion, but then I thought—why shouldn't everyone benefit from them?
 
-### Links
-
-* [Java EE](./java-ee)
-* [Webservers](./webservers)
-* [Maven](./maven)
-* [JavaScript](./js) 
-* [Hibernate](./hibernate)
-* [Java](./java)
-* [Spring](./spring)
-* [Git](./git/)
+### link to the website
+https://alae-touba.github.io/software-engineering-notes/
