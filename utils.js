@@ -1,0 +1,1 @@
+export const getBaseUrl = () => ['localhost', '127.0.0.1'].includes(location.hostname) ? '' : '/software-engineering-notes';
