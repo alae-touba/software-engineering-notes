@@ -22,20 +22,20 @@
         }
 
         .topic-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: var(--primary-color);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
-}
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary-color);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
 
-.topic-link:hover::after {
-    transform: scaleX(1);
-}
+        .topic-link:hover::after {
+            transform: scaleX(1);
+        }
 
         .loading {
             text-align: center;
@@ -91,19 +91,6 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-
-        .footer {
-            text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
-            color: var(--secondary-color);
-            border-top: 1px solid var(--border-color);
-        }
-
-        .footer a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
     </style>
 </head>
 <body>
@@ -112,12 +99,14 @@
         <div class="header">
             <h1>Software Engineering Notes</h1>
         </div>
-    </div>
 
-    <div class="container">  
         <div class="topic-grid" id="topicContainer">
             <div class="loading">Loading topics...</div>
         </div>
+
+        <footer class="footer">
+            <p>Maintained with &hearts; by Alae &bull; <a href="https://github.com/alae-touba" target="_blank">GitHub</a></p>
+        </footer>
     </div>
 
     <script>
@@ -169,11 +158,5 @@
     </script>
 
     <script src="./load-navigation.js"></script>
-
-    <footer class="footer">
-        <div class="container"> 
-            <p>Maintained with ❤️ by Alae • <a href="https://github.com/alae-touba" target="_blank">GitHub</a></p>
-        </div>
-    </footer>
 </body>
 </html>

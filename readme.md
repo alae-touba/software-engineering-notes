@@ -10,3 +10,10 @@ A small blog containing the notes and cheat sheets I've taken. I used to keep th
 ```powershell
 ./create-topic.ps1 -TopicName "new-topic"
 ```
+
+### how to generate index.html for all the topics
+you'll execute this inly if you change the template of the index.html of the topics.
+
+```powershell
+./create-topics.ps1
+```

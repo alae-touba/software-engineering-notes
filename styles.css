@@ -96,3 +96,16 @@ body {
     background: #2f80ed;
     color: white;
 }
+
+.footer {
+    text-align: center;
+    padding: 2rem;
+    margin-top: 4rem;
+    color: var(--secondary-color);
+    border-top: 1px solid var(--border-color);
+}
+
+.footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
