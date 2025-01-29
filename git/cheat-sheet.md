@@ -40,6 +40,7 @@
     - [show grandparent of head commit](#show-grandparent-of-head-commit)
   - [merging](#merging)
     - [abort a merge](#abort-a-merge)
+    - [abort a rebase](#abort-a-rebase)
   - [miscellaneous](#miscellaneous)
     - [frequently referenced](#frequently-referenced)
 
@@ -207,6 +208,12 @@ git show HEAD^^
 ```bash
 git merge --abort
 ```
+
+### abort a rebase
+```bash
+git rebase --abort
+```
+
 
 ## miscellaneous
 
