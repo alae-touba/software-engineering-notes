@@ -44,7 +44,7 @@
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error('Failed to fetch files');
-                console.log(('response:', response));
+                console.log('response:', response);
                 
                 const files = await response.json();
                 const markdownFiles = filterMarkdownFiles(files);
