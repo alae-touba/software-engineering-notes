@@ -1,28 +1,80 @@
+
 :root {
-    --background-color: #ffffff;
-    --card-background: #f5f5f5;
-    --text-color: #333;
-    --border-color: #ddd;
+    --primary-color: #2F80ED;      /* Main brand color */
+    --secondary-color: #4F4F4F;    /* Secondary text */
+    --background: #f0f2f5;         /* Page background */
+    --card-background: #ffffff;
+    --border-color: #e0e0e0;
+    --text-color: #2d3436;
+    --hover-color: #2569C7;        /* Hover state color */
+}
+
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.8;
-    max-width: 1000px;
+    background-color: var(--background);
+    font-family: 'Inter', sans-serif; /* Add Google Font later */
+    background-image: radial-gradient(circle at 1px 1px, var(--border-color) 1px, transparent 0);
+    background-size: 40px 40px;
+    transition: background-color 0.3s ease;
+}
+
+
+.container {
+    width: 100%;
+    padding: 0 1.5rem; /* Horizontal padding */
     margin: 0 auto;
-    padding: 3rem;
-    background-color: var(--background-color);
-    color: var(--text-color);
+    max-width: 1200px; /* Same as Bootstrap's xl breakpoint */
+}
+
+/* Optional responsive breakpoints */
+@media (min-width: 576px) {
+    .container {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1320px;
+    }
 }
 
 .header {
     text-align: center;
-    margin-bottom: 3rem;
+    padding: 3rem 0rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, var(--primary-color), #1B5FC1);
+    color: white;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
 }
 
 .header h1 {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     font-size: 2.5rem;
-    color: var(--text-color);
+    margin: 0;
+    letter-spacing: -0.5px;
 }
 
 /* navigation */

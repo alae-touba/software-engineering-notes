@@ -10,7 +10,7 @@ const TopicManager = {
     setPageTitle() {
         const titleElement = document.getElementById('mainTitle');
         if (titleElement) {
-            titleElement.textContent = `${this.topicName.toUpperCase()} NOTES`;
+            titleElement.textContent = `${this.topicName.charAt(0).toUpperCase() + this.topicName.slice(1)} Notes`;
         }
     },
 

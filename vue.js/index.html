@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue.js Notes</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../topic-page-styles.css">
+</head>
+<body>
+    <div class="header">
+        <h1 id="mainTitle"></h1>
+    </div>
+    
+    <input type="text" 
+           class="search-box" 
+           placeholder="Search vue.js notes..." 
+           id="searchInput"
+           autocomplete="off"
+           aria-label="Search vue.js documentation">
+    
+    <div class="file-list" id="fileList"></div>
+
+    <script src="../topic-page.js"></script>
+    <script>
+        TopicManager.init({
+            topicName: 'vue.js'
+        });
+    </script>
+
+    <script src="../load-navigation.js"></script>
+</body>
+</html>

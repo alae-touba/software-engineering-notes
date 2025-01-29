@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Software Engineering Notes</title>
     <link rel="stylesheet" href="./styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
         .topic-grid {
@@ -13,30 +14,28 @@
             gap: 2rem;
         }
 
-        .topic-card {
-            background: var(--card-background);
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            transition: transform 0.3s ease;
-        }
-
-        .topic-card:hover {
-            transform: translateY(-4px);
-        }
-
         .topic-link {
-            color: var(--text-color);
-            text-decoration: none;
-            font-weight: 700;
-            display: block; /* Makes the link cover the entire card */
-            height: 100%;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none !important; /* Add this line */
+
         }
 
-        .topic-link:hover {
-            font-size: 1.3rem;
-            text-decoration: none;
-        }
+        .topic-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--primary-color);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.topic-link:hover::after {
+    transform: scaleX(1);
+}
 
         .loading {
             text-align: center;
@@ -44,19 +43,81 @@
             color: #666;
         }
 
+        .topic-card {
+            background: var(--card-background);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            min-height: 120px; /* Ensures consistent card height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+
+        .topic-link:hover {
+            font-size: inherit; /* Remove font-size change */
+            /* text-decoration: none; */
+            text-decoration: none !important; /* Ensure no underline on hover */
+
+        }
+
         .topic-card h2 {
             margin: 0;
+            /* font-size: 1.25rem; */
+            font-size: clamp(1rem, 3vw, 1.25rem);
+            color: var(--secondary-color);
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            color: var(--secondary-color);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer a {
+            color: var(--primary-color);
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
-        
-    <div class="header">
-        <h1>Software Engineering Notes</h1>
+    
+    <div class="container">  
+        <div class="header">
+            <h1>Software Engineering Notes</h1>
+        </div>
     </div>
 
-    <div class="topic-grid" id="topicContainer">
-        <div class="loading">Loading topics...</div>
+    <div class="container">  
+        <div class="topic-grid" id="topicContainer">
+            <div class="loading">Loading topics...</div>
+        </div>
     </div>
 
     <script>
@@ -109,5 +170,10 @@
 
     <script src="./load-navigation.js"></script>
 
+    <footer class="footer">
+        <div class="container"> 
+            <p>Maintained with ❤️ by Alae • <a href="https://github.com/alae-touba" target="_blank">GitHub</a></p>
+        </div>
+    </footer>
 </body>
 </html>
