@@ -3,160 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Software Engineering Notes</title>
-    <link rel="stylesheet" href="./styles.css">
+    <title>angular Notes</title>
+    <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <style>
-        .topic-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .topic-link {
-            position: relative;
-            overflow: hidden;
-            text-decoration: none !important; /* Add this line */
-
-        }
-
-        .topic-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--primary-color);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .topic-link:hover::after {
-            transform: scaleX(1);
-        }
-
-        .loading {
-            text-align: center;
-            font-size: 1.2rem;
-            color: #666;
-        }
-
-        .topic-card {
-            background: var(--card-background);
-            padding: 1.5rem;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            min-height: 120px; /* Ensures consistent card height */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .topic-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-            border-color: var(--primary-color);
-        }
-
-        .topic-link:hover {
-            font-size: inherit; /* Remove font-size change */
-            /* text-decoration: none; */
-            text-decoration: none !important; /* Ensure no underline on hover */
-
-        }
-
-        .topic-card h2 {
-            margin: 0;
-            /* font-size: 1.25rem; */
-            font-size: clamp(1rem, 3vw, 1.25rem);
-            color: var(--secondary-color);
-            text-align: center;
-            line-height: 1.4;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(0,0,0,0.1);
-            border-radius: 50%;
-            border-top-color: var(--primary-color);
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
 </head>
 <body>
-    
-    <div class="container">  
+    <div class="container">
         <div class="header">
-            <h1>Software Engineering Notes</h1>
+            <h1 id="mainTitle">
+                notes
+            </h1>
         </div>
 
-        <div class="topic-grid" id="topicContainer">
-            <div class="loading">Loading topics...</div>
+        <input 
+            type="text" 
+            class="search-box" 
+            placeholder="Search notes..." 
+            id="searchInput"
+            autocomplete="off"
+            aria-label="Search notes"
+        >
+
+        <div class="file-list" id="fileList">
+
         </div>
 
         <footer class="footer">
             <p>Maintained with &hearts; by Alae &bull; <a href="https://github.com/alae-touba" target="_blank">GitHub</a></p>
         </footer>
     </div>
-
+    
     <script>
-        const API_URL = 'https://api.github.com/repos/alae-touba/software-engineering-notes/contents/';
-        const IGNORE_FILES = ['.gitignore', 'index.html', 'readme.md'];
+        const setPageTitle = () => {
+            const titleElement = document.getElementById('mainTitle');   
+        }
 
-        async function loadTopics() {
+        const URL = 'https://api.github.com/repos/alae-touba/software-engineering-notes/contents'
+        
+        const  loadFiles = async (url) => {
             try {
-                const response = await fetch(API_URL);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch topics');
-                }
-                const items = await response.json();
-                const topics = items.filter(item => 
-                    item.type === 'dir' && 
-                    !item.name.startsWith('.') && 
-                    !IGNORE_FILES.includes(item.name.toLowerCase())
-                );
-
-                renderTopics(topics);
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Failed to fetch files');
+                console.log(('response:', response));
+                
+                const files = await response.json();
+                const markdownFiles = this.filterMarkdownFiles(files);
+                renderFiles(markdownFiles);
+                setupSearch(markdownFiles);
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById('topicContainer').innerHTML = `
-                    <div class="error">Failed to load topics. Please try again later.</div>
+                this.showError();
+            }
+        }
+
+        const filterMarkdownFiles = (files) => {
+            return files
+                .filter(file => 
+                    file.type === 'file' && 
+                    file.name.endsWith('.md') && 
+                    !file.name.toLowerCase().startsWith('readme')
+                )
+                .map(file => ({
+                    title: this.formatTitle(file.name),
+                    filename: file.name,
+                    // url: file.download_url
+                }));
+        }
+
+        const formatTitle = (filename) => {
+            return filename
+                .replace('.md', '')
+                .replace(/-/g, ' ')
+                .replace(/\b\w/g, c => c.toUpperCase());
+        }
+
+        const renderFiles = (files) => {
+            const container = document.getElementById('fileList');
+            if (!container) return;
+
+            container.innerHTML = files.length > 0 
+                ? files.map(file => `
+                    <div class="file-item">
+                        <a href="${file.filename.replace('.md', '')}" target="_blank">${file.title}</a>
+                    </div>
+                `).join('')
+                : `<div class="no-results">No files found</div>`;
+        }
+
+
+        const setupSearch = (files) => {
+            const searchInput = document.getElementById('searchInput');
+            if (!searchInput) return;
+
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase().trim();
+                const filtered = files.filter(file => 
+                    file.title.toLowerCase().includes(term) ||
+                    file.filename.toLowerCase().includes(term)
+                );
+                renderFiles(filtered);
+            });
+        }
+
+        const showError = () => {
+            const container = document.getElementById('fileList');
+            if (container) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        Failed to load files. Refresh to try again.
+                    </div>
                 `;
             }
         }
 
-        function formatTopicName(name) {
-            return name
-                .split('-')
-                .map(word => word.toLowerCase())
-                .join(' ');
-        }
+        loadFiles(URL);
 
-        function renderTopics(topics) {
-            const container = document.getElementById('topicContainer');
-            container.innerHTML = topics.map(topic => `
-                <a class="topic-link" href="${topic.name}/">
-                    <div class="topic-card">
-                        <h2>${formatTopicName(topic.name)}</h2>
-                    </div>
-                </a>
-            `).join('');
-        }
-
-        // Initial load
-        loadTopics();
     </script>
 
-    <script src="./load-navigation.js"></script>
+    <script src="load-navigation.js"></script>
 </body>
 </html>
