@@ -47,12 +47,12 @@
                 console.log(('response:', response));
                 
                 const files = await response.json();
-                const markdownFiles = this.filterMarkdownFiles(files);
+                const markdownFiles = filterMarkdownFiles(files);
                 renderFiles(markdownFiles);
                 setupSearch(markdownFiles);
             } catch (error) {
                 console.error('Error:', error);
-                this.showError();
+                showError();
             }
         }
 
@@ -64,7 +64,7 @@
                     !file.name.toLowerCase().startsWith('readme')
                 )
                 .map(file => ({
-                    title: this.formatTitle(file.name),
+                    title: formatTitle(file.name),
                     filename: file.name,
                     // url: file.download_url
                 }));
