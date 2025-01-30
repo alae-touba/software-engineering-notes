@@ -6,12 +6,12 @@ Using a reverse proxy offers several advantages, including improved security, pe
 
 To clients, the responses they receive appear to come directly from the web server, even though they passed through the reverse proxy.
 
-![reverse proxy](reverse-proxy.png)
+![reverse proxy](imgs/reverse-proxy.png)
 
 Image credit goes to [https://www.cloudflare.com/](https://www.cloudflare.com/)
 
 In a typical client server architecture without a reverse proxy deployed, client’s requests will go directly to the origin server who will in return response back directly to the client.
-
+$
 But with the architecture in the image, requests from clients and responses from the origin backend servers shall always pass through the reverse proxy.
 
 Why do we need the reverse proxy? Multiple reasons:
