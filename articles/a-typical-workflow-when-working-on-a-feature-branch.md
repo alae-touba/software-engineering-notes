@@ -1,3 +1,10 @@
+---
+tags: [git, version-control]
+date: 2024-02-07
+author: Alae
+description: A comprehensive guide for working with feature branches in Git, including stashing and rebasing workflows
+---
+
 # a typical worflow when working on a feature branch
 
 Here's the complete workflow including stash for when you need to switch branches with uncommitted changes:
