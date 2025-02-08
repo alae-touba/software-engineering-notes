@@ -1,5 +1,29 @@
 // constants
 const ARTICLES_URL = 'https://api.github.com/repos/alae-touba/software-engineering-notes/contents/articles';
+const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
+
+
+// Cache management
+const getCachedArticles = () => {
+    const cached = localStorage.getItem('cachedArticles');
+    if (!cached) {
+        return null;
+    }
+    
+    const { timestamp, data } = JSON.parse(cached);
+    if (Date.now() - timestamp > CACHE_DURATION) {
+        localStorage.removeItem('cachedArticles');
+        return null;
+    }
+    return data;
+};
+
+const cacheArticles = (articles) => {
+    localStorage.setItem('cachedArticles', JSON.stringify({
+        timestamp: Date.now(),
+        data: articles
+    }));
+};
 
 // data processing
 const filterMarkdownFiles = (files) => {
@@ -54,10 +78,10 @@ const setupSearch = (articles) => {
     }
 
     searchInput.addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase().trim();
+        const searchTerm = e.target.value.toLowerCase().trim();
         const filtered = articles.filter(article => 
-            article.title.toLowerCase().includes(term) ||
-            article.filename.toLowerCase().includes(term)
+            article.title.toLowerCase().includes(searchTerm) ||
+            article.filename.toLowerCase().includes(searchTerm)
         );
         renderArticles(filtered);
     });
@@ -65,18 +89,45 @@ const setupSearch = (articles) => {
 
 const showError = () => {
     const container = document.getElementById('articlesList');
-    if (container) {
-        container.innerHTML = `
-            <div class="no-results">
-                Failed to load files. Refresh to try again.
-            </div>
-        `;
+    if (!container) {
+        return;
     }
+
+    container.innerHTML = `
+        <div class="no-results">
+            Failed to load files. Refresh to try again.
+        </div>
+    `;
 }
 
+const setCurrentYear = () => {
+    const yearElement = document.getElementById('currentYear');
+    if (!yearElement) {
+        return;
+    }
+    yearElement.textContent = new Date().getFullYear();
+}
+
+const renderLoading = () => {
+    const container = document.getElementById('articlesList');
+    if (!container) return;
+    container.innerHTML = '<div class="loading">Loading articles...</div>';
+};
+
 // logic
-const loadFiles = async (url) => {
+const initBlog = async (url) => {
     try {
+        renderLoading();
+
+        setCurrentYear();
+
+        const cachedArticles = getCachedArticles();
+        if (cachedArticles) {
+            renderArticles(cachedArticles);
+            setupSearch(cachedArticles);
+            return;
+        }
+
         const response = await fetch(url);
         if (!response.ok)  {
             throw new Error('Failed to fetch files');
@@ -85,7 +136,8 @@ const loadFiles = async (url) => {
         const files = await response.json()
         const markdownFiles = filterMarkdownFiles(files);
         const articles = getArticlesInfo(markdownFiles);
-
+        
+        cacheArticles(articles);
         renderArticles(articles);
         setupSearch(articles);
     } catch (error) {
@@ -95,4 +147,5 @@ const loadFiles = async (url) => {
 }
 
 // init
-loadFiles(ARTICLES_URL);
+// loadFiles(ARTICLES_URL);
+document.addEventListener('DOMContentLoaded', () => initBlog(ARTICLES_URL));

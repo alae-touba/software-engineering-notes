@@ -107,6 +107,13 @@ body {
     text-decoration: none;
 }
 
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
 .search-box {
     width: 50%;
     padding: 1rem;
@@ -152,4 +159,18 @@ body {
     color: #777;
     text-align: center;
     padding: 2rem;
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--secondary-color);
+}
+
+.social-links a {
+    transition: color 0.2s ease;
+}
+
+.social-links a:hover {
+    color: var(--hover-color);
 }
